@@ -1,0 +1,18 @@
+{
+  "name": "LexiGo",
+  "version": "1.0.0",
+  "description": "Find translations for words and phrases!",
+  "main": "index.js",
+  "author": "Adam Guidarini",
+  "license": "GPL 3.0",
+  "private": true,
+  "scripts": {
+    "build": "npx web-ext build --overwrite-dest",
+    "start:firefox": "web-ext run --devtools --source-dir .",
+    "start:chromium": ""
+  },
+  "devDependencies": {
+    "typescript": "^5.8.3",
+    "web-ext": "^8.8.0"
+  }
+}
