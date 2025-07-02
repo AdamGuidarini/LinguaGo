@@ -1,11 +1,11 @@
 {
   "compilerOptions": {
-    "lib": [ "es2015", "DOM" ],
-    "target": "es5",
     "module": "commonjs",
+    "target": "es6",
+    "outDir": "./dist/",
+    "rootDir": ".",
     "strict": true,
-    "esModuleInterop": true,
-    "outDir": "dist",
-    "resolveJsonModule": true
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
   }
 }

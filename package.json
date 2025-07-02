@@ -14,5 +14,12 @@
   "devDependencies": {
     "typescript": "^5.8.3",
     "web-ext": "^8.8.0"
+  },
+  "dependencies": {
+    "@types/axios": "^0.14.4",
+    "@types/node": "^24.0.10",
+    "axios": "^1.10.0",
+    "package": "^1.0.1",
+    "web-ext-types": "^3.2.1"
   }
 }
