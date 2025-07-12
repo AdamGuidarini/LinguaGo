@@ -11,8 +11,4 @@ import { SearchComponent } from './components/search/search.component';
 })
 export class AppComponent {
   title = 'LexiGo';
-  
-  constructor() {
-    console.log('Hello!');
-  }
 }
