@@ -1735,6 +1735,13 @@
   resolved "https://registry.yarnpkg.com/@fregante/relaxed-json/-/relaxed-json-2.0.0.tgz#c0ae5103a5473fb5dd54931107e35129351e527a"
   integrity sha512-PyUXQWB42s4jBli435TDiYuVsadwRHnMc27YaLouINktvTWsL3FcKrRMGawTayFk46X+n5bE23RjUTWQwrukWw==
 
+"@hirez_io/auto-spies-core@3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@hirez_io/auto-spies-core/-/auto-spies-core-3.0.0.tgz#316b206b5f143ce3f24da21af4f3454c1aa26d5e"
+  integrity sha512-au7s7/AqPU5CJhv0slVjmZqEv5Uaf2nj7pYFepp5g3B7EocEeNy7bZ74x5RJldHYtW0R8OptV2mZfwaDOfcNCA==
+  dependencies:
+    javascript-stringify "2.1.0"
+
 "@humanwhocodes/config-array@^0.13.0":
   version "0.13.0"
   resolved "https://registry.yarnpkg.com/@humanwhocodes/config-array/-/config-array-0.13.0.tgz#fb907624df3256d04b9aa2df50d7aa97ec648748"
@@ -6504,6 +6511,18 @@ jake@^10.8.5:
     chalk "^4.0.2"
     filelist "^1.0.4"
     minimatch "^3.1.2"
+
+javascript-stringify@2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/javascript-stringify/-/javascript-stringify-2.1.0.tgz#27c76539be14d8bd128219a2d731b09337904e79"
+  integrity sha512-JVAfqNPTvNq3sB/VHQJAFxN/sPgKnsKrCwyRt15zwNCdrMMJDdcEOdubuy+DuJYYdm0ox1J4uzEuYKkN+9yhVg==
+
+jest-auto-spies@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/jest-auto-spies/-/jest-auto-spies-3.0.0.tgz#29ebff558880d8a5f691c5c9a5e14e6bbf834b81"
+  integrity sha512-8CAszt3ngbL0fRZ2uOUPeduVJ7AV2VCnwWDh3f5aysdUlWiLw1tVgn70YapSdskDAW7w0UIYlbjIlYnt79c9Zw==
+  dependencies:
+    "@hirez_io/auto-spies-core" "3.0.0"
 
 jest-changed-files@30.0.2:
   version "30.0.2"
