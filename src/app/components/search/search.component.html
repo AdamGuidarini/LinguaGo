@@ -1,13 +1,19 @@
-<mat-card style="padding: 10px;" fxLayout="column">
-    <div fxLayout="row">
-        <mat-form-field appearance="outline" style="padding-right: 5px;">
+<mat-card style="margin: 5px; padding: 5px;">
+    <div>
+        <mat-form-field appearance="outline">
             <mat-label>Source</mat-label>
             <mat-select>
+                <mat-option *ngFor="let lang of languages$ | async" [value]="lang.code">
+                    {{ lang.name }}
+                </mat-option>
             </mat-select>
         </mat-form-field>
-        <mat-form-field appearance="outline" style="padding-left: 5px;">
+        <mat-form-field appearance="outline">
             <mat-label>Target</mat-label>
             <mat-select>
+                <mat-option *ngFor="let lang of languages$ | async" [value]="lang.code">
+                    {{ lang.name }}
+                </mat-option>
             </mat-select>
         </mat-form-field>
     </div>
