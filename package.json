@@ -2,8 +2,8 @@
   "name": "lexi-go",
   "version": "0.0.0",
   "scripts": {
-    "build": "ng build --aot && npx web-ext build -s ./dist/lexi-go/browser --overwrite-dest",
-    "start:firefox": "web-ext run --devtools --source-dir ./dist/lexi-go/browser",
+    "build": "ng build --aot && npx web-ext build -s ./dist/lexi-go/browser -o",
+    "start:firefox": "web-ext run -f --devtools -s ./dist/lexi-go/browser",
     "test": "npx jest"
   },
   "jest": {
@@ -11,12 +11,6 @@
     "setupFilesAfterEnv": [
       "./setup-jest.ts"
     ]
-  },
-  "web-ext": {
-    "manifest": "src/manifest.json",
-    "name": "LexiGo",
-    "version": "1.0",
-    "contentScripts": "src/app/app.component.ts"
   },
   "private": true,
   "dependencies": {

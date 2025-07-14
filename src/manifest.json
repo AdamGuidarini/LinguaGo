@@ -3,7 +3,9 @@
   "name": "LexiGo",
   "version": "0.1",
   "description": "A brief description of my extension.",
-  "permissions": ["activeTab"],
+  "permissions": [
+    "activeTab"
+  ],
   "sidebar_action": {
     "default_panel": "index.html",
     "default_icon": {

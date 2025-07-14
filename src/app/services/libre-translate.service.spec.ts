@@ -1,16 +1,54 @@
-import { TestBed } from '@angular/core/testing';
-
+import { HttpClient } from '@angular/common/http';
+import { createSpyFromClass } from 'jest-auto-spies';
+import { of } from 'rxjs';
 import { LibreTranslateService } from './libre-translate.service';
+
+const mockHttpClient = createSpyFromClass(HttpClient);
 
 describe('LibreTranslateService', () => {
   let service: LibreTranslateService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
-    service = TestBed.inject(LibreTranslateService);
+    service = new LibreTranslateService(mockHttpClient);
   });
 
   it('should be created', () => {
     expect(service).toBeTruthy();
+  });
+
+  describe('getLanguages method', () => {
+    it('should get all languages', () => {
+      const langList = [
+        { name: 'Foo', code: 'bar', targets: [] }
+      ];
+
+      mockHttpClient.get.mockReturnValue(
+        of(langList)
+      );
+
+      service.getLanguages().subscribe(
+        (langs) => expect(langs).toBe(langList)
+      )
+    });
+  });
+
+  describe('translate method', () => {
+    it('should send a translation request', (done) => {
+      mockHttpClient.post.mockReturnValue(
+        of({ translatedText: 'Hola, mi amigo!' })
+      )
+
+      service.translate(
+        'en', 'es', 'Hello, my friend!'
+      ).subscribe(
+        (res) => {
+          expect(res.translatedText).toBe(
+            'Hola, mi amigo!'
+          );
+
+          done();
+        }
+      );
+    });
   });
 });

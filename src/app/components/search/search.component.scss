@@ -1,3 +1,50 @@
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
 mat-form-field {
     width: 100%;
+}
+
+select {
+    background-color: transparent;
+    border: none;
+    padding: 0 1em 0 0;
+    margin: 0;
+    width: 100%;
+    font-family: inherit;
+    font-size: inherit;
+    cursor: inherit;
+    line-height: inherit;
+    outline: none;
+}
+
+.select {
+    width: 100%;
+    min-width: 15ch;
+    max-width: 30ch;
+    border: 1px solid #777;
+    border-radius: 0.25em;
+    padding: 0.25em 0.5em;
+    font-size: 1.25rem;
+    cursor: pointer;
+    line-height: 1.1;
+    background-color: #fff;
+    background-image: linear-gradient(to top, #f9f9f9, #fff 33%);
+    display: grid;
+    grid-template-areas: "select";
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.translate-button {
+    background-color: #2278e8;
+    border-radius: 5px;
+    color: #fff;
+    font-weight: 600;
+    border-color: #2278e8;
+    padding: 5px;
+    text-align: center;
 }

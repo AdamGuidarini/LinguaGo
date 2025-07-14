@@ -11,7 +11,7 @@ export class LibreTranslateService {
     private httpClient: HttpClient
   ) { }
 
-  private readonly baseUrl = 'https://libretranslate.com';
+  private readonly baseUrl = 'https://translate.flossboxin.org.in'; //'https://libretranslate.com';
 
   getLanguages(): Observable<ILibreLanguage[]> {
     return this.httpClient.get<ILibreLanguage[]>(
@@ -29,6 +29,6 @@ export class LibreTranslateService {
     return this.httpClient.post<ILibreTranslation>(
       `${this.baseUrl}/translate`,
       body
-    )
+    );
   }
 }

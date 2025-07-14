@@ -1,23 +1,29 @@
-<mat-card style="margin: 5px; padding: 5px;">
-    <div>
-        <mat-form-field appearance="outline">
-            <mat-label>Source</mat-label>
-            <mat-select>
-                <mat-option *ngFor="let lang of languages$ | async" [value]="lang.code">
+<mat-card *ngIf="vm$ | async as vm" style="margin: 5px; padding: 5px;">
+    <div fxLayout="column" fxLayoutAlign="space-around center">
+        <div class="select">
+            <select [value]="vm.source">
+                <option (click)="sourceSubject.next('auto')" value="auto">Auto</option>
+                <option *ngFor="let lang of vm.languages" (click)="sourceSubject.next(lang.code)" [value]="lang.code">
                     {{ lang.name }}
-                </mat-option>
-            </mat-select>
-        </mat-form-field>
-        <mat-form-field appearance="outline">
-            <mat-label>Target</mat-label>
-            <mat-select>
-                <mat-option *ngFor="let lang of languages$ | async" [value]="lang.code">
+                </option>
+            </select>
+        </div>
+        <div class="select">
+            <select [value]="vm.target">
+                <option style="display:none"></option>
+                <option *ngFor="let lang of vm.languages" (click)="targetSubject.next(lang.code)" [value]="lang.code">
                     {{ lang.name }}
-                </mat-option>
-            </mat-select>
-        </mat-form-field>
+                </option>
+            </select>
+        </div>
     </div>
-    <mat-form-field appearance="outline">
-        <input matInput type="text" />
+    <mat-form-field appearance="outline" >
+         <textarea matInput minRows="5" [(ngModel)]="textToTranslate"></textarea>
     </mat-form-field>
+    <button 
+        class="translate-button"
+        (click)="translateSubject.next()"
+        [disabled]="!(vm.source || vm.target || textToTranslate)">
+        Translate
+    </button>
 </mat-card>
