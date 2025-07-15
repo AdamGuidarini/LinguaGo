@@ -59,7 +59,6 @@ export class SearchComponent {
   translateSubject = new Subject<void>();
   translate$ = this.translateSubject.pipe(
     withLatestFrom(this.source$, this.target$),
-    tap(([_, source, target]) => console.log(source, target)),
     filter(([_, source, target]) => !!source && !!target && this.textToTranslate.length > 0),
     switchMap(
       ([__dirname, source, target]) => this.apertiumService.translate(source, target, this.textToTranslate)

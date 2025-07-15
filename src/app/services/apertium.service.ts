@@ -44,7 +44,7 @@ export class ApertiumService {
 
   getLanguageNames(codes: string[], locale: string = 'en'): Observable<IApertiumLanguageNames> {
     return this.httpClient.get<IApertiumLanguageNames>(
-      `${this.baseUrl}/listLanguageNames?locale=${locale}&languages=${codes.join('+')}`
+      `${this.baseUrl}/listLanguageNames?locale=${locale}${codes.length > 0 ? '&languages=' : ''}${codes.join('+')}`
     )
   }
 
