@@ -63,10 +63,15 @@ export class SearchComponent {
     switchMap(
       ([__dirname, source, target]) => this.apertiumService.translate(source, target, this.textToTranslate)
         .pipe(
-          tap(res => console.log(res))
+          tap((res) => this.translationSubject.next(res.responseData.translatedText))
         )
     ),
     startWith(null)
+  );
+
+  translationSubject = new Subject<string>();
+  translation$ = this.translationSubject.pipe(
+    startWith('')
   );
 
   vm$ = combineLatest([
@@ -75,19 +80,22 @@ export class SearchComponent {
     this.source$,
     this.target$,
     this.translate$,
+    this.translation$
   ]).pipe(
     map(([
       languages,
       targetLangs,
       source,
       target,
-      translate
+      translate,
+      translation
     ]) => ({
       languages,
       targetLangs,
       source,
       target,
-      translate
+      translate,
+      translation
     }))
   );
 }

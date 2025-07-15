@@ -17,12 +17,13 @@
             </select>
         </div>
     </div>
-    <mat-form-field appearance="outline" >
-         <textarea matInput minRows="5" [(ngModel)]="textToTranslate"></textarea>
+    <mat-form-field appearance="outline">
+        <textarea matInput minRows="5" [(ngModel)]="textToTranslate"></textarea>
     </mat-form-field>
-    <button 
-        class="translate-button"
-        (click)="translateSubject.next()"
+    <mat-form-field appearance="outline">
+        <textarea matInput minRows="5" readonly="true" style="caret-color: transparent;">{{ vm.translation }}</textarea>
+    </mat-form-field>
+    <button class="translate-button" (click)="translateSubject.next()"
         [disabled]="!(vm.source || vm.target || textToTranslate)">
         Translate
     </button>

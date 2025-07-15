@@ -1,0 +1,9 @@
+::ng-deep .mdc-tab-indicator--active {
+    font-weight: 650 !important;
+    color: #2278e8 !important;
+    border-bottom: 50px;
+}
+
+::ng-deep mat-ink-bar {
+    border-width: 20px !important;
+}

@@ -5,7 +5,7 @@ export interface IApertiumResponse<T> {
 }
 
 export interface IApertiumTranslationRepsonse {
-    translateText: string;
+    translatedText: string;
 }
 
 export interface IApertiumLanguageNames {
