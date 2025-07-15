@@ -1,23 +1,20 @@
 import { createSpyFromClass } from 'jest-auto-spies';
 import { of } from 'rxjs';
 import { ApertiumService } from '../../services/apertium.service';
-import { LibreTranslateService } from '../../services/libre-translate.service';
 import { SearchComponent } from './search.component';
 
-const mockLibreTranslateService = createSpyFromClass(LibreTranslateService);
 const mockApertiumService = createSpyFromClass(ApertiumService);
-const langList = [{ name: 'Foo', code: 'fo', targets: [] }];
+const langList = [{ name: 'Foo', code: 'fo', pairsWith: [] }];
 
 describe('SearchComponent', () => {
   let component: SearchComponent;
 
   beforeEach(async () => {
-    mockLibreTranslateService.getLanguages.mockReturnValue(
+    mockApertiumService.getLanguages.mockReturnValue(
       of(langList)
     );
 
     component = new SearchComponent(
-      mockLibreTranslateService,
       mockApertiumService
     );
   });

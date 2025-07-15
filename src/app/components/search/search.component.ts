@@ -5,9 +5,8 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { BehaviorSubject, combineLatest, filter, map, startWith, Subject, switchMap, tap, withLatestFrom } from 'rxjs';
+import { BehaviorSubject, combineLatest, filter, map, share, startWith, Subject, switchMap, tap, withLatestFrom } from 'rxjs';
 import { ApertiumService } from '../../services/apertium.service';
-import { LibreTranslateService } from '../../services/libre-translate.service';
 
 @Component({
   selector: 'app-search',
@@ -25,20 +24,14 @@ import { LibreTranslateService } from '../../services/libre-translate.service';
 })
 export class SearchComponent {
   constructor(
-    private libreTranslateService: LibreTranslateService,
     private apertiumService: ApertiumService
   ) { }
 
   textToTranslate: string = '';
 
-  // languages$: Observable<ILibreLanguage[]> = this.libreTranslateService
-  //   .getLanguages()
-  //   .pipe(
-  //     startWith([])
-  //   );
-
-  languages$ = this.apertiumService.getLanguagePairs().pipe(
+  languages$ = this.apertiumService.getLanguages().pipe(
     map((langs) => langs.filter((l) => !!l.name)),
+    share(),
     startWith([])
   );
 
@@ -48,9 +41,25 @@ export class SearchComponent {
   targetSubject = new BehaviorSubject<string>('');
   target$ = this.targetSubject.pipe();
 
+  targetLanguages$ = combineLatest(
+    [this.languages$, this.source$, this.target$]
+  ).pipe(
+    map(([languages, source, target]) => {
+      const targetLangs = source === 'auto' ? languages : languages.filter((l) => l.pairsWith.includes(source));
+
+      if (!targetLangs.findIndex((tl) => tl.code === target)) {
+        this.targetSubject.next('');
+      }
+
+      return targetLangs;
+    }),
+    startWith([])
+  );
+
   translateSubject = new Subject<void>();
   translate$ = this.translateSubject.pipe(
     withLatestFrom(this.source$, this.target$),
+    tap(([_, source, target]) => console.log(source, target)),
     filter(([_, source, target]) => !!source && !!target && this.textToTranslate.length > 0),
     switchMap(
       ([__dirname, source, target]) => this.apertiumService.translate(source, target, this.textToTranslate)
@@ -63,17 +72,20 @@ export class SearchComponent {
 
   vm$ = combineLatest([
     this.languages$,
+    this.targetLanguages$,
     this.source$,
     this.target$,
     this.translate$,
   ]).pipe(
     map(([
       languages,
+      targetLangs,
       source,
       target,
       translate
     ]) => ({
       languages,
+      targetLangs,
       source,
       target,
       translate
