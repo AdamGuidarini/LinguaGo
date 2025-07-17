@@ -2,20 +2,26 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ILibreLanguage, ILibreRequest, ILibreTranslation } from '../interfaces/libre-translate-interfaces';
+import { SettingsService } from './settings.service';
 
+
+/**
+ * A service to allow translations through the LibreTranslate open source translator.
+ * 
+ * For more information: https://libretranslate.com/
+ */
 @Injectable({
   providedIn: 'root'
 })
 export class LibreTranslateService {
   constructor(
-    private httpClient: HttpClient
+    private httpClient: HttpClient,
+    private settingsService: SettingsService
   ) { }
-
-  private readonly baseUrl = 'https://translate.flossboxin.org.in'; //'https://libretranslate.com';
 
   getLanguages(): Observable<ILibreLanguage[]> {
     return this.httpClient.get<ILibreLanguage[]>(
-      `${this.baseUrl}/languages`
+      `${this.settingsService.getSettings().libreTranslateUrl}/languages`
     );
   }
 
@@ -27,7 +33,7 @@ export class LibreTranslateService {
     }
 
     return this.httpClient.post<ILibreTranslation>(
-      `${this.baseUrl}/translate`,
+      `${this.settingsService.getSettings().libreTranslateUrl}/translate`,
       body
     );
   }

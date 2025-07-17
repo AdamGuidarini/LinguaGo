@@ -1,0 +1,12 @@
+mat-card mat-label {
+    font-weight: 550;
+}
+
+mat-card {
+    margin: 5px;
+    padding: 5px;
+}
+
+::ng-deep .mdc-radio {
+    color: --accent-color;
+}

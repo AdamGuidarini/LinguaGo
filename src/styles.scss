@@ -1,5 +1,9 @@
 /* You can add global styles to this file, and also import other style files */
 
+:root {
+    --accent-color: #2278e8;
+}
+
 html,
 body {
     height: 100%;
@@ -8,8 +12,4 @@ body {
 body {
     margin: 0;
     font-family: Roboto, "Helvetica Neue", sans-serif;
-}
-
-mat-card {
-    box-shadow: 15px;
 }

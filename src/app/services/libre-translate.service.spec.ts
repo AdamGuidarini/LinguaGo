@@ -2,14 +2,23 @@ import { HttpClient } from '@angular/common/http';
 import { createSpyFromClass } from 'jest-auto-spies';
 import { of } from 'rxjs';
 import { LibreTranslateService } from './libre-translate.service';
+import { SettingsService } from './settings.service';
 
 const mockHttpClient = createSpyFromClass(HttpClient);
+const mockSettingsService = createSpyFromClass(SettingsService);
 
 describe('LibreTranslateService', () => {
   let service: LibreTranslateService;
 
   beforeEach(() => {
-    service = new LibreTranslateService(mockHttpClient);
+    mockSettingsService.getSettings.mockReturnValue(
+      { translator: 'apertium', libreTranslateUrl: 'https://libretranslate.com' }
+    );
+
+    service = new LibreTranslateService(
+      mockHttpClient,
+      mockSettingsService
+    );
   });
 
   it('should be created', () => {
