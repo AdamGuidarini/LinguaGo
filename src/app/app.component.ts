@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { MatTabsModule } from '@angular/material/tabs';
 import { RouterOutlet } from '@angular/router';
 import { SearchComponent } from './components/search/search.component';
+import { HistoryComponent } from './components/history/history.component';
+import { SettingsComponent } from './components/settings/settings.component';
 
 @Component({
   selector: 'app-root',
@@ -9,6 +11,8 @@ import { SearchComponent } from './components/search/search.component';
   imports: [
     RouterOutlet,
     SearchComponent,
+    HistoryComponent,
+    SettingsComponent,
     MatTabsModule
   ],
   templateUrl: './app.component.html',
