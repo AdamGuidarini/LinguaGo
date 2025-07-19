@@ -9,20 +9,23 @@ mat-card {
 }
 
 ::ng-deep .mdc-radio {
-    color: #2278e8;
+    color: var(--accent-color);
 }
 
 button {
-    background-color: #2278e8;
+    background-color: var(--accent-color);
     border-radius: 5px;
     color: #fff;
     font-weight: 600;
-    border-color: #2278e8;
+    border-color: var(--accent-color);
     padding: 5px;
     text-align: center;
 }
 
+::ng-deep .mdc-button__label {
+    color: #fff;
+}
+
 .delete-button {
     background-color: #ff1f1f !important;
-    border-color: #ff1f1f !important;
 }

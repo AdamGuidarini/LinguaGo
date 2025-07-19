@@ -40,11 +40,11 @@ select {
 }
 
 .translate-button {
-    background-color: #2278e8;
+    background-color: var(--accent-color);
     border-radius: 5px;
     color: #fff;
     font-weight: 600;
-    border-color: #2278e8;
+    border-color: var(--accent-color);
     padding: 5px;
     text-align: center;
 }

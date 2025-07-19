@@ -1,6 +1,6 @@
 ::ng-deep .mdc-tab-indicator--active {
     font-weight: 650 !important;
-    color: #2278e8 !important;
+    color: var(--accent-color) !important;
     border-bottom: 50px;
 }
 
