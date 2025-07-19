@@ -26,7 +26,7 @@ describe('ApertiumService', () => {
           { sourceLanguage: 'spa', targetLanguage: 'eng' },
           { sourceLanguage: 'spa', targetLanguage: 'it' }
         ]
-      }))
+      }));
 
       service.getLanguages().subscribe(
         (res) => {
@@ -77,7 +77,7 @@ describe('ApertiumService', () => {
 
       service.detectLanguage('drink water').subscribe(
         (res) => {
-          expect(res).toStrictEqual({ 'eng': 0.5, 'nld': '0.5' })
+          expect(res).toStrictEqual({ 'eng': 0.5, 'nld': '0.5' });
           done();
         }
       );
@@ -101,5 +101,5 @@ describe('ApertiumService', () => {
         }
       );
     });
-  })
+  });
 });

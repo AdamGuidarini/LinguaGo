@@ -30,7 +30,7 @@ export class LibreTranslateService {
       q: text,
       source,
       target
-    }
+    };
 
     return this.httpClient.post<ILibreTranslation>(
       `${this.settingsService.getSettings().libreTranslateUrl}/translate`,

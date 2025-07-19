@@ -23,7 +23,7 @@
     <mat-form-field appearance="outline">
         <textarea matInput minRows="5" readonly="true" style="caret-color: transparent;">{{ vm.translation }}</textarea>
     </mat-form-field>
-    <button class="translate-button" (click)="translateSubject.next()"
+    <button mat-button class="translate-button" (click)="translateSubject.next()"
         [disabled]="!(vm.source || vm.target || textToTranslate)">
         Translate
     </button>

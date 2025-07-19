@@ -1,20 +1,23 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { createSpyFromClass } from 'jest-auto-spies';
 import { SettingsComponent } from './settings.component';
+import { SettingsService } from '../../services/settings.service';
+import { Transaltor } from '../../interfaces/settings-interfaces';
+
+const mockSettingsService = createSpyFromClass(SettingsService);
 
 describe('SettingsComponent', () => {
   let component: SettingsComponent;
-  let fixture: ComponentFixture<SettingsComponent>;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [SettingsComponent]
-    })
-    .compileComponents();
-    
-    fixture = TestBed.createComponent(SettingsComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    mockSettingsService.getSettings.mockReturnValue(
+      {
+        translator: Transaltor.APERTIUM
+      }
+    );
+
+    component = new SettingsComponent(
+      mockSettingsService
+    );
   });
 
   it('should create', () => {

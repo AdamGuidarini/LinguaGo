@@ -1,8 +1,7 @@
 import { createSpyFromClass } from 'jest-auto-spies';
-import { firstValueFrom, lastValueFrom, of, take } from 'rxjs';
+import { firstValueFrom, of } from 'rxjs';
 import { ApertiumService } from '../../services/apertium.service';
 import { SearchComponent } from './search.component';
-import { tick } from '@angular/core/testing';
 
 const mockApertiumService = createSpyFromClass(ApertiumService);
 const langList = [
@@ -35,7 +34,7 @@ describe('SearchComponent', () => {
           expect(langs).toStrictEqual(langList);
           done();
         }
-      )
+      );
     });
   });
 

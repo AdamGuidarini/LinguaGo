@@ -27,7 +27,7 @@ export class ApertiumService {
         response.responseData.forEach((p) => prs.add(p.sourceLanguage));
 
         return this.getLanguageNames(Array.from(prs.values())).pipe(
-          map((names) => ({ pairs: response.responseData, names })))
+          map((names) => ({ pairs: response.responseData, names })));
       }
       ),
       map(({ pairs, names }) => Array.from(prs.values()).map(
@@ -42,10 +42,10 @@ export class ApertiumService {
     );
   }
 
-  getLanguageNames(codes: string[], locale: string = 'en'): Observable<IApertiumLanguageNames> {
+  getLanguageNames(codes: string[], locale = 'en'): Observable<IApertiumLanguageNames> {
     return this.httpClient.get<IApertiumLanguageNames>(
       `${this.baseUrl}/listLanguageNames?locale=${locale}${codes.length > 0 ? '&languages=' : ''}${codes.join('+')}`
-    )
+    );
   }
 
   detectLanguage(text: string): Observable<IApertiumIdentification> {

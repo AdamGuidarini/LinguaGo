@@ -1,11 +1,36 @@
-<mat-card>
-    <mat-label>Translators</mat-label>
-    <mat-radio-group fxLayout="column">
-        <mat-radio-button value="apertium">Apertium</mat-radio-button>
-        <mat-radio-button value="libretranslate">LibreTranslate</mat-radio-button>
-        <mat-radio-button value="Google">Google</mat-radio-button>
-    </mat-radio-group>
-</mat-card>
-<mat-card>
-    <mat-label>Data</mat-label>
-</mat-card>
+<div *ngIf="vm$ | async as vm">
+    <mat-card>
+        <mat-label style="padding-bottom: 0 !important;">Translators</mat-label>
+        <mat-radio-group fxLayout="column" (change)="selectedTranslatorSubject.next($event.value)"
+            [value]="vm.selectedTranslator">
+            <mat-radio-button value="apertium">Apertium</mat-radio-button>
+            <mat-radio-button value="libretranslate">LibreTranslate</mat-radio-button>
+            <mat-radio-button value="google">Google</mat-radio-button>
+        </mat-radio-group>
+    </mat-card>
+    <mat-card>
+        <mat-label>LibreTranslate Settings</mat-label>
+        <mat-form-field appearance="outline">
+            <mat-label>URL</mat-label>
+            <input matInput type="text" [disabled]="vm.selectedTranslator !== 'libretranslate'">
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Key</mat-label>
+            <input matInput type="text" [disabled]="vm.selectedTranslator !== 'libretranslate'">
+        </mat-form-field>
+    </mat-card>
+    <mat-card>
+        <mat-label>Data</mat-label>
+        <div fxLayout="column" fxLayoutGap="10px">
+            <button mat-button>
+                Import History
+            </button>
+            <button mat-button>
+                Export History
+            </button>
+            <button mat-button class="delete-button">
+                Delete History
+            </button>
+        </div>
+    </mat-card>
+</div>

@@ -1,6 +1,9 @@
+/* eslint-disable @angular-eslint/prefer-inject */
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -17,7 +20,10 @@ import { ApertiumService } from '../../services/apertium.service';
     MatSelectModule,
     MatCardModule,
     FormsModule,
-    CommonModule
+    CommonModule,
+    FlexLayoutModule,
+    MatButtonModule,
+    MatButtonModule
   ],
   templateUrl: './search.component.html',
   styleUrl: './search.component.scss'
@@ -27,7 +33,7 @@ export class SearchComponent {
     private apertiumService: ApertiumService
   ) { }
 
-  textToTranslate: string = '';
+  textToTranslate = '';
 
   languages$ = this.apertiumService.getLanguages().pipe(
     map((langs) => langs.filter((l) => !!l.name)),
@@ -59,9 +65,11 @@ export class SearchComponent {
   translateSubject = new Subject<void>();
   translate$ = this.translateSubject.pipe(
     withLatestFrom(this.source$, this.target$),
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     filter(([_, source, target]) => !!source && !!target && this.textToTranslate.length > 0),
     switchMap(
-      ([__dirname, source, target]) => this.apertiumService.translate(source, target, this.textToTranslate)
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      ([_, source, target]) => this.apertiumService.translate(source, target, this.textToTranslate)
         .pipe(
           tap((res) => this.translationSubject.next(res.responseData.translatedText))
         )

@@ -1,15 +1,12 @@
 import { Injectable, OnInit } from '@angular/core';
-import { ISettings } from '../interfaces/settings-interfaces';
+import { ISettings, Transaltor } from '../interfaces/settings-interfaces';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SettingsService implements OnInit {
-
-  constructor() { }
-
   private settings: ISettings = {
-    translator: 'apertium'
+    translator: Transaltor.APERTIUM
   };
 
   ngOnInit(): void {
@@ -17,6 +14,8 @@ export class SettingsService implements OnInit {
   }
 
   getSettings(): ISettings {
+    this.settings = JSON.parse(localStorage.getItem('settings') ?? '{}');
+
     return this.settings;
   }
 

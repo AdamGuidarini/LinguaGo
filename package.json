@@ -3,8 +3,10 @@
   "version": "0.0.0",
   "scripts": {
     "build": "ng build --aot && npx web-ext build -s ./dist/lexi-go/browser -o",
-    "start:firefox": "web-ext run -f --devtools -s ./dist/lexi-go/browser",
-    "test": "npx jest"
+    "start:firefox": "web-ext run -t firefox-desktop --devtools -s ./dist/lexi-go/browser",
+    "start:chromium": "web-ext run -t chromium --devtools -s ./dist/lexi-go/browser",
+    "test": "npx jest",
+    "lint": "ng lint"
   },
   "jest": {
     "preset": "jest-preset-angular",
@@ -33,11 +35,16 @@
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^17.2.1",
+    "@angular-eslint/builder": "20.1.1",
     "@angular/cli": "^17.2.1",
     "@angular/compiler-cli": "^17.2.0",
+    "@eslint/js": "^9.29.0",
     "@types/jest": "^30.0.0",
+    "angular-eslint": "20.1.1",
+    "eslint": "^9.29.0",
     "jest": "^30.0.4",
     "jest-preset-angular": "^14.6.0",
-    "typescript": "~5.3.2"
+    "typescript": "~5.3.2",
+    "typescript-eslint": "8.34.1"
   }
 }

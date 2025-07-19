@@ -8,9 +8,7 @@ export interface IApertiumTranslationRepsonse {
     translatedText: string;
 }
 
-export interface IApertiumLanguageNames {
-    [key: string]: string;
-}
+export type IApertiumLanguageNames = Record<string, string>;
 
 export interface IApertiumLanguageCode {
     sourceLanguage: string;
@@ -23,6 +21,4 @@ export interface IApertiumLanguage {
     pairsWith: string[];
 }
 
-export interface IApertiumIdentification {
-    [key: string]: number;
-}
+export type IApertiumIdentification = Record<string, number>;
