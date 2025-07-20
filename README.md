@@ -12,7 +12,7 @@ LexiGo is a browser extension created with Angular to make it easier to looks up
 
 Apertium is a free and open source machine translator hosted by developers themselves. It supports a wide vareity of language pairs and is the LexiGo's default translator
 
-See more: https://www.apertium.org/index.eng.html#?dir=eng-epo&q=
+See more: https://www.apertium.org/index.eng.html
 
 ### LibreTranslate
 

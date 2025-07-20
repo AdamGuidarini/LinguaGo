@@ -7,7 +7,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { BehaviorSubject, combineLatest, filter, map, Observable, of, startWith, Subject, switchMap, tap, withLatestFrom } from 'rxjs';
+import { BehaviorSubject, catchError, combineLatest, filter, map, Observable, of, startWith, Subject, switchMap, tap, withLatestFrom } from 'rxjs';
 import { ILanguage } from '../../interfaces/global-transation-interfaces';
 import { ISettings, Transaltor } from '../../interfaces/settings-interfaces';
 import { ApertiumService } from '../../services/apertium.service';
@@ -114,8 +114,12 @@ export class SearchComponent {
         }
 
         return translateFunc(source, target, this.textToTranslate).pipe(
-          // tap((res) => this.translationSubject.next(res.responseData.translatedText))
-          tap((res) => console.log(res))
+          tap((res) => console.log(res)),
+          catchError((err) => {
+            console.error(err);
+          
+            return '';
+          })
         );
     }),
     startWith(null)
