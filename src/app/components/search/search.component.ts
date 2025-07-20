@@ -97,11 +97,27 @@ export class SearchComponent {
     filter(([_, source, target]) => !!source && !!target && this.textToTranslate.length > 0),
     switchMap(
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      ([_, source, target]) => this.apertiumService.translate(source, target, this.textToTranslate)
-        .pipe(
-          tap((res) => this.translationSubject.next(res.responseData.translatedText))
-        )
-    ),
+      ([_, source, target, settings]) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        let translateFunc: (source: string, target: string, text: string) => Observable<any>;
+
+        switch (settings.translator) {
+          case Transaltor.GOOGLE:
+            translateFunc = this.googleTranslateService.translate;
+            break;
+          case Transaltor.LIBRETRANSLATE:
+            translateFunc = this.libreTranslateService.translate;
+            break;
+          case Transaltor.APERTIUM:
+          default:
+            translateFunc = this.apertiumService.translate;
+        }
+
+        return translateFunc(source, target, this.textToTranslate).pipe(
+          // tap((res) => this.translationSubject.next(res.responseData.translatedText))
+          tap((res) => console.log(res))
+        );
+    }),
     startWith(null)
   );
 
