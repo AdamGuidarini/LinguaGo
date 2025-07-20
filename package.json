@@ -2,11 +2,12 @@
   "name": "lexi-go",
   "version": "0.0.0",
   "scripts": {
-    "build": "ng build --aot && npx web-ext build -s ./dist/lexi-go/browser -o",
+    "build": "ng build --aot && npx webpack --config webpack.config.js && npx web-ext build -s ./dist/lexi-go/browser -o",
     "start:firefox": "web-ext run -t firefox-desktop --devtools -s ./dist/lexi-go/browser",
     "start:chromium": "web-ext run -t chromium --devtools -s ./dist/lexi-go/browser",
     "test": "npx jest",
-    "lint": "ng lint"
+    "lint": "ng lint",
+    "clean": "rm -r dist"
   },
   "jest": {
     "preset": "jest-preset-angular",
@@ -27,6 +28,7 @@
     "@angular/platform-browser": "^17.2.0",
     "@angular/platform-browser-dynamic": "^17.2.0",
     "@angular/router": "^17.2.0",
+    "@types/webextension-polyfill": "^0.12.3",
     "google-translate-api-x": "^10.7.2",
     "jest-auto-spies": "^3.0.0",
     "rxjs": "~7.8.0",
@@ -43,10 +45,14 @@
     "@types/jest": "^30.0.0",
     "@types/node": "^24.0.15",
     "angular-eslint": "20.1.1",
+    "copy-webpack-plugin": "^13.0.0",
     "eslint": "^9.29.0",
     "jest": "^30.0.4",
     "jest-preset-angular": "^14.6.0",
+    "ts-loader": "^9.5.2",
     "typescript": "~5.3.2",
-    "typescript-eslint": "8.34.1"
+    "typescript-eslint": "8.34.1",
+    "webextension-polyfill": "^0.12.0",
+    "webpack-cli": "^6.0.1"
   }
 }

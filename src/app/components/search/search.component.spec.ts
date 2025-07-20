@@ -2,8 +2,14 @@ import { createSpyFromClass } from 'jest-auto-spies';
 import { firstValueFrom, of } from 'rxjs';
 import { ApertiumService } from '../../services/apertium.service';
 import { SearchComponent } from './search.component';
+import { LibreTranslateService } from '../../services/libre-translate.service';
+import { GoogleTranslateService } from '../../services/google.service';
+import { SettingsService } from '../../services/settings.service';
 
 const mockApertiumService = createSpyFromClass(ApertiumService);
+const mockLibreTranslateService = createSpyFromClass(LibreTranslateService);
+const mockGoogleTranslateService = createSpyFromClass(GoogleTranslateService);
+const mockSettingsService = createSpyFromClass(SettingsService);
 const langList = [
   { code: 'it', name: 'Italian', pairsWith: ['spa'] },
   { code: 'eng', name: 'English', pairsWith: ['spa'] },
@@ -19,7 +25,10 @@ describe('SearchComponent', () => {
     );
 
     component = new SearchComponent(
-      mockApertiumService
+      mockApertiumService,
+      mockLibreTranslateService,
+      mockGoogleTranslateService,
+      mockSettingsService
     );
   });
 
@@ -66,7 +75,12 @@ describe('SearchComponent', () => {
 
   describe('targetLanguages$ stream', () => {
     it('should filter out languages the source cannot target', (done) => {
-      component = new SearchComponent(mockApertiumService);
+      component = new SearchComponent(
+        mockApertiumService,
+        mockLibreTranslateService,
+        mockGoogleTranslateService,
+        mockSettingsService
+      );
       component.languages$.subscribe();
 
       component.sourceSubject.next('eng');
@@ -82,7 +96,12 @@ describe('SearchComponent', () => {
     });
 
     it('set targetLanguages to languages if source is auto', (done) => {
-      component = new SearchComponent(mockApertiumService);
+      component = new SearchComponent(
+        mockApertiumService,
+        mockLibreTranslateService,
+        mockGoogleTranslateService,
+        mockSettingsService
+      );
       component.languages$.subscribe();
 
       component.targetSubject.next('nld');
