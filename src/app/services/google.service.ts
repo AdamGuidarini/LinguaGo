@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
-import { languages, singleTranslate } from 'google-translate-api-x';
-import { from } from 'rxjs';
-import { ILanguage } from '../interfaces/global-transation-interfaces';
+import { googleTranslateApi, languages } from 'google-translate-api-x';
+import { from, map, Observable } from 'rxjs';
+import Browser from 'webextension-polyfill';
+import { ITranslateMessage } from '../../extension-actions/interfaces/translate-message-interfaces';
+import { ILanguage, ITranslation } from '../interfaces/global-transation-interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -15,10 +17,26 @@ export class GoogleTranslateService {
         code: key,
         name: langObj[key]
       })
-    );
+      );
   }
 
-  translate(source: string, target: string, text: string) {
-    return from(singleTranslate(text, { from: source, to: target, autoCorrect: true }));
+  translate(source: string, target: string, text: string): Observable<ITranslation> {
+    return from(
+      Browser.runtime.sendMessage(
+        { source, target, text, service: 'GoogleTranslateService' } as ITranslateMessage
+      )
+    ).pipe(
+      map((res) => {
+        const result = res as { success: boolean, result: googleTranslateApi.TranslationResponse, error: unknown };
+
+        return {
+          source,
+          target,
+          result: result.result.text,
+          original: text,
+          confidence: (result.result.raw as unknown as { confidence: number })?.confidence
+        };
+      })
+    );
   }
 }

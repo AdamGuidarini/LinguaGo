@@ -78,7 +78,7 @@ export class SearchComponent {
 
         return langs;
       }
-      
+
       const targetLangs = source === 'auto' ? languages : languages.filter((l) => l.targets?.includes(source));
 
       if (!targetLangs.findIndex((tl) => tl.code === target)) {
@@ -117,11 +117,11 @@ export class SearchComponent {
           tap((res) => console.log(res)),
           catchError((err) => {
             console.error(err);
-          
+
             return '';
           })
         );
-    }),
+      }),
     startWith(null)
   );
 

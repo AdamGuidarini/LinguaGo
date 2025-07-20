@@ -4,7 +4,8 @@
   "version": "0.1",
   "description": "A brief description of my extension.",
   "permissions": [
-    "activeTab"
+    "activeTab",
+    "https://translate.google.com/*"
   ],
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
   "sidebar_action": {

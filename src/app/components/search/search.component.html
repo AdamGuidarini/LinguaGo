@@ -2,6 +2,7 @@
     <div fxLayout="column" fxLayoutAlign="space-around center">
         <div class="select">
             <select [value]="vm.source" #s (change)="sourceSubject.next(s.value)">
+                <option *ngIf="vm.targetLangs && vm.targetLangs.length > 0" style="display:none"></option>
                 <option *ngFor="let lang of vm.languages" [value]="lang.code">
                     {{ lang.name }}
                 </option>
