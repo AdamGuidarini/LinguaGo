@@ -3521,6 +3521,13 @@
   dependencies:
     undici-types "~7.8.0"
 
+"@types/node@^24.0.15":
+  version "24.0.15"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-24.0.15.tgz#f34fbc973e7d64217106e0c59ed8761e6b51381e"
+  integrity sha512-oaeTSbCef7U/z7rDeJA138xpG3NuKc64/rZ2qmUFkFJmnMsAPaluIifqyWd8hSSMxyP9oie3dLAqYPblag9KgA==
+  dependencies:
+    undici-types "~7.8.0"
+
 "@types/qs@*":
   version "6.14.0"
   resolved "https://registry.yarnpkg.com/@types/qs/-/qs-6.14.0.tgz#d8b60cecf62f2db0fb68e5e006077b9178b85de5"
@@ -6309,6 +6316,11 @@ globby@^13.1.1:
     ignore "^5.2.4"
     merge2 "^1.4.1"
     slash "^4.0.0"
+
+google-translate-api-x@^10.7.2:
+  version "10.7.2"
+  resolved "https://registry.yarnpkg.com/google-translate-api-x/-/google-translate-api-x-10.7.2.tgz#bce2643bb296a37bbbee5970e7e0d28fa0dce880"
+  integrity sha512-GSmbvGMcnULaih2NFgD4Y6840DLAMot90mLWgwoB+FG/QpetyZkFrZkxop8ZxXgOAQXGskFOhGJady8nA6ZJ2g==
 
 gopd@^1.0.1, gopd@^1.2.0:
   version "1.2.0"

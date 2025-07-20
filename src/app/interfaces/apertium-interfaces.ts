@@ -15,10 +15,4 @@ export interface IApertiumLanguageCode {
     targetLanguage: string;
 }
 
-export interface IApertiumLanguage {
-    code: string;
-    name: string;
-    pairsWith: string[];
-}
-
 export type IApertiumIdentification = Record<string, number>;

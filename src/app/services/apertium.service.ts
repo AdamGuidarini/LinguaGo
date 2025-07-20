@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, Observable, switchMap } from 'rxjs';
-import { IApertiumIdentification, IApertiumLanguage, IApertiumLanguageCode, IApertiumLanguageNames, IApertiumResponse, IApertiumTranslationRepsonse } from '../interfaces/apertium-interfaces';
+import { IApertiumIdentification, IApertiumLanguageCode, IApertiumLanguageNames, IApertiumResponse, IApertiumTranslationRepsonse } from '../interfaces/apertium-interfaces';
+import { ILanguage } from '../interfaces/global-transation-interfaces';
 
 /**
  * Serivce using Aprtium APY for translations.
@@ -19,7 +20,7 @@ export class ApertiumService {
 
   private readonly baseUrl = 'https://beta.apertium.org/apy';
 
-  getLanguages(): Observable<IApertiumLanguage[]> {
+  getLanguages(): Observable<ILanguage[]> {
     const prs = new Set<string>();
 
     return this.httpClient.get<IApertiumResponse<IApertiumLanguageCode[]>>(`${this.baseUrl}/listPairs`).pipe(
@@ -34,7 +35,7 @@ export class ApertiumService {
         (p) => ({
           code: p,
           name: names[p],
-          pairsWith: Object.entries(pairs)
+          targets: Object.entries(pairs)
             .filter((entry) => entry[1].targetLanguage === p)
             .map((entry) => entry[1].sourceLanguage)
         }))

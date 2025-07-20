@@ -1,9 +1,3 @@
-export interface ILibreLanguage {
-    code: string;
-    name: string;
-    targets: string[];
-}
-
 export interface ILibreTranslation {
     translatedText: string;
     alternatives?: string[];

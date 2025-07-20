@@ -1,4 +1,3 @@
-/* eslint-disable @angular-eslint/prefer-inject */
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -8,8 +7,13 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { BehaviorSubject, combineLatest, filter, map, share, startWith, Subject, switchMap, tap, withLatestFrom } from 'rxjs';
+import { BehaviorSubject, combineLatest, filter, map, Observable, of, startWith, Subject, switchMap, tap, withLatestFrom } from 'rxjs';
+import { ILanguage } from '../../interfaces/global-transation-interfaces';
+import { ISettings, Transaltor } from '../../interfaces/settings-interfaces';
 import { ApertiumService } from '../../services/apertium.service';
+import { GoogleTranslateService } from '../../services/google.service';
+import { LibreTranslateService } from '../../services/libre-translate.service';
+import { SettingsService } from '../../services/settings.service';
 
 @Component({
   selector: 'app-search',
@@ -30,28 +34,52 @@ import { ApertiumService } from '../../services/apertium.service';
 })
 export class SearchComponent {
   constructor(
-    private apertiumService: ApertiumService
+    private apertiumService: ApertiumService,
+    private libreTranslateService: LibreTranslateService,
+    private googleTranslateService: GoogleTranslateService,
+    private settingsService: SettingsService
   ) { }
 
   textToTranslate = '';
 
-  languages$ = this.apertiumService.getLanguages().pipe(
-    map((langs) => langs.filter((l) => !!l.name)),
-    share(),
+  settingsSubject = new BehaviorSubject<ISettings>(this.settingsService.getSettings());
+  settings$ = this.settingsSubject.pipe();
+
+  languages$: Observable<ILanguage[]> = this.settings$.pipe(
+    switchMap((settings) => {
+      switch (settings.translator) {
+        case Transaltor.GOOGLE:
+          return of(this.googleTranslateService.getLanguages());
+        case Transaltor.LIBRETRANSLATE:
+          return this.libreTranslateService.getLanguages();
+        case Transaltor.APERTIUM:
+        default:
+          return this.apertiumService.getLanguages().pipe(
+            map((langs) => langs.filter((lang) => !!lang.name))
+          );
+      }
+    }),
     startWith([])
   );
 
-  sourceSubject = new BehaviorSubject<string>('auto');
+  sourceSubject = new BehaviorSubject<string>('');
   source$ = this.sourceSubject.pipe();
 
   targetSubject = new BehaviorSubject<string>('');
   target$ = this.targetSubject.pipe();
 
-  targetLanguages$ = combineLatest(
-    [this.languages$, this.source$, this.target$]
+  targetLanguages$: Observable<ILanguage[]> = combineLatest(
+    [this.languages$, this.source$, this.target$, this.settings$]
   ).pipe(
-    map(([languages, source, target]) => {
-      const targetLangs = source === 'auto' ? languages : languages.filter((l) => l.pairsWith.includes(source));
+    map(([languages, source, target, settings]) => {
+      if (settings.translator === Transaltor.GOOGLE) {
+        const langs = [...languages];
+        langs.shift();
+
+        return langs;
+      }
+      
+      const targetLangs = source === 'auto' ? languages : languages.filter((l) => l.targets?.includes(source));
 
       if (!targetLangs.findIndex((tl) => tl.code === target)) {
         this.targetSubject.next('');
@@ -64,7 +92,7 @@ export class SearchComponent {
 
   translateSubject = new Subject<void>();
   translate$ = this.translateSubject.pipe(
-    withLatestFrom(this.source$, this.target$),
+    withLatestFrom(this.source$, this.target$, this.settings$),
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     filter(([_, source, target]) => !!source && !!target && this.textToTranslate.length > 0),
     switchMap(

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatTabsModule } from '@angular/material/tabs';
 import { RouterOutlet } from '@angular/router';
 import { HistoryComponent } from './components/history/history.component';
