@@ -1,6 +1,6 @@
 import { GoogleTranslateService } from './google.service';
 
-jest.doMock('Browser');
+jest.mock('webextension-polyfill');
 
 describe('GoogleService', () => {
   let service: GoogleTranslateService;

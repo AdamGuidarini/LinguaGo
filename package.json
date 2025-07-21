@@ -12,6 +12,9 @@
   "jest": {
     "preset": "jest-preset-angular",
     "testEnvironment": "node",
+    "moduleNameMapper": {
+      "^webextension-polyfill$": "<rootDir>/src/__mocks__/browser.ts"
+    },
     "setupFilesAfterEnv": [
       "./setup-jest.ts"
     ],

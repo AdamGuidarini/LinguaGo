@@ -5,15 +5,19 @@ import { SearchComponent } from './search.component';
 import { LibreTranslateService } from '../../services/libre-translate.service';
 import { GoogleTranslateService } from '../../services/google.service';
 import { SettingsService } from '../../services/settings.service';
+import { Transaltor } from '../../interfaces/settings-interfaces';
+import { ILanguage } from '../../interfaces/global-transation-interfaces';
+
+jest.mock('webextension-polyfill');
 
 const mockApertiumService = createSpyFromClass(ApertiumService);
 const mockLibreTranslateService = createSpyFromClass(LibreTranslateService);
 const mockGoogleTranslateService = createSpyFromClass(GoogleTranslateService);
 const mockSettingsService = createSpyFromClass(SettingsService);
-const langList = [
-  { code: 'it', name: 'Italian', pairsWith: ['spa'] },
-  { code: 'eng', name: 'English', pairsWith: ['spa'] },
-  { code: 'spa', name: 'Spanish', pairsWith: ['it', 'eng'] }
+const langList: ILanguage[] = [
+  { code: 'it', name: 'Italian', targets: ['spa'] },
+  { code: 'eng', name: 'English', targets: ['spa'] },
+  { code: 'spa', name: 'Spanish', targets: ['it', 'eng'] }
 ];
 
 describe('SearchComponent', () => {
@@ -22,6 +26,10 @@ describe('SearchComponent', () => {
   beforeEach(async () => {
     mockApertiumService.getLanguages.mockReturnValue(
       of(langList)
+    );
+
+    mockSettingsService.getSettings.mockReturnValue(
+      of({ translator: Transaltor.APERTIUM })
     );
 
     component = new SearchComponent(
@@ -88,7 +96,7 @@ describe('SearchComponent', () => {
       component.targetLanguages$.subscribe(
         (res) => {
           expect(res).toStrictEqual([
-            { code: 'spa', name: 'Spanish', pairsWith: ['it', 'eng'] }
+            { code: 'spa', name: 'Spanish', targets: ['it', 'eng'] }
           ]);
           done();
         }
