@@ -19,5 +19,5 @@ import { SettingsComponent } from './components/settings/settings.component';
   styleUrl: './app.component.scss'
 })
 export class AppComponent {
-  title = 'LexiGo';
+  title = 'LinguaGo';
 }

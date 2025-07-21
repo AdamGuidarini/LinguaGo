@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "LexiGo": {
+    "LinguaGo": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -21,7 +21,7 @@
               "google-translate-api-x",
               "webextension-polyfill"
             ],
-            "outputPath": "dist/lexi-go",
+            "outputPath": "dist/lingua-go",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
@@ -72,10 +72,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "LexiGo:build:production"
+              "buildTarget": "LinguaGo:build:production"
             },
             "development": {
-              "buildTarget": "LexiGo:build:development"
+              "buildTarget": "LinguaGo:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -83,7 +83,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "buildTarget": "LexiGo:build"
+            "buildTarget": "LinguaGo:build"
           }
         },
         "lint": {

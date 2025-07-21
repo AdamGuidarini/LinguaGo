@@ -4,7 +4,7 @@ module.exports = {
   entry: './src/extension-actions/background.ts',
   output: {
     filename: 'background.js',
-    path: path.resolve(__dirname, 'dist/lexi-go/browser/extension-actions'),
+    path: path.resolve(__dirname, 'dist/lingua-go/browser/extension-actions'),
   },
   module: {
     rules: [

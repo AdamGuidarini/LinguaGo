@@ -12,6 +12,6 @@ describe('AppComponent', () => {
   });
 
   it('should set the title', () => {
-    expect(component.title).toBe('LexiGo');
+    expect(component.title).toBe('LinguaGo');
   });
 });
