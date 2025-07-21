@@ -32,9 +32,9 @@ describe('ApertiumService', () => {
         (res) => {
           expect(res).toStrictEqual(
             [
-              { code: 'it', name: 'Italian', pairsWith: ['spa'] },
-              { code: 'eng', name: 'English', pairsWith: ['spa'] },
-              { code: 'spa', name: 'Spanish', pairsWith: ['it', 'eng'] }
+              { code: 'it', name: 'Italian', targets: ['spa'] },
+              { code: 'eng', name: 'English', targets: ['spa'] },
+              { code: 'spa', name: 'Spanish', targets: ['it', 'eng'] }
             ]
           );
           done();

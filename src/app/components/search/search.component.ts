@@ -9,7 +9,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { BehaviorSubject, catchError, combineLatest, filter, map, Observable, of, startWith, Subject, switchMap, tap, withLatestFrom } from 'rxjs';
 import { ILanguage } from '../../interfaces/global-transation-interfaces';
-import { ISettings, Transaltor } from '../../interfaces/settings-interfaces';
+import { Transaltor } from '../../interfaces/settings-interfaces';
 import { ApertiumService } from '../../services/apertium.service';
 import { GoogleTranslateService } from '../../services/google.service';
 import { LibreTranslateService } from '../../services/libre-translate.service';
@@ -42,8 +42,7 @@ export class SearchComponent {
 
   textToTranslate = '';
 
-  settingsSubject = new BehaviorSubject<ISettings>(this.settingsService.getSettings());
-  settings$ = this.settingsSubject.pipe();
+  settings$ = this.settingsService.getSettings();
 
   languages$: Observable<ILanguage[]> = this.settings$.pipe(
     switchMap((settings) => {

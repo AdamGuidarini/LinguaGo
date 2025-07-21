@@ -1,22 +1,20 @@
-import { Injectable, OnInit } from '@angular/core';
+import { Injectable } from '@angular/core';
+import { Observable, startWith, Subject } from 'rxjs';
 import { ISettings, Transaltor } from '../interfaces/settings-interfaces';
 
 @Injectable({
   providedIn: 'root'
 })
-export class SettingsService implements OnInit {
-  private settings: ISettings = {
-    translator: Transaltor.APERTIUM
-  };
+export class SettingsService {
+  private settingsSubject = new Subject<ISettings>();
+  private settings$: Observable<ISettings> = this.settingsSubject.pipe(
+    startWith({ translator: Transaltor.APERTIUM })
+  );
 
-  ngOnInit(): void {
-    this.settings = this.getSettings();
-  }
+  getSettings(): Observable<ISettings> {
+    this.settingsSubject.next(JSON.parse(localStorage.getItem('settings') ?? '{}'));
 
-  getSettings(): ISettings {
-    this.settings = JSON.parse(localStorage.getItem('settings') ?? '{}');
-
-    return this.settings;
+    return this.settings$;
   }
 
   saveSettings(settings: ISettings): void {
@@ -25,6 +23,6 @@ export class SettingsService implements OnInit {
       JSON.stringify(settings)
     );
 
-    this.settings = settings;
+    this.settingsSubject.next(settings);
   }
 }

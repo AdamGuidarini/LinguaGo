@@ -13,7 +13,7 @@ describe('LibreTranslateService', () => {
 
   beforeEach(() => {
     mockSettingsService.getSettings.mockReturnValue(
-      { translator: Transaltor.APERTIUM, libreTranslateUrl: 'https://libretranslate.com' }
+      of({ translator: Transaltor.APERTIUM, libreTranslateUrl: 'https://libretranslate.com' })
     );
 
     service = new LibreTranslateService(

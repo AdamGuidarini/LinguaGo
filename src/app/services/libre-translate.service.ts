@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, switchMap } from 'rxjs';
 import { ILanguage } from '../interfaces/global-transation-interfaces';
 import { ILibreRequest, ILibreTranslation } from '../interfaces/libre-translate-interfaces';
 import { SettingsService } from './settings.service';
@@ -21,8 +21,10 @@ export class LibreTranslateService {
   ) { }
 
   getLanguages(): Observable<ILanguage[]> {
-    return this.httpClient.get<ILanguage[]>(
-      `${this.settingsService.getSettings().libreTranslateUrl}/languages`
+    return this.settingsService.getSettings().pipe(
+      switchMap((settings) => this.httpClient.get<ILanguage[]>(
+        `${settings.libreTranslateUrl}/languages`
+      ))
     );
   }
 
@@ -33,9 +35,11 @@ export class LibreTranslateService {
       target
     };
 
-    return this.httpClient.post<ILibreTranslation>(
-      `${this.settingsService.getSettings().libreTranslateUrl}/translate`,
-      body
+    return this.settingsService.getSettings().pipe(
+      switchMap((settings) => this.httpClient.post<ILibreTranslation>(
+        `${settings.libreTranslateUrl}/translate`,
+        body
+      ))
     );
   }
 }

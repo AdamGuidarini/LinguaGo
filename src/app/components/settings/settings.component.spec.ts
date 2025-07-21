@@ -2,6 +2,7 @@ import { createSpyFromClass } from 'jest-auto-spies';
 import { SettingsComponent } from './settings.component';
 import { SettingsService } from '../../services/settings.service';
 import { Transaltor } from '../../interfaces/settings-interfaces';
+import { of } from 'rxjs';
 
 const mockSettingsService = createSpyFromClass(SettingsService);
 
@@ -10,9 +11,9 @@ describe('SettingsComponent', () => {
 
   beforeEach(async () => {
     mockSettingsService.getSettings.mockReturnValue(
-      {
+      of({
         translator: Transaltor.APERTIUM
-      }
+      })
     );
 
     component = new SettingsComponent(

@@ -1,13 +1,12 @@
-import { TestBed } from '@angular/core/testing';
-
 import { GoogleTranslateService } from './google.service';
+
+jest.doMock('Browser');
 
 describe('GoogleService', () => {
   let service: GoogleTranslateService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
-    service = TestBed.inject(GoogleTranslateService);
+    service = new GoogleTranslateService();
   });
 
   it('should be created', () => {

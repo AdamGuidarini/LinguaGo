@@ -11,8 +11,12 @@
   },
   "jest": {
     "preset": "jest-preset-angular",
+    "testEnvironment": "node",
     "setupFilesAfterEnv": [
       "./setup-jest.ts"
+    ],
+    "testPathIgnorePatterns": [
+      "src/extension-actions/*"
     ]
   },
   "private": true,

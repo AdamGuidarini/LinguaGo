@@ -7,7 +7,7 @@ import { MatCard } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatRadioModule } from '@angular/material/radio';
-import { BehaviorSubject, combineLatest, map, Observable, startWith, Subject, withLatestFrom } from 'rxjs';
+import { combineLatest, map, Observable, startWith, Subject, withLatestFrom } from 'rxjs';
 import { ISettings, Transaltor } from '../../interfaces/settings-interfaces';
 import { SettingsService } from '../../services/settings.service';
 
@@ -32,8 +32,7 @@ export class SettingsComponent {
     private settingsService: SettingsService
   ) { }
 
-  settingsSubject = new BehaviorSubject<ISettings>(this.settingsService.getSettings());
-  settings$ = this.settingsSubject.pipe();
+  settings$ = this.settingsService.getSettings();
 
   selectedTranslatorSubject = new Subject<string>();
   selectedTranslator$: Observable<Transaltor> = this.selectedTranslatorSubject
@@ -43,11 +42,10 @@ export class SettingsComponent {
         const updatedSettings: ISettings = { ...settings, translator: choice as Transaltor };
 
         this.settingsService.saveSettings(updatedSettings);
-        this.settingsSubject.next(updatedSettings);
 
         return choice as Transaltor;
       }),
-      startWith(this.settingsService.getSettings().translator ?? Transaltor.APERTIUM)
+      startWith(Transaltor.APERTIUM)
     );
 
   vm$ = combineLatest([
