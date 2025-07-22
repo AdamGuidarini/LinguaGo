@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, switchMap } from 'rxjs';
-import { ILanguage } from '../interfaces/global-transation-interfaces';
+import { map, Observable, switchMap } from 'rxjs';
+import { ILanguage, ITranslation, ITranslator } from '../interfaces/global-transation-interfaces';
 import { ILibreRequest, ILibreTranslation } from '../interfaces/libre-translate-interfaces';
 import { SettingsService } from './settings.service';
 
@@ -14,7 +14,7 @@ import { SettingsService } from './settings.service';
 @Injectable({
   providedIn: 'root'
 })
-export class LibreTranslateService {
+export class LibreTranslateService implements ITranslator {
   constructor(
     private httpClient: HttpClient,
     private settingsService: SettingsService
@@ -28,7 +28,7 @@ export class LibreTranslateService {
     );
   }
 
-  translate(source: string, target: string, text: string): Observable<ILibreTranslation> {
+  translate(source: string, target: string, text: string): Observable<ITranslation> {
     const body: ILibreRequest = {
       q: text,
       source,
@@ -39,7 +39,14 @@ export class LibreTranslateService {
       switchMap((settings) => this.httpClient.post<ILibreTranslation>(
         `${settings.libreTranslateUrl}/translate`,
         body
-      ))
+      )),
+      map((result) => ({
+        source: source === 'auto' && result.detectedLanguage ? result.detectedLanguage.language : source,
+        target,
+        result: result.translatedText,
+        original: text,
+        confidence: result.detectedLanguage?.confidence
+      }))
     );
   }
 }

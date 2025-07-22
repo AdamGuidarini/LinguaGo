@@ -1,3 +1,5 @@
+import { Observable } from "rxjs";
+
 export interface ILanguage {
     code: string;
     name: string;
@@ -10,4 +12,9 @@ export interface ITranslation {
     result: string;
     original: string;
     confidence?: number;
+}
+
+export interface ITranslator {
+    getLanguages: () => Observable<ILanguage[]>;
+    translate: (source: string, target: string, text: string) => Observable<ITranslation>
 }

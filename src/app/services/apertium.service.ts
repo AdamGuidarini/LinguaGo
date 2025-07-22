@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, Observable, switchMap } from 'rxjs';
 import { IApertiumIdentification, IApertiumLanguageCode, IApertiumLanguageNames, IApertiumResponse, IApertiumTranslationRepsonse } from '../interfaces/apertium-interfaces';
-import { ILanguage } from '../interfaces/global-transation-interfaces';
+import { ILanguage, ITranslation, ITranslator } from '../interfaces/global-transation-interfaces';
 
 /**
  * Serivce using Aprtium APY for translations.
@@ -12,7 +12,7 @@ import { ILanguage } from '../interfaces/global-transation-interfaces';
 @Injectable({
   providedIn: 'root'
 })
-export class ApertiumService {
+export class ApertiumService implements ITranslator {
 
   constructor(
     private httpClient: HttpClient
@@ -55,9 +55,16 @@ export class ApertiumService {
     );
   }
 
-  translate(source: string, target: string, text: string): Observable<IApertiumResponse<IApertiumTranslationRepsonse>> {
+  translate(source: string, target: string, text: string): Observable<ITranslation> {
     return this.httpClient.get<IApertiumResponse<IApertiumTranslationRepsonse>>(
       `${this.baseUrl}/translate?langpair=${source}|${target}&q=${text}`
+    ).pipe(
+      map((result) => ({
+        source,
+        target,
+        result: result.responseData.translatedText,
+        original: text
+      }))
     );
   }
 }

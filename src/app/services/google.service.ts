@@ -3,12 +3,12 @@ import { googleTranslateApi, languages } from 'google-translate-api-x';
 import { from, map, Observable, of } from 'rxjs';
 import Browser from 'webextension-polyfill';
 import { ITranslateMessage } from '../../extension-actions/interfaces/translate-message-interfaces';
-import { ILanguage, ITranslation } from '../interfaces/global-transation-interfaces';
+import { ILanguage, ITranslation, ITranslator } from '../interfaces/global-transation-interfaces';
 
 @Injectable({
   providedIn: 'root'
 })
-export class GoogleTranslateService {
+export class GoogleTranslateService implements ITranslator {
   getLanguages(): Observable<ILanguage[]> {
     const langObj = languages as Record<string, string>;
 
