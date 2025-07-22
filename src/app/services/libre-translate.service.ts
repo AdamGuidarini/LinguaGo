@@ -45,7 +45,8 @@ export class LibreTranslateService implements ITranslator {
         target,
         result: result.translatedText,
         original: text,
-        confidence: result.detectedLanguage?.confidence
+        confidence: result.detectedLanguage?.confidence,
+        alternatives: result.alternatives
       }))
     );
   }

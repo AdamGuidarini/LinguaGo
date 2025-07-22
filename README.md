@@ -37,9 +37,10 @@ See more: https://www.npmjs.com/package/google-translate-api-x, https://translat
  - web-ext
 
 
-To build the extension, run:
+To fetch dependencies and build the extension, run:
 ```bash
-yarn && yarn build
+yarn
+yarn build
 ```
 The built extension will be places in `web-ext-artifacts/linguago-[version].zip`.
 

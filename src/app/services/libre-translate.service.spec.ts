@@ -52,7 +52,7 @@ describe('LibreTranslateService', () => {
         'en', 'es', 'Hello, my friend!'
       ).subscribe(
         (res) => {
-          expect(res.translatedText).toBe(
+          expect(res.result).toBe(
             'Hola, mi amigo!'
           );
 

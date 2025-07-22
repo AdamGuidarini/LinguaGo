@@ -96,7 +96,7 @@ describe('ApertiumService', () => {
 
       service.translate('it', 'en', 'Salve, mondo!').subscribe(
         (res) => {
-          expect(res.responseData).toBe('Hello, world!');
+          expect(res.result).toBe('Hello, world!');
           done();
         }
       );

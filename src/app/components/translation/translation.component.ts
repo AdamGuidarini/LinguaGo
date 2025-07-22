@@ -1,4 +1,5 @@
 import { CommonModule } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule } from '@angular/forms';
@@ -8,7 +9,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { BehaviorSubject, catchError, combineLatest, filter, map, Observable, startWith, Subject, switchMap, tap, withLatestFrom } from 'rxjs';
-import { ILanguage } from '../../interfaces/global-transation-interfaces';
+import { ILanguage, ITranslation } from '../../interfaces/global-transation-interfaces';
 import { Transaltor } from '../../interfaces/settings-interfaces';
 import { ApertiumService } from '../../services/apertium.service';
 import { GoogleTranslateService } from '../../services/google.service';
@@ -27,7 +28,8 @@ import { SettingsService } from '../../services/settings.service';
     CommonModule,
     FlexLayoutModule,
     MatButtonModule,
-    MatButtonModule
+    MatButtonModule,
+    HttpClientModule
   ],
   templateUrl: './translation.component.html',
   styleUrl: './translation.component.scss'
@@ -97,8 +99,7 @@ export class TranslationComponent {
     switchMap(
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       ([_, source, target, settings]) => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        let translateFunc: (source: string, target: string, text: string) => Observable<any>;
+        let translateFunc: (source: string, target: string, text: string) => Observable<ITranslation>;
 
         switch (settings.translator) {
           case Transaltor.GOOGLE:
@@ -113,7 +114,7 @@ export class TranslationComponent {
         }
 
         return translateFunc(source, target, this.textToTranslate).pipe(
-          tap((res) => console.log(res)),
+          tap((res) => this.translationSubject.next(res.result)),
           catchError((err) => {
             console.error(err);
 
