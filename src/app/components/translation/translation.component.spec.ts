@@ -1,7 +1,7 @@
 import { createSpyFromClass } from 'jest-auto-spies';
 import { firstValueFrom, of } from 'rxjs';
 import { ApertiumService } from '../../services/apertium.service';
-import { SearchComponent } from './search.component';
+import { TranslationComponent } from './translation.component';
 import { LibreTranslateService } from '../../services/libre-translate.service';
 import { GoogleTranslateService } from '../../services/google.service';
 import { SettingsService } from '../../services/settings.service';
@@ -21,7 +21,7 @@ const langList: ILanguage[] = [
 ];
 
 describe('SearchComponent', () => {
-  let component: SearchComponent;
+  let component: TranslationComponent;
 
   beforeEach(async () => {
     mockApertiumService.getLanguages.mockReturnValue(
@@ -32,7 +32,7 @@ describe('SearchComponent', () => {
       of({ translator: Transaltor.APERTIUM })
     );
 
-    component = new SearchComponent(
+    component = new TranslationComponent(
       mockApertiumService,
       mockLibreTranslateService,
       mockGoogleTranslateService,
@@ -83,7 +83,7 @@ describe('SearchComponent', () => {
 
   describe('targetLanguages$ stream', () => {
     it('should filter out languages the source cannot target', (done) => {
-      component = new SearchComponent(
+      component = new TranslationComponent(
         mockApertiumService,
         mockLibreTranslateService,
         mockGoogleTranslateService,
@@ -104,7 +104,7 @@ describe('SearchComponent', () => {
     });
 
     it('set targetLanguages to languages if source is auto', (done) => {
-      component = new SearchComponent(
+      component = new TranslationComponent(
         mockApertiumService,
         mockLibreTranslateService,
         mockGoogleTranslateService,

@@ -25,3 +25,28 @@ See more: https://libretranslate.com/
 LinguaGo uses an unofficial API for Google Translate to provide a more robust translation engine than Apertium with more flexibilty than Apertium.
 
 See more: https://www.npmjs.com/package/google-translate-api-x, https://translate.google.com
+
+
+## Build and Run
+
+### Dependencies
+
+ - Node.js
+ - Yarn
+ - Angular CLI
+ - web-ext
+
+
+To build the extension, run:
+```bash
+yarn && yarn build
+```
+The built extension will be places in `web-ext-artifacts/linguago-[version].zip`.
+
+The compiled filed will be placed in `dist/lingua-go` and can be loaded into a browser from there if you prefer to run locally.
+
+You can also have web-ext load the extension into a browser for testing with the scripts in `package.json`:
+
+- FireFox `yarn start:firefox`
+- Chromium `yarn start:chromium`
+

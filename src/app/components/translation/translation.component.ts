@@ -7,7 +7,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { BehaviorSubject, catchError, combineLatest, filter, map, Observable, of, startWith, Subject, switchMap, tap, withLatestFrom } from 'rxjs';
+import { BehaviorSubject, catchError, combineLatest, filter, map, Observable, startWith, Subject, switchMap, tap, withLatestFrom } from 'rxjs';
 import { ILanguage } from '../../interfaces/global-transation-interfaces';
 import { Transaltor } from '../../interfaces/settings-interfaces';
 import { ApertiumService } from '../../services/apertium.service';
@@ -16,7 +16,7 @@ import { LibreTranslateService } from '../../services/libre-translate.service';
 import { SettingsService } from '../../services/settings.service';
 
 @Component({
-  selector: 'app-search',
+  selector: 'app-translation',
   standalone: true,
   imports: [
     MatFormFieldModule,
@@ -29,10 +29,10 @@ import { SettingsService } from '../../services/settings.service';
     MatButtonModule,
     MatButtonModule
   ],
-  templateUrl: './search.component.html',
-  styleUrl: './search.component.scss'
+  templateUrl: './translation.component.html',
+  styleUrl: './translation.component.scss'
 })
-export class SearchComponent {
+export class TranslationComponent {
   constructor(
     private apertiumService: ApertiumService,
     private libreTranslateService: LibreTranslateService,
@@ -48,7 +48,7 @@ export class SearchComponent {
     switchMap((settings) => {
       switch (settings.translator) {
         case Transaltor.GOOGLE:
-          return of(this.googleTranslateService.getLanguages());
+          return this.googleTranslateService.getLanguages();
         case Transaltor.LIBRETRANSLATE:
           return this.libreTranslateService.getLanguages();
         case Transaltor.APERTIUM:
