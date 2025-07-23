@@ -4,6 +4,7 @@ import { RouterOutlet } from '@angular/router';
 import { HistoryComponent } from './components/history/history.component';
 import { TranslationComponent } from './components/translation/translation.component';
 import { SettingsComponent } from './components/settings/settings.component';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-root',
@@ -13,10 +14,12 @@ import { SettingsComponent } from './components/settings/settings.component';
     TranslationComponent,
     HistoryComponent,
     SettingsComponent,
-    MatTabsModule
+    MatTabsModule,
+    HttpClientModule
   ],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+  styleUrl: './app.component.scss',
+  providers: [HttpClient]
 })
 export class AppComponent {
   title = 'LinguaGo';

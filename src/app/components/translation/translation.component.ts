@@ -8,7 +8,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { BehaviorSubject, catchError, combineLatest, filter, map, Observable, startWith, Subject, switchMap, tap, withLatestFrom } from 'rxjs';
+import { BehaviorSubject, catchError, combineLatest, filter, map, Observable, share, shareReplay, startWith, Subject, switchMap, tap, withLatestFrom } from 'rxjs';
 import { ILanguage, ITranslation } from '../../interfaces/global-transation-interfaces';
 import { Transaltor } from '../../interfaces/settings-interfaces';
 import { ApertiumService } from '../../services/apertium.service';
@@ -60,6 +60,7 @@ export class TranslationComponent {
           );
       }
     }),
+    shareReplay(),
     startWith([])
   );
 
