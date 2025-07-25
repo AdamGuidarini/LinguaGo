@@ -35,5 +35,5 @@
         class="error-box">
         LibreTranslate requires a URL to be provided to function, but none was found.
     </div>
-    <div class="error-box" *ngIf="vm.error">{{ vm.error }}</div>
+    <div *ngIf="vm.error" class="error-box" style="margin-top: 5px;">{{ vm.error }}</div>
 </mat-card>

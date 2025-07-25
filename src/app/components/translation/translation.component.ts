@@ -15,6 +15,7 @@ import {
   filter,
   map,
   Observable,
+  of,
   shareReplay,
   startWith,
   Subject,
@@ -64,7 +65,9 @@ export class TranslationComponent {
   );
 
   settings$ = this.settingsService.getSettings();
-  currentTab$ = this.tabsService.getCurrentTab();
+  currentTab$ = this.tabsService.getCurrentTab().pipe(
+    tap((tab) => tab === 0 ? this.errorSubject.next('') : null)
+  );
 
   languages$: Observable<ILanguage[]> = combineLatest(
     [this.settings$, this.currentTab$]
@@ -83,6 +86,14 @@ export class TranslationComponent {
             map((langs) => langs.filter((lang) => !!lang.name))
           );
       }
+    }),
+    catchError((err: Error) => {
+      console.error(err);
+      this.errorSubject.next(
+        'Unable to retrieve languages'
+      );
+
+      return of([]);
     }),
     shareReplay(),
     startWith([])
@@ -149,7 +160,9 @@ export class TranslationComponent {
           tap((res) => this.translationSubject.next(res.result)),
           catchError((err: Error) => {
             console.error(err);
-            this.errorSubject.next(err.message);
+            this.errorSubject.next(
+              `Translation failed with error: ${err.message}`
+            );
 
             return '';
           })
