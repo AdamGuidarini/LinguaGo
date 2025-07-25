@@ -56,6 +56,8 @@ export class TranslationComponent {
     private tabsService: TabsService
   ) { }
 
+  translator = Transaltor;
+
   textToTranslate = '';
 
   settings$ = this.settingsService.getSettings();
@@ -156,7 +158,8 @@ export class TranslationComponent {
     this.source$,
     this.target$,
     this.translate$,
-    this.translation$
+    this.translation$,
+    this.settings$
   ]).pipe(
     map(([
       languages,
@@ -164,14 +167,16 @@ export class TranslationComponent {
       source,
       target,
       translate,
-      translation
+      translation,
+      settings
     ]) => ({
       languages,
       targetLangs,
       source,
       target,
       translate,
-      translation
+      translation,
+      settings
     }))
   );
 }

@@ -47,4 +47,12 @@ select {
     border-color: var(--accent-color);
     padding: 5px;
     text-align: center;
+    width: 100%;
+}
+
+.error-box {
+    border: solid rgb(255, 25, 0) 2px;
+    background-color: #ff7162;
+    border-radius: 10px;
+    padding: 5px;
 }
