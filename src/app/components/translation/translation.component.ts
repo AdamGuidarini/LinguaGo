@@ -8,8 +8,21 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { BehaviorSubject, catchError, combineLatest, filter, map, Observable, share, shareReplay, startWith, Subject, switchMap, tap, withLatestFrom } from 'rxjs';
-import { ILanguage, ITranslation } from '../../interfaces/global-transation-interfaces';
+import {
+  BehaviorSubject,
+  catchError,
+  combineLatest,
+  filter,
+  map,
+  Observable,
+  shareReplay,
+  startWith,
+  Subject,
+  switchMap,
+  tap,
+  withLatestFrom
+} from 'rxjs';
+import { ILanguage, ITranslator } from '../../interfaces/global-transation-interfaces';
 import { Transaltor } from '../../interfaces/settings-interfaces';
 import { ApertiumService } from '../../services/apertium.service';
 import { GoogleTranslateService } from '../../services/google.service';
@@ -27,7 +40,6 @@ import { SettingsService } from '../../services/settings.service';
     FormsModule,
     CommonModule,
     FlexLayoutModule,
-    MatButtonModule,
     MatButtonModule,
     HttpClientModule
   ],
@@ -100,21 +112,21 @@ export class TranslationComponent {
     switchMap(
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       ([_, source, target, settings]) => {
-        let translateFunc: (source: string, target: string, text: string) => Observable<ITranslation>;
+        let service: ITranslator;
 
         switch (settings.translator) {
           case Transaltor.GOOGLE:
-            translateFunc = this.googleTranslateService.translate;
+            service = this.googleTranslateService;
             break;
           case Transaltor.LIBRETRANSLATE:
-            translateFunc = this.libreTranslateService.translate;
+            service = this.libreTranslateService;
             break;
           case Transaltor.APERTIUM:
           default:
-            translateFunc = this.apertiumService.translate;
+            service = this.apertiumService;
         }
 
-        return translateFunc(source, target, this.textToTranslate).pipe(
+        return service.translate(source, target, this.textToTranslate).pipe(
           tap((res) => this.translationSubject.next(res.result)),
           catchError((err) => {
             console.error(err);

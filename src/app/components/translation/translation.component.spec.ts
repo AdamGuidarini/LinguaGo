@@ -20,7 +20,7 @@ const langList: ILanguage[] = [
   { code: 'spa', name: 'Spanish', targets: ['it', 'eng'] }
 ];
 
-describe('SearchComponent', () => {
+describe('TranslationComponent', () => {
   let component: TranslationComponent;
 
   beforeEach(async () => {

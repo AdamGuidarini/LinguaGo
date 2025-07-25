@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, startWith, Subject } from 'rxjs';
+import { distinctUntilChanged, Observable, startWith, Subject } from 'rxjs';
 import { ISettings, Transaltor } from '../interfaces/settings-interfaces';
 
 @Injectable({
@@ -8,6 +8,7 @@ import { ISettings, Transaltor } from '../interfaces/settings-interfaces';
 export class SettingsService {
   private settingsSubject = new Subject<ISettings>();
   private settings$: Observable<ISettings> = this.settingsSubject.pipe(
+    distinctUntilChanged(),
     startWith({ translator: Transaltor.APERTIUM })
   );
 

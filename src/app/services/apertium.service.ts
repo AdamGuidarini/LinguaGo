@@ -13,7 +13,6 @@ import { ILanguage, ITranslation, ITranslator } from '../interfaces/global-trans
   providedIn: 'root'
 })
 export class ApertiumService implements ITranslator {
-
   constructor(
     private httpClient: HttpClient
   ) { }
@@ -29,8 +28,7 @@ export class ApertiumService implements ITranslator {
 
         return this.getLanguageNames(Array.from(prs.values())).pipe(
           map((names) => ({ pairs: response.responseData, names })));
-      }
-      ),
+      }),
       map(({ pairs, names }) => Array.from(prs.values()).map(
         (p) => ({
           code: p,

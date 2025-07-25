@@ -88,7 +88,7 @@ describe('ApertiumService', () => {
     it('should translate', (done) => {
       mockHttpClient.get.mockReturnValue(
         of({
-          responseData: 'Hello, world!',
+          responseData: { translatedText: 'Hello, world!'},
           responseDetails: '',
           responseCode: 200
         })
