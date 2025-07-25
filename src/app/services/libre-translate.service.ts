@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map, Observable, switchMap } from 'rxjs';
+import { map, Observable, of, switchMap } from 'rxjs';
 import { ILanguage, ITranslation, ITranslator } from '../interfaces/global-transation-interfaces';
-import { ILibreRequest, ILibreTranslation } from '../interfaces/libre-translate-interfaces';
+import { ILibreTranslation } from '../interfaces/libre-translate-interfaces';
 import { SettingsService } from './settings.service';
 
 
@@ -22,23 +22,30 @@ export class LibreTranslateService implements ITranslator {
 
   getLanguages(): Observable<ILanguage[]> {
     return this.settingsService.getSettings().pipe(
-      switchMap((settings) => this.httpClient.get<ILanguage[]>(
-        `${settings.libreTranslateUrl}/languages`
-      ))
+      switchMap((settings) => {
+        if (!settings.libreTranslateUrl) {
+          console.error('LibreTranslate selected as translor, but no url provided');
+
+          return of([]);
+        }        
+
+        return this.httpClient.get<ILanguage[]>(
+          `${settings.libreTranslateUrl}/languages`
+        );
+      })
     );
   }
 
   translate(source: string, target: string, text: string): Observable<ITranslation> {
-    const body: ILibreRequest = {
-      q: text,
-      source,
-      target
-    };
-
     return this.settingsService.getSettings().pipe(
       switchMap((settings) => this.httpClient.post<ILibreTranslation>(
         `${settings.libreTranslateUrl}/translate`,
-        body
+        {
+          q: text,
+          source,
+          target,
+          api_key: settings.libreTranslateKey
+        }
       )),
       map((result) => ({
         source: source === 'auto' && result.detectedLanguage ? result.detectedLanguage.language : source,

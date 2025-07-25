@@ -28,6 +28,7 @@ import { ApertiumService } from '../../services/apertium.service';
 import { GoogleTranslateService } from '../../services/google.service';
 import { LibreTranslateService } from '../../services/libre-translate.service';
 import { SettingsService } from '../../services/settings.service';
+import { TabsService } from '../../services/tabs.service';
 
 @Component({
   selector: 'app-translation',
@@ -51,14 +52,20 @@ export class TranslationComponent {
     private apertiumService: ApertiumService,
     private libreTranslateService: LibreTranslateService,
     private googleTranslateService: GoogleTranslateService,
-    private settingsService: SettingsService
+    private settingsService: SettingsService,
+    private tabsService: TabsService
   ) { }
 
   textToTranslate = '';
 
   settings$ = this.settingsService.getSettings();
+  currentTab$ = this.tabsService.getCurrentTab();
 
-  languages$: Observable<ILanguage[]> = this.settings$.pipe(
+  languages$: Observable<ILanguage[]> = combineLatest(
+    [this.settings$, this.currentTab$]
+  ).pipe(
+    filter(([, currentTab]) => currentTab === 0),
+    map(([settings]) => settings),
     switchMap((settings) => {
       switch (settings.translator) {
         case Transaltor.GOOGLE:

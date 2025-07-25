@@ -1,29 +1,23 @@
 import { Injectable } from '@angular/core';
-import { distinctUntilChanged, Observable, startWith, Subject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { ISettings, Transaltor } from '../interfaces/settings-interfaces';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SettingsService {
-  private settingsSubject = new Subject<ISettings>();
-  private settings$: Observable<ISettings> = this.settingsSubject.pipe(
-    distinctUntilChanged(),
-    startWith({ translator: Transaltor.APERTIUM })
+  private readonly defaultSettings: ISettings = { translator: Transaltor.APERTIUM };
+
+  private readonly settingsSubject = new BehaviorSubject<ISettings>(
+    JSON.parse(localStorage.getItem('settings') ?? 'null') || this.defaultSettings
   );
 
   getSettings(): Observable<ISettings> {
-    this.settingsSubject.next(JSON.parse(localStorage.getItem('settings') ?? '{}'));
-
-    return this.settings$;
+    return this.settingsSubject.asObservable();
   }
 
   saveSettings(settings: ISettings): void {
-    localStorage.setItem(
-      'settings',
-      JSON.stringify(settings)
-    );
-
+    localStorage.setItem('settings', JSON.stringify(settings));
     this.settingsSubject.next(settings);
   }
 }

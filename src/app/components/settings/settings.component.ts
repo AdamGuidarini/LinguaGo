@@ -48,13 +48,61 @@ export class SettingsComponent {
       startWith(Transaltor.APERTIUM)
     );
 
+  libreTranslateUrlSubject = new Subject<unknown>();
+  libreTranslateUrl$: Observable<string> = this.libreTranslateUrlSubject.pipe(
+    withLatestFrom(this.settings$),
+    map(([event, settings]) => {
+      const url = (event as { target: { value: string } }).target.value;
+
+      if (settings.libreTranslateUrl !== url) {
+        this.settingsService.saveSettings(
+          {
+            ...settings,
+            libreTranslateUrl: url
+          }
+        );
+      }
+
+      return url;
+    }),
+    startWith('')
+  );
+
+  libreTranslateKeySubject = new Subject<unknown>();
+  libreTranslateKey$ = this.libreTranslateKeySubject.pipe(
+    withLatestFrom(this.settings$),
+    map(([event, settings]) => {
+      const key = (event as { target: { value: string } }).target.value;
+
+      if (settings.libreTranslateUrl !== key) {
+        this.settingsService.saveSettings(
+          {
+            ...settings,
+            libreTranslateKey: key
+          }
+        );
+      }
+
+      return key;
+    }),
+    startWith('')
+  );
+
+
   vm$ = combineLatest([
-    this.selectedTranslator$
+    this.selectedTranslator$,
+    this.libreTranslateUrl$,
+    this.libreTranslateKey$,
+    this.settings$
   ]).pipe(
     map(([
-      selectedTranslator
+      selectedTranslator,
+      libreTranslateUrl,
+      libreTranslateKey
     ]) => ({
-      selectedTranslator
+      selectedTranslator,
+      libreTranslateUrl,
+      libreTranslateKey
     }))
   );
 }

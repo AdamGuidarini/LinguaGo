@@ -7,6 +7,7 @@ import { GoogleTranslateService } from '../../services/google.service';
 import { SettingsService } from '../../services/settings.service';
 import { Transaltor } from '../../interfaces/settings-interfaces';
 import { ILanguage } from '../../interfaces/global-transation-interfaces';
+import { TabsService } from '../../services/tabs.service';
 
 jest.mock('webextension-polyfill');
 
@@ -14,6 +15,8 @@ const mockApertiumService = createSpyFromClass(ApertiumService);
 const mockLibreTranslateService = createSpyFromClass(LibreTranslateService);
 const mockGoogleTranslateService = createSpyFromClass(GoogleTranslateService);
 const mockSettingsService = createSpyFromClass(SettingsService);
+const mockTabsService = createSpyFromClass(TabsService);
+
 const langList: ILanguage[] = [
   { code: 'it', name: 'Italian', targets: ['spa'] },
   { code: 'eng', name: 'English', targets: ['spa'] },
@@ -36,7 +39,8 @@ describe('TranslationComponent', () => {
       mockApertiumService,
       mockLibreTranslateService,
       mockGoogleTranslateService,
-      mockSettingsService
+      mockSettingsService,
+      mockTabsService
     );
   });
 
@@ -87,7 +91,8 @@ describe('TranslationComponent', () => {
         mockApertiumService,
         mockLibreTranslateService,
         mockGoogleTranslateService,
-        mockSettingsService
+        mockSettingsService,
+        mockTabsService
       );
       component.languages$.subscribe();
 
@@ -108,7 +113,8 @@ describe('TranslationComponent', () => {
         mockApertiumService,
         mockLibreTranslateService,
         mockGoogleTranslateService,
-        mockSettingsService
+        mockSettingsService,
+        mockTabsService
       );
       component.languages$.subscribe();
 
