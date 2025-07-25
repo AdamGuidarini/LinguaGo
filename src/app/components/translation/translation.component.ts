@@ -116,6 +116,11 @@ export class TranslationComponent {
     startWith([])
   );
 
+  errorSubject = new Subject<string>();
+  error$: Observable<string> = this.errorSubject.pipe(
+    startWith('')
+  );
+
   translateSubject = new Subject<void>();
   translate$ = this.translateSubject.pipe(
     withLatestFrom(this.source$, this.target$, this.settings$, this.textToTranslate$),
@@ -125,6 +130,8 @@ export class TranslationComponent {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       ([_, source, target, settings, textToTranslate]) => {
         let service: ITranslator;
+
+        this.errorSubject.next('');
 
         switch (settings.translator) {
           case Transaltor.GOOGLE:
@@ -140,8 +147,9 @@ export class TranslationComponent {
 
         return service.translate(source, target, textToTranslate).pipe(
           tap((res) => this.translationSubject.next(res.result)),
-          catchError((err) => {
+          catchError((err: Error) => {
             console.error(err);
+            this.errorSubject.next(err.message);
 
             return '';
           })
@@ -163,7 +171,8 @@ export class TranslationComponent {
     this.translate$,
     this.translation$,
     this.settings$,
-    this.textToTranslate$
+    this.textToTranslate$,
+    this.error$
   ]).pipe(
     map(([
       languages,
@@ -173,7 +182,8 @@ export class TranslationComponent {
       translate,
       translation,
       settings,
-      textToTranslate
+      textToTranslate,
+      error
     ]) => ({
       languages,
       targetLangs,
@@ -182,7 +192,8 @@ export class TranslationComponent {
       translate,
       translation,
       settings,
-      textToTranslate
+      textToTranslate,
+      error
     }))
   );
 }
