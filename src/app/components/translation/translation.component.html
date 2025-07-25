@@ -17,22 +17,22 @@
             </select>
         </div>
     </div>
-    <div 
-        *ngIf="!(vm.settings.translator === translator.LIBRETRANSLATE && !vm.settings.libreTranslateUrl)"
+    <div *ngIf="!(vm.settings.translator === translator.LIBRETRANSLATE && !vm.settings.libreTranslateUrl)"
         fxLayout="column" fxLayoutAlign="space-around center">
         <mat-form-field appearance="outline">
-            <textarea matInput minRows="5" [(ngModel)]="textToTranslate"></textarea>
+            <textarea #inputText matInput minRows="5" (input)="this.textToTranslateSubject.next(inputText.value)"></textarea>
         </mat-form-field>
         <mat-form-field appearance="outline">
             <textarea matInput minRows="5" readonly="true"
                 style="caret-color: transparent;">{{ vm.translation }}</textarea>
         </mat-form-field>
         <button mat-button class="translate-button" (click)="translateSubject.next()"
-            [disabled]="!(vm.source || vm.target || textToTranslate)">
+            [disabled]="!(vm.source || vm.target || vm.textToTranslate)">
             Translate
         </button>
     </div>
-    <div *ngIf="vm.settings.translator === translator.LIBRETRANSLATE && !vm.settings.libreTranslateUrl" class="error-box">
+    <div *ngIf="vm.settings.translator === translator.LIBRETRANSLATE && !vm.settings.libreTranslateUrl"
+        class="error-box">
         LibreTranslate requires a URL to be provided to function, but none was found.
     </div>
 </mat-card>

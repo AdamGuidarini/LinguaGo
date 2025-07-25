@@ -58,7 +58,10 @@ export class TranslationComponent {
 
   translator = Transaltor;
 
-  textToTranslate = '';
+  textToTranslateSubject = new Subject<string>();
+  textToTranslate$: Observable<string> = this.textToTranslateSubject.pipe(
+    startWith('')
+  );
 
   settings$ = this.settingsService.getSettings();
   currentTab$ = this.tabsService.getCurrentTab();
@@ -115,12 +118,12 @@ export class TranslationComponent {
 
   translateSubject = new Subject<void>();
   translate$ = this.translateSubject.pipe(
-    withLatestFrom(this.source$, this.target$, this.settings$),
+    withLatestFrom(this.source$, this.target$, this.settings$, this.textToTranslate$),
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    filter(([_, source, target]) => !!source && !!target && this.textToTranslate.length > 0),
+    filter(([_, source, target, settings, textToTranslate]) => !!source && !!target && textToTranslate.length > 0),
     switchMap(
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      ([_, source, target, settings]) => {
+      ([_, source, target, settings, textToTranslate]) => {
         let service: ITranslator;
 
         switch (settings.translator) {
@@ -135,7 +138,7 @@ export class TranslationComponent {
             service = this.apertiumService;
         }
 
-        return service.translate(source, target, this.textToTranslate).pipe(
+        return service.translate(source, target, textToTranslate).pipe(
           tap((res) => this.translationSubject.next(res.result)),
           catchError((err) => {
             console.error(err);
@@ -159,7 +162,8 @@ export class TranslationComponent {
     this.target$,
     this.translate$,
     this.translation$,
-    this.settings$
+    this.settings$,
+    this.textToTranslate$
   ]).pipe(
     map(([
       languages,
@@ -168,7 +172,8 @@ export class TranslationComponent {
       target,
       translate,
       translation,
-      settings
+      settings,
+      textToTranslate
     ]) => ({
       languages,
       targetLangs,
@@ -176,7 +181,8 @@ export class TranslationComponent {
       target,
       translate,
       translation,
-      settings
+      settings,
+      textToTranslate
     }))
   );
 }
