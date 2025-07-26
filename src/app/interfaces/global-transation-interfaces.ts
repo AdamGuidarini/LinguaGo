@@ -13,6 +13,7 @@ export interface ITranslation {
     original: string;
     confidence?: number;
     alternatives?: string[];
+    key?: string;
 }
 
 export interface ITranslator {
