@@ -7,6 +7,16 @@ import { Observable } from 'rxjs';
 })
 export class DataService implements OnDestroy {
   constructor() {
+    this.setUp();
+  }
+
+  private readonly databaseVersion = 1;
+  private readonly databaseName = 'translation_history';
+  private readonly objectStorageName = 'translations';
+
+  db: IDBDatabase | null = null;
+
+  setUp(): void {
     const request = window.indexedDB.open(this.databaseName, this.databaseVersion);
 
     request.onsuccess = () => {
@@ -21,12 +31,6 @@ export class DataService implements OnDestroy {
     };
   }
 
-  private readonly databaseVersion = 1;
-  private readonly databaseName = 'translation_history';
-  private readonly objectStorageName = 'translations';
-
-  db: IDBDatabase | null = null;
-
   ngOnDestroy(): void {
     if (this.db) {
       this.db.close();
@@ -37,7 +41,7 @@ export class DataService implements OnDestroy {
     if (!this.db) {
       console.error('DB reference is not defined');
 
-      throw new Error('Attempted to add item when database is undefined');
+      throw new Error('Attempted to add item when database is null');
     }
 
     const transaction = this.db.transaction(this.objectStorageName);
@@ -66,8 +70,7 @@ export class DataService implements OnDestroy {
 
       transaction.onerror = (err) => {
         console.error('Error retrieving records from indexed db', err);
-
-        throw err;
+        observer.error(err);
       };
 
       let translations: ITranslation[] | null = null;
@@ -87,6 +90,7 @@ export class DataService implements OnDestroy {
       };
       countRequest.onerror = (err) => {
         observer.error(err);
+        observer.error(err);
       };
 
       getAllRequest.onsuccess = () => {
@@ -96,11 +100,9 @@ export class DataService implements OnDestroy {
           observer.complete();
         }
       };
+
       getAllRequest.onerror = (err) => {
         observer.error(err);
-      };
-
-      transaction.onerror = (err) => {
         observer.error(err);
       };
     });
