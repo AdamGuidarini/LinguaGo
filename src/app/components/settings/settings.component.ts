@@ -48,12 +48,10 @@ export class SettingsComponent {
       startWith(Transaltor.APERTIUM)
     );
 
-  libreTranslateUrlSubject = new Subject<unknown>();
+  libreTranslateUrlSubject = new Subject<string>();
   libreTranslateUrl$: Observable<string> = this.libreTranslateUrlSubject.pipe(
     withLatestFrom(this.settings$),
-    map(([event, settings]) => {
-      const url = (event as { target: { value: string } }).target.value;
-
+    map(([url, settings]) => {
       if (settings.libreTranslateUrl !== url) {
         this.settingsService.saveSettings(
           {
@@ -68,12 +66,10 @@ export class SettingsComponent {
     startWith('')
   );
 
-  libreTranslateKeySubject = new Subject<unknown>();
+  libreTranslateKeySubject = new Subject<string>();
   libreTranslateKey$ = this.libreTranslateKeySubject.pipe(
     withLatestFrom(this.settings$),
-    map(([event, settings]) => {
-      const key = (event as { target: { value: string } }).target.value;
-
+    map(([key, settings]) => {
       if (settings.libreTranslateUrl !== key) {
         this.settingsService.saveSettings(
           {
@@ -98,11 +94,13 @@ export class SettingsComponent {
     map(([
       selectedTranslator,
       libreTranslateUrl,
-      libreTranslateKey
+      libreTranslateKey,
+      settings
     ]) => ({
       selectedTranslator,
       libreTranslateUrl,
-      libreTranslateKey
+      libreTranslateKey,
+      settings
     }))
   );
 }
