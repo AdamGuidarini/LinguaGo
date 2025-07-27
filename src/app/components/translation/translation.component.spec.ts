@@ -30,10 +30,10 @@ describe('TranslationComponent', () => {
     mockApertiumService.getLanguages.mockReturnValue(
       of(langList)
     );
-
     mockSettingsService.getSettings.mockReturnValue(
       of({ translator: Transaltor.APERTIUM })
     );
+    mockTabsService.getCurrentTab.mockReturnValue(of(0));
 
     component = new TranslationComponent(
       mockApertiumService,

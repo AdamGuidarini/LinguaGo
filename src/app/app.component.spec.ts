@@ -18,4 +18,12 @@ describe('AppComponent', () => {
   it('should set the title', () => {
     expect(component.title).toBe('LinguaGo');
   });
+
+  describe('onTabChange method', () => {
+    it('should change the active tab', () => {
+      component.onTabChange(0);
+
+      expect(mockTabsService.changeTab).toHaveBeenCalledWith(0);
+    });
+  });
 });

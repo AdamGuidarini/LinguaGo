@@ -40,6 +40,16 @@ describe('LibreTranslateService', () => {
         (langs) => expect(langs).toBe(langList)
       );
     });
+
+    it('should return an empty array if no url is found', () => {
+      mockSettingsService.getSettings.mockReturnValue(
+        of({ translator: Transaltor.LIBRETRANSLATE })
+      );
+
+      service.getLanguages().subscribe(
+        (langs) => expect(langs).toStrictEqual([])
+      );
+    });
   });
 
   describe('translate method', () => {
@@ -50,6 +60,27 @@ describe('LibreTranslateService', () => {
 
       service.translate(
         'en', 'es', 'Hello, my friend!'
+      ).subscribe(
+        (res) => {
+          expect(res.result).toBe(
+            'Hola, mi amigo!'
+          );
+
+          done();
+        }
+      );
+    });
+
+    it('should send a translation request', (done) => {
+      mockHttpClient.post.mockReturnValue(
+        of({
+          translatedText: 'Hola, mi amigo!',
+          detectedLanguage: { language: 'en', confidence: 0.9 }
+        })
+      );
+
+      service.translate(
+        'auto', 'es', 'Hello, my friend!'
       ).subscribe(
         (res) => {
           expect(res.result).toBe(
