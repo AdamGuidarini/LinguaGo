@@ -1,13 +1,13 @@
 import { createSpyFromClass } from 'jest-auto-spies';
-import { firstValueFrom, of } from 'rxjs';
-import { ApertiumService } from '../../services/apertium.service';
-import { TranslationComponent } from './translation.component';
-import { LibreTranslateService } from '../../services/libre-translate.service';
-import { GoogleTranslateService } from '../../services/google.service';
-import { SettingsService } from '../../services/settings.service';
-import { Transaltor } from '../../interfaces/settings-interfaces';
+import { BehaviorSubject, firstValueFrom, of, take, throwError } from 'rxjs';
 import { ILanguage } from '../../interfaces/global-transation-interfaces';
+import { ISettings, Transaltor } from '../../interfaces/settings-interfaces';
+import { ApertiumService } from '../../services/apertium.service';
+import { GoogleTranslateService } from '../../services/google.service';
+import { LibreTranslateService } from '../../services/libre-translate.service';
+import { SettingsService } from '../../services/settings.service';
 import { TabsService } from '../../services/tabs.service';
+import { TranslationComponent } from './translation.component';
 
 jest.mock('webextension-polyfill');
 
@@ -23,6 +23,10 @@ const langList: ILanguage[] = [
   { code: 'spa', name: 'Spanish', targets: ['it', 'eng'] }
 ];
 
+const mockSettingsBS = new BehaviorSubject<ISettings>(
+  { translator: Transaltor.APERTIUM }
+);
+
 describe('TranslationComponent', () => {
   let component: TranslationComponent;
 
@@ -30,8 +34,17 @@ describe('TranslationComponent', () => {
     mockApertiumService.getLanguages.mockReturnValue(
       of(langList)
     );
+    mockLibreTranslateService.getLanguages.mockReturnValue(
+      of(langList)
+    );
+    mockGoogleTranslateService.getLanguages.mockReturnValue(
+      of(langList)
+    );
     mockSettingsService.getSettings.mockReturnValue(
-      of({ translator: Transaltor.APERTIUM })
+      mockSettingsBS.asObservable()
+    );
+    mockSettingsService.saveSettings.mockImplementation(
+      (settings) => mockSettingsBS.next(settings)
     );
     mockTabsService.getCurrentTab.mockReturnValue(of(0));
 
@@ -49,13 +62,54 @@ describe('TranslationComponent', () => {
   });
 
   describe('languages stream', () => {
-    it('should populate languages', (done) => {
+    it('should populate languages from Apertium', (done) => {
       component.languages$.subscribe(
-        (langs) => {
-          expect(langs).toStrictEqual(langList);
+        () => {
+          expect(mockApertiumService.getLanguages).toHaveBeenCalled();
           done();
         }
       );
+    });
+
+    it('should get languages from Libretranslate', (done) => {
+      component.languages$.subscribe(
+        () => {
+          expect(mockLibreTranslateService.getLanguages).toHaveBeenCalled();
+          done();
+        }
+      );
+
+      mockSettingsBS.next({ translator: Transaltor.LIBRETRANSLATE });
+    });
+
+    it('should get languages from Google', (done) => {
+      component.languages$.subscribe(
+        () => {
+          expect(mockGoogleTranslateService.getLanguages).toHaveBeenCalled();
+          done();
+        }
+      );
+
+      mockSettingsBS.next({ translator: Transaltor.GOOGLE });
+    });
+
+    it('should log if it cannot retrieve languages', (done) => {
+      mockApertiumService.getLanguages.mockReturnValue(
+        throwError(() => new Error('Oh no!'))
+      );
+
+      component.languages$.pipe(
+        take(1)
+      ).subscribe(
+        (res) => {
+          if (res.length === 0) {
+            expect(res).toStrictEqual([]);
+            done();
+          }
+        }
+      );
+
+      mockSettingsBS.next({ translator: Transaltor.APERTIUM });
     });
   });
 
@@ -87,17 +141,6 @@ describe('TranslationComponent', () => {
 
   describe('targetLanguages$ stream', () => {
     it('should filter out languages the source cannot target', (done) => {
-      component = new TranslationComponent(
-        mockApertiumService,
-        mockLibreTranslateService,
-        mockGoogleTranslateService,
-        mockSettingsService,
-        mockTabsService
-      );
-      component.languages$.subscribe();
-
-      component.sourceSubject.next('eng');
-
       component.targetLanguages$.subscribe(
         (res) => {
           expect(res).toStrictEqual([
@@ -106,27 +149,21 @@ describe('TranslationComponent', () => {
           done();
         }
       );
+
+      mockSettingsBS.next({ translator: Transaltor.APERTIUM });
+      component.sourceSubject.next('eng');
     });
 
     it('set targetLanguages to languages if source is auto', (done) => {
-      component = new TranslationComponent(
-        mockApertiumService,
-        mockLibreTranslateService,
-        mockGoogleTranslateService,
-        mockSettingsService,
-        mockTabsService
-      );
-      component.languages$.subscribe();
-
-      component.targetSubject.next('nld');
-      component.sourceSubject.next('auto');
-
       component.targetLanguages$.subscribe(
         (res) => {
           expect(res).toStrictEqual(langList);
           done();
         }
       );
+
+      component.targetSubject.next('nld');
+      component.sourceSubject.next('auto');
     });
   });
 
