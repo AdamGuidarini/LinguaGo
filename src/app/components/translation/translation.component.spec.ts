@@ -9,6 +9,7 @@ import { LibreTranslateService } from '../../services/libre-translate.service';
 import { SettingsService } from '../../services/settings.service';
 import { TabsService } from '../../services/tabs.service';
 import { TranslationComponent } from './translation.component';
+import { DataService } from '../../services/data.service';
 
 jest.mock('webextension-polyfill');
 
@@ -17,6 +18,7 @@ const mockLibreTranslateService = createSpyFromClass(LibreTranslateService);
 const mockGoogleTranslateService = createSpyFromClass(GoogleTranslateService);
 const mockSettingsService = createSpyFromClass(SettingsService);
 const mockTabsService = createSpyFromClass(TabsService);
+const mockDataService = createSpyFromClass(DataService);
 
 const langList: ILanguage[] = [
   { code: 'it', name: 'Italian', targets: ['spa'] },
@@ -49,12 +51,17 @@ describe('TranslationComponent', () => {
     );
     mockTabsService.getCurrentTab.mockReturnValue(of(0));
 
+    if (!('randomUUID' in crypto)) {
+      (crypto as any).randomUUID = jest.fn(() => 'mock-uuid');
+    }
+
     component = new TranslationComponent(
       mockApertiumService,
       mockLibreTranslateService,
       mockGoogleTranslateService,
       mockSettingsService,
-      mockTabsService
+      mockTabsService,
+      mockDataService
     );
   });
 
@@ -256,7 +263,7 @@ describe('TranslationComponent', () => {
       component.translate$.subscribe(
         (res) => {
           if (res) {
-            expect(res).toStrictEqual({ result: 'Hola' });
+            expect(res).toStrictEqual({ result: 'Hola', key: 'mock-uuid' });
             expect(mockApertiumService.translate).toHaveBeenCalled();
             done();
           }
@@ -275,7 +282,7 @@ describe('TranslationComponent', () => {
       component.translate$.subscribe(
         (res) => {
           if (res) {
-            expect(res).toStrictEqual({ result: 'Salve' });
+            expect(res).toStrictEqual({ result: 'Salve', key: 'mock-uuid' });
             expect(mockLibreTranslateService.translate).toHaveBeenCalled();
             done();
           }
@@ -293,7 +300,7 @@ describe('TranslationComponent', () => {
       component.translate$.subscribe(
         (res) => {
           if (res) {
-            expect(res).toStrictEqual({ result: 'Hallo' });
+            expect(res).toStrictEqual({ result: 'Hallo', key: 'mock-uuid' });
             expect(mockGoogleTranslateService.translate).toHaveBeenCalled();
             done();
           }

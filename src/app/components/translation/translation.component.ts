@@ -30,6 +30,7 @@ import { GoogleTranslateService } from '../../services/google.service';
 import { LibreTranslateService } from '../../services/libre-translate.service';
 import { SettingsService } from '../../services/settings.service';
 import { TabsService } from '../../services/tabs.service';
+import { DataService } from '../../services/data.service';
 
 @Component({
   selector: 'app-translation',
@@ -54,7 +55,8 @@ export class TranslationComponent {
     private libreTranslateService: LibreTranslateService,
     private googleTranslateService: GoogleTranslateService,
     private settingsService: SettingsService,
-    private tabsService: TabsService
+    private tabsService: TabsService,
+    private dataService: DataService
   ) { }
 
   translator = Transaltor;
@@ -155,7 +157,13 @@ export class TranslationComponent {
         }
 
         return service.translate(source, target, textToTranslate).pipe(
-          tap((res) => this.translationSubject.next(res.result)),
+          tap((res) => {
+            this.translationSubject.next(res.result);
+
+            res.key = crypto.randomUUID();
+
+            this.dataService.addTranslation(res);
+          }),
           catchError((err: Error) => {
             console.error(err);
             this.errorSubject.next(
