@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { createSpyFromClass } from 'jest-auto-spies';
 import { BehaviorSubject, firstValueFrom, of, take, throwError } from 'rxjs';
 import { ILanguage } from '../../interfaces/global-transation-interfaces';
@@ -59,6 +60,32 @@ describe('TranslationComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  describe('currentTab$ stream', () => {
+    it('should clear the error', (done) => {
+      component.error$.subscribe(
+        (res) => {
+          expect(res).toBe('');
+          done();
+        }
+      );
+
+      component.errorSubject.next('hello!');
+      mockTabsService.changeTab(0);
+    });
+
+    it('should not clear the error', (done) => {
+      component.error$.subscribe(
+        (res) => {
+          expect(res).toBe('hello!');
+          done();
+        }
+      );
+
+      component.errorSubject.next('hello!');
+      mockTabsService.changeTab(1);
+    });
   });
 
   describe('languages stream', () => {
@@ -143,10 +170,12 @@ describe('TranslationComponent', () => {
     it('should filter out languages the source cannot target', (done) => {
       component.targetLanguages$.subscribe(
         (res) => {
-          expect(res).toStrictEqual([
-            { code: 'spa', name: 'Spanish', targets: ['it', 'eng'] }
-          ]);
-          done();
+          if (res.length > 0) {
+            expect(res).toStrictEqual([
+              { code: 'spa', name: 'Spanish', targets: ['it', 'eng'] }
+            ]);
+            done();
+          }
         }
       );
 
@@ -157,17 +186,62 @@ describe('TranslationComponent', () => {
     it('set targetLanguages to languages if source is auto', (done) => {
       component.targetLanguages$.subscribe(
         (res) => {
-          expect(res).toStrictEqual(langList);
-          done();
+          if (res.length > 0) {
+            expect(res).toStrictEqual(langList);
+            done();
+          }
         }
       );
 
       component.targetSubject.next('nld');
       component.sourceSubject.next('auto');
     });
+
+    it('should return all languages expect auto for Google Translate', (done) => {
+      component.targetLanguages$.subscribe(
+        (res) => {
+          const ll = [...langList];
+          ll.shift();
+
+          expect(res).toStrictEqual(ll);
+          done();
+        }
+      );
+
+      mockSettingsService.saveSettings({
+        translator: Transaltor.GOOGLE
+      });
+    });
+
+    it('should unset the target language if source cannot translate to it', (done) => {
+      component.targetLanguages$.subscribe();
+      component.target$.subscribe(
+        (res) => {
+          expect(res).toBe('');
+          done();
+        }
+      );
+
+      component.targetSubject.next('en');
+      component.sourceSubject.next('it');
+    });
   });
 
   describe('translate$ stream', () => {
+    beforeEach(() => {
+      mockApertiumService.translate.mockReturnValue(
+        of({ result: 'Hola' } as any)
+      );
+      mockGoogleTranslateService.translate.mockReturnValue(
+        of({ result: 'Hallo' } as any)
+      );
+      mockLibreTranslateService.translate.mockReturnValue(
+        of({ result: 'Salve' } as any)
+      );
+
+      mockTabsService.changeTab(0);
+    });
+
     it('should not translate if there is no source', async () => {
       component.sourceSubject.next('eng');
       component.targetSubject.next('spa');
@@ -176,6 +250,89 @@ describe('TranslationComponent', () => {
       await firstValueFrom(component.translate$);
 
       expect(mockApertiumService.translate).not.toHaveBeenCalled();
+    });
+
+    it('should translate - Apertium', (done) => {
+      component.translate$.subscribe(
+        (res) => {
+          if (res) {
+            expect(res).toStrictEqual({ result: 'Hola' });
+            expect(mockApertiumService.translate).toHaveBeenCalled();
+            done();
+          }
+        }
+      );
+
+      mockSettingsBS.next({ translator: Transaltor.APERTIUM });
+
+      component.sourceSubject.next('eng');
+      component.targetSubject.next('spa');
+      component.textToTranslateSubject.next('Hello');
+      component.translateSubject.next();
+    });
+
+    it('should translate - LibreTranslate', (done) => {
+      component.translate$.subscribe(
+        (res) => {
+          if (res) {
+            expect(res).toStrictEqual({ result: 'Salve' });
+            expect(mockLibreTranslateService.translate).toHaveBeenCalled();
+            done();
+          }
+        }
+      );
+
+      mockSettingsBS.next({ translator: Transaltor.LIBRETRANSLATE });
+      component.sourceSubject.next('eng');
+      component.targetSubject.next('it');
+      component.textToTranslateSubject.next('Hello');
+      component.translateSubject.next();
+    });
+
+    it('should translate - GoogleTranslate', (done) => {
+      component.translate$.subscribe(
+        (res) => {
+          if (res) {
+            expect(res).toStrictEqual({ result: 'Hallo' });
+            expect(mockGoogleTranslateService.translate).toHaveBeenCalled();
+            done();
+          }
+        }
+      );
+
+      mockSettingsBS.next({ translator: Transaltor.GOOGLE });
+      component.sourceSubject.next('eng');
+      component.targetSubject.next('nl');
+      component.textToTranslateSubject.next('Hello');
+      component.translateSubject.next();
+    });
+
+    it('should set an error if one occurs', (done) => {
+      component.translate$.subscribe();
+      component.error$.subscribe(
+        (res) => {
+          expect(res).toBe('Translation failed with error: Oh no!');
+          done();
+        }
+      );
+
+      mockSettingsBS.next({ translator: Transaltor.APERTIUM });
+      mockApertiumService.translate.mockReturnValueOnce(
+        throwError(() => new Error('Oh no!'))
+      );
+
+      component.sourceSubject.next('eng');
+      component.targetSubject.next('nl');
+      component.textToTranslateSubject.next('Hello');
+      component.translateSubject.next();
+    });
+  });
+
+  describe('vm$ stream', () => {
+    it('should map the stream', async () => {
+      const res = await firstValueFrom(component.vm$);
+
+      expect(Object.keys(res).length).toBe(9);
     });
   });
 });

@@ -118,7 +118,7 @@ export class TranslationComponent {
 
       const targetLangs = source === 'auto' ? languages : languages.filter((l) => l.targets?.includes(source));
 
-      if (!targetLangs.findIndex((tl) => tl.code === target)) {
+      if (source !== 'auto' && target && targetLangs.findIndex((tl) => tl.code === target) === -1) {
         this.targetSubject.next('');
       }
 
@@ -135,11 +135,9 @@ export class TranslationComponent {
   translateSubject = new Subject<void>();
   translate$ = this.translateSubject.pipe(
     withLatestFrom(this.source$, this.target$, this.settings$, this.textToTranslate$),
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    filter(([_, source, target, settings, textToTranslate]) => !!source && !!target && textToTranslate.length > 0),
+    filter(([, source, target,, textToTranslate]) => !!source && !!target && textToTranslate.length > 0),
     switchMap(
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      ([_, source, target, settings, textToTranslate]) => {
+      ([, source, target, settings, textToTranslate]) => {
         let service: ITranslator;
 
         this.errorSubject.next('');
