@@ -60,7 +60,7 @@ export class TranslationComponent {
     private dataService: DataService
   ) { }
 
-  translator = Transaltor;
+  readonly translator = Transaltor;
 
   textToTranslateSubject = new Subject<string>();
   textToTranslate$: Observable<string> = this.textToTranslateSubject.pipe(
@@ -72,23 +72,35 @@ export class TranslationComponent {
     tap((tab) => tab === 0 ? this.errorSubject.next('') : null)
   );
 
+  translatorSubject = new Subject<Transaltor>();
+  transaltor$: Observable<Transaltor | null> = this.translatorSubject.pipe(
+    startWith(null)
+  );
+
   languages$: Observable<ILanguage[]> = combineLatest(
-    [this.settings$, this.currentTab$]
+    [this.settings$, this.currentTab$, this.transaltor$]
   ).pipe(
-    filter(([, currentTab]) => currentTab === 0),
-    map(([settings]) => settings),
-    switchMap((settings) => {
+    filter(([settings, currentTab, transaltor]) => currentTab === 0 && (settings.translator !== transaltor || !transaltor)),
+    switchMap(([settings]) => {
+      let langs: Observable<ILanguage[]>;
+
       switch (settings.translator) {
         case Transaltor.GOOGLE:
-          return this.googleTranslateService.getLanguages();
+          langs = this.googleTranslateService.getLanguages();
+          break;
         case Transaltor.LIBRETRANSLATE:
-          return this.libreTranslateService.getLanguages();
+          langs =  this.libreTranslateService.getLanguages();
+          break;
         case Transaltor.APERTIUM:
         default:
-          return this.apertiumService.getLanguages().pipe(
+          langs =  this.apertiumService.getLanguages().pipe(
             map((langs) => langs.filter((lang) => !!lang.name))
           );
       }
+
+      return langs.pipe(
+        tap(() => this.translatorSubject.next(settings.translator))
+      );
     }),
     catchError((err: Error) => {
       console.error(err);
@@ -138,7 +150,7 @@ export class TranslationComponent {
   translateSubject = new Subject<void>();
   translate$ = this.translateSubject.pipe(
     withLatestFrom(this.source$, this.target$, this.settings$, this.textToTranslate$),
-    filter(([, source, target,, textToTranslate]) => !!source && !!target && textToTranslate.length > 0),
+    filter(([, source, target, , textToTranslate]) => !!source && !!target && textToTranslate.length > 0),
     switchMap(
       ([, source, target, settings, textToTranslate]) => {
         let service: ITranslator;
