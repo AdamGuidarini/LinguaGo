@@ -12,25 +12,19 @@
         <mat-label>LibreTranslate Settings</mat-label>
         <mat-form-field appearance="outline">
             <mat-label>URL</mat-label>
-            <input 
-                matInput #url type="text" 
-                [disabled]="vm.selectedTranslator !== 'libretranslate'"
-                [value]="vm.libreTranslateUrl"
-                (input)="libreTranslateUrlSubject.next(url.value)">
+            <input matInput #url type="text" [disabled]="vm.selectedTranslator !== 'libretranslate'"
+                [value]="vm.libreTranslateUrl" (input)="libreTranslateUrlSubject.next(url.value)">
         </mat-form-field>
         <mat-form-field appearance="outline">
             <mat-label>Key (Optional)</mat-label>
-            <input 
-                matInput #key type="text" 
-                [disabled]="vm.selectedTranslator !== 'libretranslate'"
-                [value]="vm.libreTranslateKey"
-                (input)="libreTranslateKeySubject.next(key.value)">
+            <input matInput #key type="text" [disabled]="vm.selectedTranslator !== 'libretranslate'"
+                [value]="vm.libreTranslateKey" (input)="libreTranslateKeySubject.next(key.value)">
         </mat-form-field>
     </mat-card>
     <mat-card>
         <mat-label>Data</mat-label>
         <div fxLayout="column" fxLayoutGap="10px">
-            <button mat-button>
+            <button mat-button (click)="fileUpload.click()">
                 Import History
             </button>
             <button mat-button (click)="exportDataSubject.next()">
@@ -41,6 +35,9 @@
             </button>
         </div>
     </mat-card>
+
+    <input type="file" style="display: none;" accept="application/json" multiple="false"
+        (change)="importDataSubject.next($event)" #fileUpload>
 </div>
 
 <ng-template *ngIf="triggers$ | async"></ng-template>

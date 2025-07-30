@@ -8,7 +8,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatRadioModule } from '@angular/material/radio';
 import { DateTime } from 'luxon';
-import { combineLatest, map, Observable, startWith, Subject, switchMap, tap, withLatestFrom } from 'rxjs';
+import { combineLatest, EMPTY, from, map, Observable, startWith, Subject, switchMap, tap, withLatestFrom } from 'rxjs';
 import { ISettings, Transaltor } from '../../interfaces/settings-interfaces';
 import { DataService } from '../../services/data.service';
 import { SettingsService } from '../../services/settings.service';
@@ -87,6 +87,26 @@ export class SettingsComponent {
     startWith('')
   );
 
+  importDataSubject = new Subject<Event>();
+  importData$ = this.importDataSubject.pipe(
+    switchMap((ev) => {
+      const input = ev.target as HTMLInputElement | null;
+      const file = input?.files && input.files.length > 0 ? input.files[0] : null;
+
+      if (file) {
+        return from(file.text()).pipe(
+          tap((t) => {
+            const data = JSON.parse(t);
+
+            console.log(data);
+          })
+        );
+      }
+
+      return EMPTY;
+    })
+  );
+
   exportDataSubject = new Subject<void>();
   exportData$ = this.exportDataSubject.pipe(
     switchMap(() => this.dataService.getTranslations(undefined, undefined)),
@@ -131,6 +151,7 @@ export class SettingsComponent {
   );
 
   triggers$ = combineLatest([
+    this.importData$,
     this.exportData$,
     this.deleteAll$
   ]);
