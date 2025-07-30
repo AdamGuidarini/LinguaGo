@@ -7,10 +7,11 @@ import { MatCard } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatRadioModule } from '@angular/material/radio';
-import { combineLatest, map, Observable, startWith, Subject, tap, withLatestFrom } from 'rxjs';
+import { DateTime } from 'luxon';
+import { combineLatest, map, Observable, startWith, Subject, switchMap, tap, withLatestFrom } from 'rxjs';
 import { ISettings, Transaltor } from '../../interfaces/settings-interfaces';
-import { SettingsService } from '../../services/settings.service';
 import { DataService } from '../../services/data.service';
+import { SettingsService } from '../../services/settings.service';
 
 @Component({
   selector: 'app-settings',
@@ -86,6 +87,28 @@ export class SettingsComponent {
     startWith('')
   );
 
+  exportDataSubject = new Subject<void>();
+  exportData$ = this.exportDataSubject.pipe(
+    switchMap(() => this.dataService.getTranslations(undefined, undefined)),
+    tap((data) => {
+      console.log(data);
+
+      const now = DateTime.now();
+
+      const blob = new Blob(
+        [JSON.stringify(data.translations)]
+      );
+
+      const link = document.createElement('a');
+      link.setAttribute('href', URL.createObjectURL(blob));
+      link.setAttribute('download', `linguago_${now.year}-${now.month}-${now.day}-${now.hour}-${now.minute}-${now.second}.json`);
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    })
+  );
+
   deleteAllSubject = new Subject<void>();
   deleteAll$ = this.deleteAllSubject.pipe(
     tap(() => this.dataService.deleteAllTranslations())
@@ -111,6 +134,7 @@ export class SettingsComponent {
   );
 
   triggers$ = combineLatest([
+    this.exportData$,
     this.deleteAll$
   ]);
 }
