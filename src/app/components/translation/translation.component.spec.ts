@@ -4,12 +4,12 @@ import { BehaviorSubject, firstValueFrom, of, take, throwError } from 'rxjs';
 import { ILanguage } from '../../interfaces/global-transation-interfaces';
 import { ISettings, Transaltor } from '../../interfaces/settings-interfaces';
 import { ApertiumService } from '../../services/apertium.service';
+import { DataService } from '../../services/data.service';
 import { GoogleTranslateService } from '../../services/google.service';
 import { LibreTranslateService } from '../../services/libre-translate.service';
 import { SettingsService } from '../../services/settings.service';
 import { TabsService } from '../../services/tabs.service';
 import { TranslationComponent } from './translation.component';
-import { DataService } from '../../services/data.service';
 
 jest.mock('webextension-polyfill');
 
@@ -263,7 +263,7 @@ describe('TranslationComponent', () => {
       component.translate$.subscribe(
         (res) => {
           if (res) {
-            expect(res).toStrictEqual({ result: 'Hola', key: 'mock-uuid' });
+            expect(res).toStrictEqual({ result: 'Hola', key: 'mock-uuid', timestamp: expect.stringContaining(':') });
             expect(mockApertiumService.translate).toHaveBeenCalled();
             done();
           }
@@ -282,7 +282,7 @@ describe('TranslationComponent', () => {
       component.translate$.subscribe(
         (res) => {
           if (res) {
-            expect(res).toStrictEqual({ result: 'Salve', key: 'mock-uuid' });
+            expect(res).toStrictEqual({ result: 'Salve', key: 'mock-uuid', timestamp: expect.stringContaining(':') });
             expect(mockLibreTranslateService.translate).toHaveBeenCalled();
             done();
           }
@@ -300,7 +300,7 @@ describe('TranslationComponent', () => {
       component.translate$.subscribe(
         (res) => {
           if (res) {
-            expect(res).toStrictEqual({ result: 'Hallo', key: 'mock-uuid' });
+            expect(res).toStrictEqual({ result: 'Hallo', key: 'mock-uuid', timestamp: expect.stringContaining(':') });
             expect(mockGoogleTranslateService.translate).toHaveBeenCalled();
             done();
           }

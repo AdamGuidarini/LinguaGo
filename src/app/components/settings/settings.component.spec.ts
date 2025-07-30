@@ -3,8 +3,10 @@ import { SettingsComponent } from './settings.component';
 import { SettingsService } from '../../services/settings.service';
 import { Transaltor } from '../../interfaces/settings-interfaces';
 import { of } from 'rxjs';
+import { DataService } from '../../services/data.service';
 
 const mockSettingsService = createSpyFromClass(SettingsService);
+const mockDataService = createSpyFromClass(DataService);
 
 describe('SettingsComponent', () => {
   let component: SettingsComponent;
@@ -17,7 +19,8 @@ describe('SettingsComponent', () => {
     );
 
     component = new SettingsComponent(
-      mockSettingsService
+      mockSettingsService,
+      mockDataService
     );
   });
 

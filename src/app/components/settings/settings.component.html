@@ -36,9 +36,11 @@
             <button mat-button>
                 Export History
             </button>
-            <button mat-button class="delete-button">
+            <button mat-button class="delete-button" (click)="deleteAllSubject.next()">
                 Delete History
             </button>
         </div>
     </mat-card>
 </div>
+
+<ng-template *ngIf="triggers$ | async"></ng-template>

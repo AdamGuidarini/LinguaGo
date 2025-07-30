@@ -89,11 +89,11 @@ export class TranslationComponent {
           langs = this.googleTranslateService.getLanguages();
           break;
         case Transaltor.LIBRETRANSLATE:
-          langs =  this.libreTranslateService.getLanguages();
+          langs = this.libreTranslateService.getLanguages();
           break;
         case Transaltor.APERTIUM:
         default:
-          langs =  this.apertiumService.getLanguages().pipe(
+          langs = this.apertiumService.getLanguages().pipe(
             map((langs) => langs.filter((lang) => !!lang.name))
           );
       }
@@ -151,43 +151,42 @@ export class TranslationComponent {
   translate$ = this.translateSubject.pipe(
     withLatestFrom(this.source$, this.target$, this.settings$, this.textToTranslate$),
     filter(([, source, target, , textToTranslate]) => !!source && !!target && textToTranslate.length > 0),
-    switchMap(
-      ([, source, target, settings, textToTranslate]) => {
-        let service: ITranslator;
+    switchMap(([, source, target, settings, textToTranslate]) => {
+      let service: ITranslator;
 
-        this.errorSubject.next('');
+      this.errorSubject.next('');
 
-        switch (settings.translator) {
-          case Transaltor.GOOGLE:
-            service = this.googleTranslateService;
-            break;
-          case Transaltor.LIBRETRANSLATE:
-            service = this.libreTranslateService;
-            break;
-          case Transaltor.APERTIUM:
-          default:
-            service = this.apertiumService;
-        }
+      switch (settings.translator) {
+        case Transaltor.GOOGLE:
+          service = this.googleTranslateService;
+          break;
+        case Transaltor.LIBRETRANSLATE:
+          service = this.libreTranslateService;
+          break;
+        case Transaltor.APERTIUM:
+        default:
+          service = this.apertiumService;
+      }
 
-        return service.translate(source, target, textToTranslate).pipe(
-          tap((translation) => {
-            this.translationSubject.next(translation.result);
+      return service.translate(source, target, textToTranslate).pipe(
+        tap((translation) => {
+          this.translationSubject.next(translation.result);
 
-            translation.key = crypto.randomUUID();
-            translation.timestamp = DateTime.now().toUTC().toISO();
+          translation.key = crypto.randomUUID();
+          translation.timestamp = DateTime.now().toUTC().toISO();
 
-            this.dataService.addTranslation(translation);
-          }),
-          catchError((err: Error) => {
-            console.error(err);
-            this.errorSubject.next(
-              `Translation failed with error: ${err.message}`
-            );
+          this.dataService.addTranslation(translation);
+        }),
+        catchError((err: Error) => {
+          console.error(err);
+          this.errorSubject.next(
+            `Translation failed with error: ${err.message}`
+          );
 
-            return '';
-          })
-        );
-      }),
+          return '';
+        })
+      );
+    }),
     startWith(null)
   );
 

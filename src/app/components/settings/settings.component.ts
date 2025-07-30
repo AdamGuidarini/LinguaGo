@@ -7,9 +7,10 @@ import { MatCard } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatRadioModule } from '@angular/material/radio';
-import { combineLatest, map, Observable, startWith, Subject, withLatestFrom } from 'rxjs';
+import { combineLatest, map, Observable, startWith, Subject, tap, withLatestFrom } from 'rxjs';
 import { ISettings, Transaltor } from '../../interfaces/settings-interfaces';
 import { SettingsService } from '../../services/settings.service';
+import { DataService } from '../../services/data.service';
 
 @Component({
   selector: 'app-settings',
@@ -29,7 +30,8 @@ import { SettingsService } from '../../services/settings.service';
 })
 export class SettingsComponent {
   constructor(
-    private settingsService: SettingsService
+    private settingsService: SettingsService,
+    private dataService: DataService
   ) { }
 
   settings$ = this.settingsService.getSettings();
@@ -84,6 +86,10 @@ export class SettingsComponent {
     startWith('')
   );
 
+  deleteAllSubject = new Subject<void>();
+  deleteAll$ = this.deleteAllSubject.pipe(
+    tap(() => this.dataService.deleteAllTranslations())
+  );
 
   vm$ = combineLatest([
     this.selectedTranslator$,
@@ -103,4 +109,8 @@ export class SettingsComponent {
       settings
     }))
   );
+
+  triggers$ = combineLatest([
+    this.deleteAll$
+  ]);
 }
