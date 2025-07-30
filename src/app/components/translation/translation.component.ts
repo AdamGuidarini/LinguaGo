@@ -31,6 +31,7 @@ import { LibreTranslateService } from '../../services/libre-translate.service';
 import { SettingsService } from '../../services/settings.service';
 import { TabsService } from '../../services/tabs.service';
 import { DataService } from '../../services/data.service';
+import { DateTime } from 'luxon';
 
 @Component({
   selector: 'app-translation',
@@ -157,12 +158,13 @@ export class TranslationComponent {
         }
 
         return service.translate(source, target, textToTranslate).pipe(
-          tap((res) => {
-            this.translationSubject.next(res.result);
+          tap((translation) => {
+            this.translationSubject.next(translation.result);
 
-            res.key = crypto.randomUUID();
+            translation.key = crypto.randomUUID();
+            translation.timestamp = DateTime.now().toUTC().toISO();
 
-            this.dataService.addTranslation(res);
+            this.dataService.addTranslation(translation);
           }),
           catchError((err: Error) => {
             console.error(err);

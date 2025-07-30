@@ -14,6 +14,7 @@ export interface ITranslation {
     confidence?: number;
     alternatives?: string[];
     key?: string;
+    timestamp?: string;
 }
 
 export interface ITranslator {

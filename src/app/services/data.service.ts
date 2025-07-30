@@ -19,9 +19,15 @@ export class DataService implements OnDestroy {
   setUp(): void {
     const request = window.indexedDB.open(this.databaseName, this.databaseVersion);
 
+    request.onupgradeneeded = () => {
+      const db = request.result;
+      if (!db.objectStoreNames.contains(this.objectStorageName)) {
+        db.createObjectStore(this.objectStorageName, { keyPath: 'key' });
+      }
+    };
+
     request.onsuccess = () => {
       this.db = request.result;
-      this.db.createObjectStore(this.objectStorageName);
     };
 
     request.onerror = (err: unknown) => {
@@ -44,7 +50,7 @@ export class DataService implements OnDestroy {
       throw new Error('Attempted to add item when database is null');
     }
 
-    const transaction = this.db.transaction(this.objectStorageName);
+    const transaction = this.db.transaction(this.objectStorageName, 'readwrite');
     const objectStore = transaction?.objectStore(this.objectStorageName);
 
     transaction.onerror = (err) => {
@@ -53,10 +59,10 @@ export class DataService implements OnDestroy {
       throw err;
     };
 
-    objectStore.add(translation, translation.key);
+    objectStore.add(translation);
   }
 
-  getTranslations(startIndex: number, batchSize: number): Observable<{ translations: ITranslation[], count: number }> {
+  getTranslations(startIndex: number | undefined, batchSize: number | undefined): Observable<{ translations: ITranslation[], count: number }> {
     return new Observable((observer) => {
       if (!this.db) {
         const err = new Error('DB reference is not defined');
@@ -65,7 +71,7 @@ export class DataService implements OnDestroy {
         return;
       }
 
-      const transaction = this.db.transaction(this.objectStorageName);
+      const transaction = this.db.transaction(this.objectStorageName, 'readwrite');
       const objectStore = transaction?.objectStore(this.objectStorageName);
 
       transaction.onerror = (err) => {
@@ -115,7 +121,7 @@ export class DataService implements OnDestroy {
       throw new Error('Attempted to delete data from undefined database reference');
     }
 
-    const transaction = this.db.transaction(this.objectStorageName);
+    const transaction = this.db.transaction(this.objectStorageName, 'readwrite');
     const objectStore = transaction?.objectStore(this.objectStorageName);
 
     transaction.onerror = (err) => {
@@ -125,5 +131,24 @@ export class DataService implements OnDestroy {
     };
 
     objectStore.delete(key);
+  }
+
+  deleteAllTranslations(): void {
+    if (!this.db) {
+      console.error('DB reference is not defined');
+
+      throw new Error('Attempted to delete data from undefined database reference');
+    }
+
+    const transaction = this.db.transaction(this.objectStorageName, 'readwrite');
+    const objectStore = transaction?.objectStore(this.objectStorageName);
+
+    transaction.onerror = (err) => {
+      console.error('Attempt to delete all translations from db', err);
+
+      throw err;
+    };
+
+    objectStore.clear();
   }
 }
