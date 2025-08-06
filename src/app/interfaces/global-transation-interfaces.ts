@@ -1,4 +1,5 @@
 import { Observable } from "rxjs";
+import { Transaltor } from "./settings-interfaces";
 
 export interface ILanguage {
     code: string;
@@ -15,6 +16,7 @@ export interface ITranslation {
     alternatives?: string[];
     key?: string;
     timestamp?: string;
+    translator?: Transaltor
 }
 
 export interface ITranslator {

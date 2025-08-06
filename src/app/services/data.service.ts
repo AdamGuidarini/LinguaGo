@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { ITranslation } from '../interfaces/global-transation-interfaces';
 import { Observable } from 'rxjs';
+import { ITranslation } from '../interfaces/global-transation-interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -16,25 +16,27 @@ export class DataService implements OnDestroy {
 
   db: IDBDatabase | null = null;
 
-  setUp(): void {
-    const request = window.indexedDB.open(this.databaseName, this.databaseVersion);
+  setUp(): Observable<boolean> {
+    return new Observable<boolean>((observer) => {
+      const request = window.indexedDB.open(this.databaseName, this.databaseVersion);
 
-    request.onupgradeneeded = () => {
-      const db = request.result;
-      if (!db.objectStoreNames.contains(this.objectStorageName)) {
-        db.createObjectStore(this.objectStorageName, { keyPath: 'key' });
-      }
-    };
+      request.onupgradeneeded = () => {
+        const db = request.result;
+        if (!db.objectStoreNames.contains(this.objectStorageName)) {
+          db.createObjectStore(this.objectStorageName, { keyPath: 'key' });
+        }
+      };
 
-    request.onsuccess = () => {
-      this.db = request.result;
-    };
+      request.onsuccess = () => {
+        this.db = request.result;
+        observer.next(true);
+      };
 
-    request.onerror = (err: unknown) => {
-      console.error(`An error has occurred in database: ${this.databaseName}`, err);
-
-      throw err;
-    };
+      request.onerror = (err: unknown) => {
+        console.error(`An error has occurred in database: ${this.databaseName}`, err);
+        observer.error(err);
+      };
+    });
   }
 
   ngOnDestroy(): void {

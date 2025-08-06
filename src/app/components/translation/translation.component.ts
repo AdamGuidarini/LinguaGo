@@ -174,6 +174,7 @@ export class TranslationComponent {
 
           translation.key = crypto.randomUUID();
           translation.timestamp = DateTime.now().toUTC().toISO();
+          translation.translator = settings.translator;
 
           this.dataService.addTranslation(translation);
         }),
