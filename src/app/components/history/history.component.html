@@ -1,6 +1,6 @@
 <div *ngIf="vm$ | async as vm">
     <p>Total Count: {{ vm.count }}</p>
-    <div *ngFor="let translation of vm.translationHistory.translations">
-        {{ translation | json }}
+    <div *ngFor="let translation of vm.translationHistory">
+        {{ translation.result }}
     </div>
 </div>

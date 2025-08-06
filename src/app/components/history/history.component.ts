@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { BehaviorSubject, catchError, combineLatest, filter, map, Observable, of, startWith, switchMap, tap, withLatestFrom } from 'rxjs';
+import { BehaviorSubject, catchError, combineLatest, filter, map, Observable, of, startWith, switchMap, tap } from 'rxjs';
 import { DataService } from '../../services/data.service';
 
 @Component({
@@ -21,29 +21,31 @@ export class HistoryComponent {
 
   dbReady$: Observable<boolean> = this.dataService.setUp().pipe(
     map(() => true),
-    catchError(() => of(false)),
+    catchError((err) => {
+      console.error(err);
+
+      return of(false);
+    }),
     startWith(false)
   );
 
   translationStartIndexSubject = new BehaviorSubject<number>(0);
-  translationHistory$ = this.translationStartIndexSubject.pipe(
-    withLatestFrom(this.dbReady$),
-    filter(([, dbReady]) => !!dbReady),
-    tap(() => console.log('Ready to fetch translations')),
-    switchMap(([start]) => this.dataService.getTranslations(start, this.batchSize)),
-    tap((res) => this.countSubject.next(res.count))
+  translationHistory$ = combineLatest([this.dbReady$, this.translationStartIndexSubject]).pipe(
+    filter(([dbReady]) => !!dbReady),
+    switchMap(([, start]) => this.dataService.getTranslations(start, start + this.batchSize)),
+    tap((res) => {
+      console.log(res);
+    })
   );
 
   countSubject = new BehaviorSubject<number>(0);
   count$ = this.countSubject.asObservable();
 
   vm$ = combineLatest([
-    this.dbReady$,
     this.translationHistory$,
     this.count$
   ]).pipe(
     map(([
-      ,
       translationHistory,
       count
     ]) => ({

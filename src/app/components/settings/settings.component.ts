@@ -109,7 +109,7 @@ export class SettingsComponent {
 
   exportDataSubject = new Subject<void>();
   exportData$ = this.exportDataSubject.pipe(
-    switchMap(() => this.dataService.getTranslations(undefined, undefined)),
+    switchMap(() => this.dataService.getAllTranslations()),
     tap((data) => {
       const now = DateTime.now();
       const blob = new Blob(

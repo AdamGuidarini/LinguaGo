@@ -30,6 +30,7 @@ export class DataService implements OnDestroy {
       request.onsuccess = () => {
         this.db = request.result;
         observer.next(true);
+        observer.complete();
       };
 
       request.onerror = (err: unknown) => {
@@ -64,7 +65,7 @@ export class DataService implements OnDestroy {
     objectStore.add(translation);
   }
 
-  getTranslations(startIndex: number | undefined, batchSize: number | undefined): Observable<{ translations: ITranslation[], count: number }> {
+  getTranslations(startIndex: number, endIndex: number): Observable<ITranslation[]> {
     return new Observable((observer) => {
       if (!this.db) {
         const err = new Error('DB reference is not defined');
@@ -73,7 +74,7 @@ export class DataService implements OnDestroy {
         return;
       }
 
-      const transaction = this.db.transaction(this.objectStorageName, 'readwrite');
+      const transaction = this.db.transaction(this.objectStorageName, 'readonly');
       const objectStore = transaction?.objectStore(this.objectStorageName);
 
       transaction.onerror = (err) => {
@@ -81,13 +82,46 @@ export class DataService implements OnDestroy {
         observer.error(err);
       };
 
-      let translations: ITranslation[] | null = null;
-      let count: number | null = null;
+      const translations: ITranslation[] = [];
+      const keyRange = IDBKeyRange.bound(startIndex, endIndex, false, true);
+
+      const request = objectStore.openCursor(keyRange);
+
+      request.onsuccess = (event) => {
+        const cursor = (event.target as IDBRequest).result as IDBCursorWithValue;
+        if (cursor) {
+          translations.push(cursor.value);
+          cursor.continue();
+        } else {
+          observer.next(translations);
+          observer.complete();
+        }
+      };
+    });
+  }
+
+  getAllTranslations(): Observable<{ translations: ITranslation[], count: number }> {
+    return new Observable((observer) => {
+      if (!this.db) {
+        const err = new Error('DB reference is not defined');
+        console.error(err.message);
+        observer.error(err);
+        return;
+      }
+
+      const transaction = this.db.transaction(this.objectStorageName, 'readonly');
+      const objectStore = transaction?.objectStore(this.objectStorageName);
+
+      transaction.onerror = (err) => {
+        console.error('Error retrieving records from indexed db', err);
+        observer.error(err);
+      };
+
+      let translations: ITranslation[];
+      let count: number;
 
       const countRequest = objectStore.count();
-      const getAllRequest = objectStore.getAll(
-        startIndex, batchSize
-      );
+      const getAllRequest = objectStore.getAll();
 
       countRequest.onsuccess = () => {
         count = countRequest.result;
@@ -97,7 +131,6 @@ export class DataService implements OnDestroy {
         }
       };
       countRequest.onerror = (err) => {
-        observer.error(err);
         observer.error(err);
       };
 
@@ -110,7 +143,6 @@ export class DataService implements OnDestroy {
       };
 
       getAllRequest.onerror = (err) => {
-        observer.error(err);
         observer.error(err);
       };
     });

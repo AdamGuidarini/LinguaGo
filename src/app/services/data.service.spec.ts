@@ -151,7 +151,7 @@ describe('DataService', () => {
     });
   });
 
-  describe('getTranslations method', () => {
+  describe('getAllTranslations method', () => {
     it('should return an Observable with the translations - translations first', (done) => {
       service.db = mockDb;
       const mockGetAllResp = {
@@ -177,7 +177,7 @@ describe('DataService', () => {
         () => mockCountResp as any
       );
 
-      const retVal = service.getTranslations(0, 50);
+      const retVal = service.getAllTranslations();
 
       retVal.subscribe(
         (res) => {
@@ -227,7 +227,7 @@ describe('DataService', () => {
         () => mockCountResp as any
       );
 
-      const retVal = service.getTranslations(0, 50);
+      const retVal = service.getAllTranslations();
 
       retVal.subscribe(
         (res) => {
@@ -254,7 +254,7 @@ describe('DataService', () => {
 
     it('should throw an error if the transaction fails', (done) => {
       service.db = mockDb;
-      const retVal = service.getTranslations(0, 50);
+      const retVal = service.getAllTranslations();
 
       retVal.pipe(
         catchError((err) => {
@@ -286,7 +286,7 @@ describe('DataService', () => {
         () => mockCountResp as any
       );
 
-      const retVal = service.getTranslations(0, 50);
+      const retVal = service.getAllTranslations();
 
       retVal.pipe(
         catchError((err) => {
@@ -318,7 +318,7 @@ describe('DataService', () => {
         () => mockCountResp as any
       );
 
-      const retVal = service.getTranslations(0, 50);
+      const retVal = service.getAllTranslations();
 
       retVal.pipe(
         catchError((err) => {
@@ -337,7 +337,7 @@ describe('DataService', () => {
     it('should error out if db is falsy', (done) => {
       service.db = null;
 
-      const retVal = service.getTranslations(0, 50);
+      const retVal = service.getAllTranslations();
 
       retVal.pipe(
         catchError((err) => {
