@@ -65,42 +65,7 @@ export class DataService implements OnDestroy {
     objectStore.add(translation);
   }
 
-  getTranslations(startIndex: number, endIndex: number): Observable<ITranslation[]> {
-    return new Observable((observer) => {
-      if (!this.db) {
-        const err = new Error('DB reference is not defined');
-        console.error(err.message);
-        observer.error(err);
-        return;
-      }
-
-      const transaction = this.db.transaction(this.objectStorageName, 'readonly');
-      const objectStore = transaction?.objectStore(this.objectStorageName);
-
-      transaction.onerror = (err) => {
-        console.error('Error retrieving records from indexed db', err);
-        observer.error(err);
-      };
-
-      const translations: ITranslation[] = [];
-      const keyRange = IDBKeyRange.bound(startIndex, endIndex, false, true);
-
-      const request = objectStore.openCursor(keyRange);
-
-      request.onsuccess = (event) => {
-        const cursor = (event.target as IDBRequest).result as IDBCursorWithValue;
-        if (cursor) {
-          translations.push(cursor.value);
-          cursor.continue();
-        } else {
-          observer.next(translations);
-          observer.complete();
-        }
-      };
-    });
-  }
-
-  getAllTranslations(): Observable<{ translations: ITranslation[], count: number }> {
+  getTranslations(): Observable<{ translations: ITranslation[], count: number }> {
     return new Observable((observer) => {
       if (!this.db) {
         const err = new Error('DB reference is not defined');

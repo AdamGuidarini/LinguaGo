@@ -29,10 +29,9 @@ export class HistoryComponent {
     startWith(false)
   );
 
-  translationStartIndexSubject = new BehaviorSubject<number>(0);
-  translationHistory$ = combineLatest([this.dbReady$, this.translationStartIndexSubject]).pipe(
-    filter(([dbReady]) => !!dbReady),
-    switchMap(([, start]) => this.dataService.getTranslations(start, start + this.batchSize)),
+  translationHistory$ = this.dbReady$.pipe(
+    filter((dbReady) => !!dbReady),
+    switchMap(() => this.dataService.getTranslations()),
     tap((res) => {
       console.log(res);
     })
