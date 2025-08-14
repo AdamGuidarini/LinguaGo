@@ -1,6 +1,17 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { BehaviorSubject, catchError, combineLatest, filter, map, Observable, of, startWith, switchMap, tap } from 'rxjs';
+import {
+  BehaviorSubject,
+  catchError,
+  combineLatest,
+  filter,
+  map,
+  Observable,
+  of,
+  startWith,
+  switchMap,
+  tap 
+} from 'rxjs';
 import { DataService } from '../../services/data.service';
 
 @Component({
