@@ -1,6 +1,17 @@
 <div *ngIf="vm$ | async as vm">
     <p>Total Count: {{ vm.count }}</p>
-    <div *ngFor="let translation of vm.translationHistory.translations">
-        {{ translation.result }}
-    </div>
+    <mat-card *ngFor="let translation of vm.translationHistory.translations" style="margin: 5px; padding: 5px;">
+        <div>
+            <span>Original - {{ translation.source }}: </span> {{ translation.original }}
+        </div>
+        <div>
+            <span>Translation - {{ translation.target }}: </span> {{ translation.result }}
+        </div>
+        <div>
+            <span>Translator: </span> {{ translation.translator }}
+        </div>
+        <div>
+            <span>Timestamp: </span> {{ translation.timestamp }}
+        </div>
+    </mat-card>
 </div>

@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { MatCardModule } from '@angular/material/card';
 import {
   BehaviorSubject,
   catchError,
@@ -10,7 +11,7 @@ import {
   of,
   startWith,
   switchMap,
-  tap 
+  tap
 } from 'rxjs';
 import { DataService } from '../../services/data.service';
 
@@ -18,7 +19,8 @@ import { DataService } from '../../services/data.service';
   selector: 'app-history',
   standalone: true,
   imports: [
-    CommonModule
+    CommonModule,
+    MatCardModule
   ],
   templateUrl: './history.component.html',
   styleUrl: './history.component.scss'

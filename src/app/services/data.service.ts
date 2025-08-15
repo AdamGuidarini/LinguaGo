@@ -88,28 +88,25 @@ export class DataService implements OnDestroy {
       const countRequest = objectStore.count();
       const getAllRequest = objectStore.getAll();
 
-      countRequest.onsuccess = () => {
-        count = countRequest.result;
-        if (translations !== null) {
+      const tryComplete = () => {
+        if (translations && (count || count === 0)) {
           observer.next({ translations, count });
           observer.complete();
         }
       };
-      countRequest.onerror = (err) => {
-        observer.error(err);
+
+      countRequest.onsuccess = () => {
+        count = countRequest.result;
+        tryComplete();
       };
 
       getAllRequest.onsuccess = () => {
         translations = getAllRequest.result;
-        if (count !== null) {
-          observer.next({ translations, count });
-          observer.complete();
-        }
+        tryComplete();
       };
 
-      getAllRequest.onerror = (err) => {
-        observer.error(err);
-      };
+      countRequest.onerror = (err) => observer.error(err);
+      getAllRequest.onerror = (err) => observer.error(err);
     });
   }
 
