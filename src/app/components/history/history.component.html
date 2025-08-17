@@ -1,5 +1,4 @@
 <div *ngIf="vm$ | async as vm">
-    <p>Total Count: {{ vm.count }}</p>
     <mat-card *ngFor="let translation of vm.translationHistory.translations" style="margin: 5px; padding: 5px;">
         <div>
             <span>Original - {{ translation.source }}: </span> {{ translation.original }}
@@ -11,7 +10,7 @@
             <span>Translator: </span> {{ translation.translator }}
         </div>
         <div>
-            <span>Timestamp: </span> {{ translation.timestamp }}
+            <span>Timestamp: </span> {{ translation.timestamp | datetime }}
         </div>
     </mat-card>
 </div>

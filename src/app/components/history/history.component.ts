@@ -14,20 +14,24 @@ import {
   tap
 } from 'rxjs';
 import { DataService } from '../../services/data.service';
+import { DatetimePipe } from '../../pipes/datetime.pipe';
+import { TabsService } from '../../services/tabs.service';
 
 @Component({
   selector: 'app-history',
   standalone: true,
   imports: [
     CommonModule,
-    MatCardModule
+    MatCardModule,
+    DatetimePipe
   ],
   templateUrl: './history.component.html',
   styleUrl: './history.component.scss'
 })
 export class HistoryComponent {
   constructor(
-    private dataService: DataService
+    private dataService: DataService,
+    private tabsService: TabsService
   ) { }
 
   private readonly batchSize = 50;
@@ -42,8 +46,10 @@ export class HistoryComponent {
     startWith(false)
   );
 
-  translationHistory$ = this.dbReady$.pipe(
-    filter((dbReady) => !!dbReady),
+  translationHistory$ = combineLatest([
+    this.dbReady$, this.tabsService.getCurrentTab()
+  ]).pipe(
+    filter(([dbReady, tab]) => !!dbReady && tab === 1),
     switchMap(() => this.dataService.getTranslations()),
     tap((res) => {
       console.log(res);
@@ -51,18 +57,14 @@ export class HistoryComponent {
   );
 
   countSubject = new BehaviorSubject<number>(0);
-  count$ = this.countSubject.asObservable();
 
   vm$ = combineLatest([
-    this.translationHistory$,
-    this.count$
+    this.translationHistory$
   ]).pipe(
     map(([
-      translationHistory,
-      count
+      translationHistory
     ]) => ({
-      translationHistory,
-      count
+      translationHistory
     }))
   );
 }
