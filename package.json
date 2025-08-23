@@ -3,8 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "build": "ng build --aot && npx webpack --config webpack.config.js && npx web-ext build -s ./dist/lingua-go/browser -o",
-    "start:firefox": "web-ext run -t firefox-desktop --devtools -s ./dist/lingua-go/browser",
-    "start:chromium": "web-ext run -t chromium --devtools -s ./dist/lingua-go/browser",
+    "start": "web-ext run -t firefox-desktop --devtools -s ./dist/lingua-go/browser",
     "test": "npx jest",
     "lint": "ng lint",
     "clean": "rm -r dist"
