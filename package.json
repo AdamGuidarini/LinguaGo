@@ -39,6 +39,7 @@
     "google-translate-api-x": "^10.7.2",
     "jest-auto-spies": "^3.0.0",
     "luxon": "^3.7.1",
+    "primeicons": "^7.0.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "web-ext": "^8.8.0",

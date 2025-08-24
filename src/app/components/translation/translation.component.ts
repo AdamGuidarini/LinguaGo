@@ -32,6 +32,7 @@ import { SettingsService } from '../../services/settings.service';
 import { TabsService } from '../../services/tabs.service';
 import { DataService } from '../../services/data.service';
 import { DateTime } from 'luxon';
+import { TranslatorPipe } from '../../pipes/translator.pipe';
 
 @Component({
   selector: 'app-translation',
@@ -45,7 +46,8 @@ import { DateTime } from 'luxon';
     CommonModule,
     FlexLayoutModule,
     MatButtonModule,
-    HttpClientModule
+    HttpClientModule,
+    TranslatorPipe
   ],
   templateUrl: './translation.component.html',
   styleUrl: './translation.component.scss'

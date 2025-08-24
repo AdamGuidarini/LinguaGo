@@ -1,6 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { FlexModule } from '@angular/flex-layout';
 import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
 import {
   BehaviorSubject,
   catchError,
@@ -10,14 +12,13 @@ import {
   Observable,
   of,
   startWith,
-  switchMap,
-  tap
+  switchMap
 } from 'rxjs';
-import { DataService } from '../../services/data.service';
 import { DatetimePipe } from '../../pipes/datetime.pipe';
-import { TabsService } from '../../services/tabs.service';
-import { FlexModule } from '@angular/flex-layout';
 import { LanguageNamePipe } from '../../pipes/language-name.pipe';
+import { TranslatorPipe } from '../../pipes/translator.pipe';
+import { DataService } from '../../services/data.service';
+import { TabsService } from '../../services/tabs.service';
 
 @Component({
   selector: 'app-history',
@@ -27,7 +28,9 @@ import { LanguageNamePipe } from '../../pipes/language-name.pipe';
     MatCardModule,
     DatetimePipe,
     LanguageNamePipe,
-    FlexModule
+    TranslatorPipe,
+    FlexModule,
+    MatIconModule
   ],
   templateUrl: './history.component.html',
   styleUrl: './history.component.scss'
@@ -54,10 +57,7 @@ export class HistoryComponent {
     this.dbReady$, this.tabsService.getCurrentTab()
   ]).pipe(
     filter(([dbReady, tab]) => !!dbReady && tab === 1),
-    switchMap(() => this.dataService.getTranslations()),
-    tap((res) => {
-      console.log(res);
-    })
+    switchMap(() => this.dataService.getTranslations())
   );
 
   countSubject = new BehaviorSubject<number>(0);

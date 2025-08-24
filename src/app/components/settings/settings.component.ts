@@ -8,8 +8,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatRadioModule } from '@angular/material/radio';
 import { DateTime } from 'luxon';
-import { combineLatest, EMPTY, from, map, Observable, startWith, Subject, switchMap, tap, withLatestFrom } from 'rxjs';
-import { ISettings, Transaltor } from '../../interfaces/settings-interfaces';
+import { BehaviorSubject, combineLatest, EMPTY, from, map, Observable, startWith, Subject, switchMap, tap, withLatestFrom } from 'rxjs';
+import { Transaltor } from '../../interfaces/settings-interfaces';
 import { DataService } from '../../services/data.service';
 import { SettingsService } from '../../services/settings.service';
 
@@ -37,19 +37,20 @@ export class SettingsComponent {
 
   settings$ = this.settingsService.getSettings();
 
-  selectedTranslatorSubject = new Subject<string>();
-  selectedTranslator$: Observable<Transaltor> = this.selectedTranslatorSubject
-    .pipe(
-      withLatestFrom(this.settings$),
-      map(([choice, settings]) => {
-        const updatedSettings: ISettings = { ...settings, translator: choice as Transaltor };
+  selectedTranslatorSubject = new BehaviorSubject<string>('');
+  selectedTranslator$: Observable<Transaltor> = combineLatest([
+    this.selectedTranslatorSubject, this.settings$
+  ]).pipe(
+    map(([choice, settings]) => {
+      if (choice && choice !== settings.translator) {
+        this.settingsService.saveSettings(
+          { ...settings, translator: choice as Transaltor }
+        );
+      }
 
-        this.settingsService.saveSettings(updatedSettings);
-
-        return choice as Transaltor;
-      }),
-      startWith(Transaltor.APERTIUM)
-    );
+      return choice as Transaltor;
+    })
+  );
 
   libreTranslateUrlSubject = new Subject<string>();
   libreTranslateUrl$: Observable<string> = this.libreTranslateUrlSubject.pipe(

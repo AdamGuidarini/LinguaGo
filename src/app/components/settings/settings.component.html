@@ -1,8 +1,8 @@
 <div *ngIf="vm$ | async as vm">
     <mat-card>
         <mat-label style="padding-bottom: 0 !important;">Translators</mat-label>
-        <mat-radio-group fxLayout="column" (change)="selectedTranslatorSubject.next($event.value)"
-            [value]="vm.selectedTranslator">
+        <mat-radio-group fxLayout="column" (ngModelChange)="selectedTranslatorSubject.next($event)"
+            [(ngModel)]="vm.selectedTranslator">
             <mat-radio-button value="apertium">Apertium</mat-radio-button>
             <mat-radio-button value="libretranslate">LibreTranslate</mat-radio-button>
             <mat-radio-button value="google">Google (Unofficial)</mat-radio-button>

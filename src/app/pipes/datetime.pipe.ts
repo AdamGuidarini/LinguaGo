@@ -15,6 +15,6 @@ export class DatetimePipe implements PipeTransform {
     const dateStr = date.toLocaleDateString();
     const timeStr = date.toLocaleTimeString();
 
-    return `${dateStr} - ${timeStr}`;
+    return `${dateStr} ${timeStr}`;
   }
 }

@@ -25,6 +25,6 @@ describe('DatetimePipe', () => {
       testDate
     );
 
-    expect(retVal).toBe(`${dateStr} - ${timeStr}`);
+    expect(retVal).toBe(`${dateStr} ${timeStr}`);
   });
 });

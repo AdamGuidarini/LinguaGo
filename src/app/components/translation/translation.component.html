@@ -17,10 +17,14 @@
             </select>
         </div>
     </div>
+    <div class="translator-label">
+        {{ vm.settings.translator | translator }}
+    </div>
     <div *ngIf="!(vm.settings.translator === translator.LIBRETRANSLATE && !vm.settings.libreTranslateUrl)"
         fxLayout="column" fxLayoutAlign="space-around center">
         <mat-form-field appearance="outline">
-            <textarea #inputText matInput minRows="5" (input)="this.textToTranslateSubject.next(inputText.value)"></textarea>
+            <textarea #inputText matInput minRows="5"
+                (input)="this.textToTranslateSubject.next(inputText.value)"></textarea>
         </mat-form-field>
         <mat-form-field appearance="outline">
             <textarea matInput minRows="5" readonly="true"
