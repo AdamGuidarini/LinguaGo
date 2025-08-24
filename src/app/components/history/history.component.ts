@@ -12,13 +12,16 @@ import {
   Observable,
   of,
   startWith,
-  switchMap
+  Subject,
+  switchMap,
+  tap
 } from 'rxjs';
 import { DatetimePipe } from '../../pipes/datetime.pipe';
 import { LanguageNamePipe } from '../../pipes/language-name.pipe';
 import { TranslatorPipe } from '../../pipes/translator.pipe';
 import { DataService } from '../../services/data.service';
 import { TabsService } from '../../services/tabs.service';
+import { ITranslation } from '../../interfaces/global-transation-interfaces';
 
 @Component({
   selector: 'app-history',
@@ -62,13 +65,21 @@ export class HistoryComponent {
 
   countSubject = new BehaviorSubject<number>(0);
 
-  vm$ = combineLatest([
-    this.translationHistory$
-  ]).pipe(
-    map(([
-      translationHistory
-    ]) => ({
-      translationHistory
-    }))
+  deleteTranslationSubject = new Subject<ITranslation>();
+  deleteTranslation$ = this.deleteTranslationSubject.pipe(
+    tap((t) => {
+      if (t.key) { this.dataService.deleteTranslation(t.key); }
+    }),
+    tap(() => this.tabsService.changeTab(1))
   );
+
+vm$ = combineLatest([
+  this.translationHistory$
+]).pipe(
+  map(([
+    translationHistory
+  ]) => ({
+    translationHistory
+  }))
+);
 }

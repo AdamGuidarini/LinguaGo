@@ -8,7 +8,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatRadioModule } from '@angular/material/radio';
 import { DateTime } from 'luxon';
-import { BehaviorSubject, combineLatest, EMPTY, from, map, Observable, startWith, Subject, switchMap, tap, withLatestFrom } from 'rxjs';
+import { BehaviorSubject, combineLatest, EMPTY, from, map, Observable, startWith, Subject, switchMap, take, tap, withLatestFrom } from 'rxjs';
 import { Transaltor } from '../../interfaces/settings-interfaces';
 import { DataService } from '../../services/data.service';
 import { SettingsService } from '../../services/settings.service';
@@ -36,6 +36,10 @@ export class SettingsComponent {
   ) { }
 
   settings$ = this.settingsService.getSettings();
+  firstSettings$ = this.settings$.pipe(
+    take(1),
+    tap((settings) => this.selectedTranslatorSubject.next(settings.translator))
+  );
 
   selectedTranslatorSubject = new BehaviorSubject<string>('');
   selectedTranslator$: Observable<Transaltor> = combineLatest([
@@ -136,18 +140,21 @@ export class SettingsComponent {
     this.selectedTranslator$,
     this.libreTranslateUrl$,
     this.libreTranslateKey$,
-    this.settings$
+    this.settings$,
+    this.firstSettings$
   ]).pipe(
     map(([
       selectedTranslator,
       libreTranslateUrl,
       libreTranslateKey,
-      settings
+      settings,
+      firstSettings
     ]) => ({
       selectedTranslator,
       libreTranslateUrl,
       libreTranslateKey,
-      settings
+      settings,
+      firstSettings
     }))
   );
 

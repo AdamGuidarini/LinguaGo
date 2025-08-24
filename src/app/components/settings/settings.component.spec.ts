@@ -151,7 +151,8 @@ describe('SettingsComponent', () => {
               'selectedTranslator',
               'libreTranslateUrl',
               'libreTranslateKey',
-              'settings'
+              'settings',
+              'firstSettings'
             ]
           );
           done();

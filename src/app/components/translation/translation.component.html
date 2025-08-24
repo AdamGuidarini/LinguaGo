@@ -1,4 +1,7 @@
 <mat-card *ngIf="vm$ | async as vm" style="margin: 5px; padding: 5px;">
+    <div class="translator-label">
+        Translator: {{ vm.settings.translator | translator }}
+    </div>
     <div fxLayout="column" fxLayoutAlign="space-around center">
         <div class="select">
             <select [value]="vm.source" #s (change)="sourceSubject.next(s.value)">
@@ -16,9 +19,6 @@
                 </option>
             </select>
         </div>
-    </div>
-    <div class="translator-label">
-        {{ vm.settings.translator | translator }}
     </div>
     <div *ngIf="!(vm.settings.translator === translator.LIBRETRANSLATE && !vm.settings.libreTranslateUrl)"
         fxLayout="column" fxLayoutAlign="space-around center">

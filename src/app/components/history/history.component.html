@@ -6,7 +6,9 @@
                     <span style="flex: 1;">
                         Original - {{ (translation.source | languagename: translation.translator) | async }}
                     </span>
-                    <i class="pi pi-trash" style="cursor: pointer; color: var(--delete);"></i>
+                    <button style="background: none; border: none;" (click)="deleteTranslationSubject.next(translation)">
+                        <i class="pi pi-trash" style="color: var(--delete);"></i>
+                    </button>
                 </div>
                 <div>{{ translation.original }}</div>
             </div>
@@ -28,3 +30,5 @@
         </div>
     </mat-card>
 </div>
+
+<ng-template *ngIf="deleteTranslation$ | async"></ng-template>
