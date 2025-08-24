@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "LinguaGo",
   "version": "0.1",
-  "description": "A brief description of my extension.",
+  "description": "A browser extension to help translate in a side bar.",
   "permissions": [
     "activeTab",
     "https://translate.google.com/*"

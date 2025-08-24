@@ -16,7 +16,7 @@ export interface ITranslation {
     alternatives?: string[];
     key?: string;
     timestamp?: string;
-    translator?: Transaltor
+    translator: Transaltor
 }
 
 export interface ITranslator {

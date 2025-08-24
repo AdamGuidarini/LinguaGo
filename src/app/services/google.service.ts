@@ -4,6 +4,7 @@ import { from, map, Observable, of } from 'rxjs';
 import Browser from 'webextension-polyfill';
 import { ITranslateMessage } from '../../extension-actions/interfaces/translate-message-interfaces';
 import { ILanguage, ITranslation, ITranslator } from '../interfaces/global-transation-interfaces';
+import { Transaltor } from '../interfaces/settings-interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -35,7 +36,8 @@ export class GoogleTranslateService implements ITranslator {
           target,
           result: result.result.text,
           original: text,
-          confidence: (result.result.raw as unknown as { confidence: number })?.confidence
+          confidence: (result.result.raw as unknown as { confidence: number })?.confidence,
+          translator: Transaltor.GOOGLE
         };
       })
     );

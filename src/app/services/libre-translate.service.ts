@@ -4,6 +4,7 @@ import { map, Observable, of, switchMap } from 'rxjs';
 import { ILanguage, ITranslation, ITranslator } from '../interfaces/global-transation-interfaces';
 import { ILibreTranslation } from '../interfaces/libre-translate-interfaces';
 import { SettingsService } from './settings.service';
+import { Transaltor } from '../interfaces/settings-interfaces';
 
 
 /**
@@ -53,7 +54,8 @@ export class LibreTranslateService implements ITranslator {
         result: result.translatedText,
         original: text,
         confidence: result.detectedLanguage?.confidence,
-        alternatives: result.alternatives
+        alternatives: result.alternatives,
+        translator: Transaltor.LIBRETRANSLATE
       }))
     );
   }

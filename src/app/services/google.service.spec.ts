@@ -1,6 +1,7 @@
 import { languages } from 'google-translate-api-x';
 import { GoogleTranslateService } from './google.service';
 import Browser from 'webextension-polyfill';
+import { Transaltor } from '../interfaces/settings-interfaces';
 
 jest.mock('webextension-polyfill');
 
@@ -47,6 +48,7 @@ describe('GoogleService', () => {
             result: 'Ciao',
             source: 'en',
             target: 'it',
+            translator: Transaltor.GOOGLE
           });
           done();
         }

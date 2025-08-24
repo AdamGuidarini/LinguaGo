@@ -16,6 +16,8 @@ import {
 import { DataService } from '../../services/data.service';
 import { DatetimePipe } from '../../pipes/datetime.pipe';
 import { TabsService } from '../../services/tabs.service';
+import { FlexModule } from '@angular/flex-layout';
+import { LanguageNamePipe } from '../../pipes/language-name.pipe';
 
 @Component({
   selector: 'app-history',
@@ -23,7 +25,9 @@ import { TabsService } from '../../services/tabs.service';
   imports: [
     CommonModule,
     MatCardModule,
-    DatetimePipe
+    DatetimePipe,
+    LanguageNamePipe,
+    FlexModule
   ],
   templateUrl: './history.component.html',
   styleUrl: './history.component.scss'

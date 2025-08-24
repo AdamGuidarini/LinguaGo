@@ -1,8 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map, Observable, switchMap } from 'rxjs';
+import { map, Observable, of, switchMap, tap } from 'rxjs';
 import { IApertiumIdentification, IApertiumLanguageCode, IApertiumLanguageNames, IApertiumResponse, IApertiumTranslationRepsonse } from '../interfaces/apertium-interfaces';
 import { ILanguage, ITranslation, ITranslator } from '../interfaces/global-transation-interfaces';
+import { Transaltor } from '../interfaces/settings-interfaces';
 
 /**
  * Serivce using Aprtium APY for translations.
@@ -18,26 +19,36 @@ export class ApertiumService implements ITranslator {
   ) { }
 
   private readonly baseUrl = 'https://beta.apertium.org/apy';
+  private languages$: Observable<ILanguage[]> = of([]);
 
   getLanguages(): Observable<ILanguage[]> {
-    const prs = new Set<string>();
+    return this.languages$.pipe(
+      switchMap((langs) => {
+        if (langs.length > 0) {
+          return of(langs);
+        }
 
-    return this.httpClient.get<IApertiumResponse<IApertiumLanguageCode[]>>(`${this.baseUrl}/listPairs`).pipe(
-      switchMap((response) => {
-        response.responseData.forEach((p) => prs.add(p.sourceLanguage));
+        const prs = new Set<string>();
 
-        return this.getLanguageNames(Array.from(prs.values())).pipe(
-          map((names) => ({ pairs: response.responseData, names })));
-      }),
-      map(({ pairs, names }) => Array.from(prs.values()).map(
-        (p) => ({
-          code: p,
-          name: names[p],
-          targets: Object.entries(pairs)
-            .filter((entry) => entry[1].targetLanguage === p)
-            .map((entry) => entry[1].sourceLanguage)
-        }))
-      )
+        return this.httpClient.get<IApertiumResponse<IApertiumLanguageCode[]>>(`${this.baseUrl}/listPairs`).pipe(
+          switchMap((response) => {
+            response.responseData.forEach((p) => prs.add(p.sourceLanguage));
+
+            return this.getLanguageNames(Array.from(prs.values())).pipe(
+              map((names) => ({ pairs: response.responseData, names })));
+          }),
+          map(({ pairs, names }) => Array.from(prs.values()).map(
+            (p) => ({
+              code: p,
+              name: names[p],
+              targets: Object.entries(pairs)
+                .filter((entry) => entry[1].targetLanguage === p)
+                .map((entry) => entry[1].sourceLanguage)
+            }))
+          ),
+          tap((l) => this.languages$ = of(l))
+        );  
+      })
     );
   }
 
@@ -61,7 +72,8 @@ export class ApertiumService implements ITranslator {
         source,
         target,
         result: result.responseData.translatedText,
-        original: text
+        original: text,
+        translator: Transaltor.APERTIUM
       }))
     );
   }

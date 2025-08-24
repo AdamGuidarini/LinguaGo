@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { catchError } from 'rxjs';
 import { DataService } from './data.service';
+import { Transaltor } from '../interfaces/settings-interfaces';
 
 describe('DataService', () => {
   let service: DataService;
@@ -122,7 +123,8 @@ describe('DataService', () => {
           target: 'en',
           source: 'it',
           result: 'Hello, world!',
-          original: 'Ciao, mondo!'
+          original: 'Ciao, mondo!',
+          translator: Transaltor.APERTIUM
         }
       );
 
@@ -145,7 +147,8 @@ describe('DataService', () => {
           target: 'en',
           source: 'it',
           result: 'Hello, world!',
-          original: 'Ciao, mondo!'
+          original: 'Ciao, mondo!',
+          translator: Transaltor.APERTIUM
         }
       )).toThrow('Oh no!');
     });

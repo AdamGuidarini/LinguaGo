@@ -84,6 +84,9 @@ export class TranslationComponent {
     switchMap(([settings]) => {
       let langs: Observable<ILanguage[]>;
 
+      this.translationSubject.next('');
+      this.textToTranslateSubject.next('');
+
       switch (settings.translator) {
         case Transaltor.GOOGLE:
           langs = this.googleTranslateService.getLanguages();
@@ -174,7 +177,6 @@ export class TranslationComponent {
 
           translation.key = crypto.randomUUID();
           translation.timestamp = DateTime.now().toUTC().toISO();
-          translation.translator = settings.translator;
 
           this.dataService.addTranslation(translation);
         }),
