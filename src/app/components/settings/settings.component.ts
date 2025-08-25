@@ -99,13 +99,15 @@ export class SettingsComponent {
 
       if (file) {
         return from(file.text()).pipe(
-          tap((t) => {
+          switchMap((t) => {
             const data: ITranslation[] = JSON.parse(t);
 
             this.dataService.deleteAllTranslations();
-            
-            return forkJoin(
-              data.map((d) => this.dataService.addTranslation(d))
+
+            return this.dataService.deleteAllTranslations().pipe(
+              switchMap(() => forkJoin(
+                data.map((d) => this.dataService.addTranslation(d))
+              ))
             );
           })
         );
@@ -136,7 +138,7 @@ export class SettingsComponent {
 
   deleteAllSubject = new Subject<void>();
   deleteAll$ = this.deleteAllSubject.pipe(
-    tap(() => this.dataService.deleteAllTranslations())
+    switchMap(() => this.dataService.deleteAllTranslations())
   );
 
   vm$ = combineLatest([

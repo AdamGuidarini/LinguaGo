@@ -133,22 +133,37 @@ export class DataService implements OnDestroy {
     objectStore.delete(key);
   }
 
-  deleteAllTranslations(): void {
-    if (!this.db) {
-      console.error('DB reference is not defined');
+  deleteAllTranslations(): Observable<void> {
+    return new Observable((observer) => {
+      if (!this.db) {
+        console.error('DB reference is not defined');
+        observer.error(new Error('Attempted to delete data from undefined database reference'));
 
-      throw new Error('Attempted to delete data from undefined database reference');
-    }
+        return;
+      }
 
-    const transaction = this.db.transaction(this.objectStorageName, 'readwrite');
-    const objectStore = transaction?.objectStore(this.objectStorageName);
+      const transaction = this.db.transaction(this.objectStorageName, 'readwrite');
+      const objectStore = transaction?.objectStore(this.objectStorageName);
 
-    transaction.onerror = (err) => {
-      console.error('Attempt to delete all translations from db', err);
+      transaction.onerror = (err) => {
+        console.error('Attempt to delete all translations from db', err);
+        observer.error(err);
 
-      throw err;
-    };
+        return;
+      };
 
-    objectStore.clear();
+      const request = objectStore.clear();
+
+      request.onsuccess = () => {
+        observer.next();
+        observer.complete();
+      };
+
+      request.onerror = (err) => {
+        observer.error(err);
+
+        return;
+      };
+    });
   }
 }

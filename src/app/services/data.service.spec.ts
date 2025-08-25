@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { catchError } from 'rxjs';
+import { catchError, lastValueFrom } from 'rxjs';
 import { DataService } from './data.service';
 import { Transaltor } from '../interfaces/settings-interfaces';
 
@@ -24,7 +24,15 @@ describe('DataService', () => {
       count: jest.fn(() => ({ onsuccess: null, onerror: null })),
       getAll: jest.fn(() => ({ onsuccess: null, onerror: null })),
       delete: jest.fn(),
-      clear: jest.fn()
+      clear: jest.fn(() => {
+        const request: any = {};
+        setTimeout(() => {
+          if (typeof request.onsuccess === 'function') {
+            request.onsuccess();
+          }
+        }, 0);
+        return request;
+      })
     } as unknown as IDBObjectStore;
 
     mockTransaction = {
@@ -413,10 +421,10 @@ describe('DataService', () => {
   });
 
   describe('deleteAllTranslations method', () => {
-    it('should delete translations', () => {
+    it('should delete translations', async () => {
       service.db = mockDb;
 
-      service.deleteAllTranslations();
+      await lastValueFrom(service.deleteAllTranslations());
 
       expect(mockObjectStore.clear).toHaveBeenCalled();
     });
