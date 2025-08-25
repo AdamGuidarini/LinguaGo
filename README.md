@@ -46,8 +46,5 @@ The built extension will be places in `web-ext-artifacts/linguago-[version].zip`
 
 The compiled filed will be placed in `dist/lingua-go` and can be loaded into a browser from there if you prefer to run locally.
 
-You can also have web-ext load the extension into a browser for testing with the scripts in `package.json`:
-
-- FireFox `yarn start:firefox`
-- Chromium `yarn start:chromium`
+You can also have web-ext load the extension into a browser for testing with the scripts in `package.json`: `yarn start`
 
