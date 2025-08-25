@@ -3,7 +3,6 @@ import { Component } from '@angular/core';
 import { FlexModule } from '@angular/flex-layout';
 import { MatIconModule } from '@angular/material/icon';
 import {
-  BehaviorSubject,
   catchError,
   combineLatest,
   filter,
@@ -61,23 +60,23 @@ export class HistoryComponent {
     switchMap(() => this.dataService.getTranslations())
   );
 
-  countSubject = new BehaviorSubject<number>(0);
-
   deleteTranslationSubject = new Subject<ITranslation>();
   deleteTranslation$ = this.deleteTranslationSubject.pipe(
     tap((t) => {
-      if (t.key) { this.dataService.deleteTranslation(t.key); }
+      if (t.key) {
+        this.dataService.deleteTranslation(t.key);
+      }
     }),
     tap(() => this.tabsService.changeTab(1))
   );
 
-vm$ = combineLatest([
-  this.translationHistory$
-]).pipe(
-  map(([
-    translationHistory
-  ]) => ({
-    translationHistory
-  }))
-);
+  vm$ = combineLatest([
+    this.translationHistory$
+  ]).pipe(
+    map(([
+      translationHistory
+    ]) => ({
+      translationHistory
+    }))
+  );
 }
