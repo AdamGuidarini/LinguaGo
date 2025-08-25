@@ -61,7 +61,7 @@ describe('ApertiumService', () => {
       service.getLanguageNames([]).subscribe(
         () => {
           expect(mockHttpClient.get).toHaveBeenLastCalledWith(
-            'https://beta.apertium.org/apy/listLanguageNames?locale=en'
+            'https://apertium.org/apy/listLanguageNames?locale=en'
           );
           done();
         }

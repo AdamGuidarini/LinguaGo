@@ -1,4 +1,4 @@
-<mat-card *ngIf="vm$ | async as vm" style="margin: 5px; padding: 5px;">
+<div *ngIf="vm$ | async as vm" class="card">
     <div class="translator-label">
         Translator: {{ vm.settings.translator | translator }}
     </div>
@@ -40,4 +40,4 @@
         LibreTranslate requires a URL to be provided to function, but none was found.
     </div>
     <div *ngIf="vm.error" class="error-box" style="margin-top: 5px;">{{ vm.error }}</div>
-</mat-card>
+</div>

@@ -1,5 +1,5 @@
 <div *ngIf="vm$ | async as vm">
-    <mat-card>
+    <div class="card">
         <mat-label style="padding-bottom: 0 !important;">Translators</mat-label>
         <mat-radio-group fxLayout="column" (ngModelChange)="selectedTranslatorSubject.next($event)"
             [(ngModel)]="vm.selectedTranslator">
@@ -7,8 +7,8 @@
             <mat-radio-button value="libretranslate">LibreTranslate</mat-radio-button>
             <mat-radio-button value="google">Google (Unofficial)</mat-radio-button>
         </mat-radio-group>
-    </mat-card>
-    <mat-card>
+    </div>
+    <div class="card">
         <mat-label>LibreTranslate Settings</mat-label>
         <mat-form-field appearance="outline">
             <mat-label>URL</mat-label>
@@ -20,8 +20,8 @@
             <input matInput #key type="text" [disabled]="vm.selectedTranslator !== 'libretranslate'"
                 [value]="vm.libreTranslateKey" (input)="libreTranslateKeySubject.next(key.value)">
         </mat-form-field>
-    </mat-card>
-    <mat-card>
+    </div>
+    <div class="card">
         <mat-label>Data</mat-label>
         <div fxLayout="column" fxLayoutGap="10px">
             <button mat-button (click)="fileUpload.click()">
@@ -34,7 +34,7 @@
                 Delete History
             </button>
         </div>
-    </mat-card>
+    </div>
 
     <input type="file" style="display: none;" accept="application/json" multiple="false"
         (change)="importDataSubject.next($event)" #fileUpload>

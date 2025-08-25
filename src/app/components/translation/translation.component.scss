@@ -12,6 +12,13 @@ mat-form-field {
     opacity: 70% !important;
 }
 
+.card {
+    margin: 5px;
+    padding: 5px;
+    border: solid black 0.5px;
+    border-radius: 5px;
+}
+
 select {
     background-color: transparent;
     border: none;

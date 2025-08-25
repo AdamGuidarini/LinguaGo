@@ -1,8 +1,16 @@
 @import "primeicons/primeicons.css";
 
+.card {
+    margin: 5px;
+    padding: 5px;
+    border: solid black 0.5px;
+    border-radius: 5px;
+}
+
 .header {
     font-weight: 600;
     border-bottom: solid 1.5px;
-    color: #677;
+    color: #7d7d7d;
     font-size: 1.1em;
+    margin-bottom: 2px;
 }

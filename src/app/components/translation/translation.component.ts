@@ -4,10 +4,10 @@ import { Component } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import { DateTime } from 'luxon';
 import {
   BehaviorSubject,
   catchError,
@@ -25,14 +25,13 @@ import {
 } from 'rxjs';
 import { ILanguage, ITranslator } from '../../interfaces/global-transation-interfaces';
 import { Transaltor } from '../../interfaces/settings-interfaces';
+import { TranslatorPipe } from '../../pipes/translator.pipe';
 import { ApertiumService } from '../../services/apertium.service';
+import { DataService } from '../../services/data.service';
 import { GoogleTranslateService } from '../../services/google.service';
 import { LibreTranslateService } from '../../services/libre-translate.service';
 import { SettingsService } from '../../services/settings.service';
 import { TabsService } from '../../services/tabs.service';
-import { DataService } from '../../services/data.service';
-import { DateTime } from 'luxon';
-import { TranslatorPipe } from '../../pipes/translator.pipe';
 
 @Component({
   selector: 'app-translation',
@@ -41,7 +40,6 @@ import { TranslatorPipe } from '../../pipes/translator.pipe';
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
-    MatCardModule,
     FormsModule,
     CommonModule,
     FlexLayoutModule,
@@ -87,7 +85,6 @@ export class TranslationComponent {
       let langs: Observable<ILanguage[]>;
 
       this.translationSubject.next('');
-      this.textToTranslateSubject.next('');
 
       switch (settings.translator) {
         case Transaltor.GOOGLE:

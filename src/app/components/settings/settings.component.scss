@@ -3,9 +3,11 @@ mat-card mat-label {
     padding-bottom: 10px;
 }
 
-mat-card {
+.card {
     margin: 5px;
     padding: 5px;
+    border: solid black 0.5px;
+    border-radius: 5px;
 }
 
 ::ng-deep .mdc-radio {

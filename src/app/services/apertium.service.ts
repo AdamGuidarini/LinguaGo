@@ -18,7 +18,7 @@ export class ApertiumService implements ITranslator {
     private httpClient: HttpClient
   ) { }
 
-  private readonly baseUrl = 'https://beta.apertium.org/apy';
+  private readonly baseUrl = 'https://apertium.org/apy';
   private languages$: Observable<ILanguage[]> = of([]);
 
   getLanguages(): Observable<ILanguage[]> {

@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FlexModule } from '@angular/flex-layout';
-import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import {
   BehaviorSubject,
@@ -16,19 +15,18 @@ import {
   switchMap,
   tap
 } from 'rxjs';
+import { ITranslation } from '../../interfaces/global-transation-interfaces';
 import { DatetimePipe } from '../../pipes/datetime.pipe';
 import { LanguageNamePipe } from '../../pipes/language-name.pipe';
 import { TranslatorPipe } from '../../pipes/translator.pipe';
 import { DataService } from '../../services/data.service';
 import { TabsService } from '../../services/tabs.service';
-import { ITranslation } from '../../interfaces/global-transation-interfaces';
 
 @Component({
   selector: 'app-history',
   standalone: true,
   imports: [
     CommonModule,
-    MatCardModule,
     DatetimePipe,
     LanguageNamePipe,
     TranslatorPipe,

@@ -1,5 +1,5 @@
 <div *ngIf="vm$ | async as vm">
-    <mat-card *ngFor="let translation of vm.translationHistory.translations" style="margin: 5px; padding: 5px;">
+    <div *ngFor="let translation of vm.translationHistory.translations" class="card">
         <div fxLayout="column">
             <div>
                 <div fxLayout="row" fxLayoutAlign="space-between center" class="header">
@@ -28,7 +28,7 @@
                 </div>
             </div>
         </div>
-    </mat-card>
+    </div>
 </div>
 
 <ng-template *ngIf="deleteTranslation$ | async"></ng-template>
