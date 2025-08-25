@@ -65,26 +65,26 @@ describe('DataService', () => {
   });
 
   describe('setUp method', () => {
-    it('should define the db', () => {
-      service.setUp();
-
-      if (mockOpenRequest.onsuccess) {
-        mockOpenRequest.onsuccess({} as any);
-      }
-
-      expect(service.db).toBe(mockDb);
+    it('should define the db', (done) => {
+      service.setUp().subscribe(
+        () => {
+          expect(service.db).toBe(mockDb);
+          done();
+        }
+      );
     });
 
-    it('should throw an error if request fails', () => {
-      service.setUp();
-
-      expect(() => {
-        if (mockOpenRequest.onerror) {
-          mockOpenRequest.onerror(new Error('Oh no!') as any);
+    it('should error if database open fails', (done) => {
+      service.setUp().subscribe({
+        error: (err) => {
+          expect(err).toBeDefined();
+          done();
         }
-      }).toThrow(
-        'Oh no!'
-      );
+      });
+
+      if (mockOpenRequest.onerror) {
+        mockOpenRequest.onerror(new Error('Open failed') as any);
+      }
     });
   });
 
