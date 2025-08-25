@@ -46,23 +46,27 @@ export class DataService implements OnDestroy {
     }
   }
 
-  addTranslation(translation: ITranslation): void {
-    if (!this.db) {
-      console.error('DB reference is not defined');
+  addTranslation(translation: ITranslation): Observable<void> {
+    return new Observable<void>((observer) => {
+      if (!this.db) {
+        observer.error(new Error('DB reference is not defined'));
+        return;
+      }
 
-      throw new Error('Attempted to add item when database is null');
-    }
+      const transaction = this.db.transaction(this.objectStorageName, 'readwrite');
+      const objectStore = transaction.objectStore(this.objectStorageName);
 
-    const transaction = this.db.transaction(this.objectStorageName, 'readwrite');
-    const objectStore = transaction?.objectStore(this.objectStorageName);
+      transaction.onerror = (err) => observer.error(err);
 
-    transaction.onerror = (err) => {
-      console.error('Error inserting record into indexed db', err, translation);
+      const request = objectStore.add(translation);
 
-      throw err;
-    };
+      request.onsuccess = () => {
+        observer.next();
+        observer.complete();
+      };
 
-    objectStore.add(translation);
+      request.onerror = (err) => observer.error(err);
+    });
   }
 
   getTranslations(): Observable<{ translations: ITranslation[], count: number }> {

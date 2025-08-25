@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { createSpyFromClass } from 'jest-auto-spies';
-import { SettingsComponent } from './settings.component';
-import { SettingsService } from '../../services/settings.service';
+import { lastValueFrom, of } from 'rxjs';
 import { Transaltor } from '../../interfaces/settings-interfaces';
-import { of } from 'rxjs';
 import { DataService } from '../../services/data.service';
+import { SettingsService } from '../../services/settings.service';
+import { SettingsComponent } from './settings.component';
 
 const mockSettingsService = createSpyFromClass(SettingsService);
 const mockDataService = createSpyFromClass(DataService);
@@ -139,6 +140,19 @@ describe('SettingsComponent', () => {
 
       component.libreTranslateKeySubject.next('foo');
       component.libreTranslateKeySubject.next('foo');
+    });
+  });
+
+  describe('importData$ stream', () => {
+    it('should read the data', () => {
+      component.importData$.subscribe();
+      component.importDataSubject.next({
+        target: {
+          files: [{ text: () => lastValueFrom(of('{ "foo": "bar"  }')) }]
+        } as any
+      } as any);
+
+      
     });
   });
 

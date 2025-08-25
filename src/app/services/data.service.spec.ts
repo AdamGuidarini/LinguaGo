@@ -12,7 +12,15 @@ describe('DataService', () => {
 
   beforeEach(() => {
     mockObjectStore = {
-      add: jest.fn(),
+      add: jest.fn(() => {
+        const request: any = {};
+        setTimeout(() => {
+          if (typeof request.onsuccess === 'function') {
+            request.onsuccess();
+          }
+        }, 0);
+        return request;
+      }),
       count: jest.fn(() => ({ onsuccess: null, onerror: null })),
       getAll: jest.fn(() => ({ onsuccess: null, onerror: null })),
       delete: jest.fn(),
@@ -107,15 +115,20 @@ describe('DataService', () => {
   });
 
   describe('addTranslation method', () => {
-    it('should throw an error if db is falsy', () => {
+    it('should throw an error if db is falsy', (done) => {
       service.db = null;
 
-      expect(() => service.addTranslation({} as any)).toThrow(
-        'Attempted to add item when database is null'
-      );
+      service.addTranslation({} as any).pipe(
+        catchError((err) => {
+          expect(err).toStrictEqual(new Error('DB reference is not defined'));
+          done();
+
+          return [];
+        })
+      ).subscribe();
     });
 
-    it('should add an item to the db', () => {
+    it('should add an item to the db', (done) => {
       service.db = mockDb;
 
       service.addTranslation(
@@ -126,12 +139,15 @@ describe('DataService', () => {
           original: 'Ciao, mondo!',
           translator: Transaltor.APERTIUM
         }
+      ).subscribe(
+        () => {
+          expect(mockObjectStore.add).toHaveBeenCalled();
+          done();
+        }
       );
-
-      expect(mockObjectStore.add).toHaveBeenCalled();
     });
 
-    it('should throw an error if one occurs while adding to db', () => {
+    it('should throw an error if one occurs while adding to db', (done) => {
       mockObjectStore.add = jest.fn(() => {
         if (typeof mockTransaction.onerror === 'function') {
           mockTransaction.onerror('Oh no!' as any);
@@ -142,7 +158,7 @@ describe('DataService', () => {
 
       service.db = mockDb;
 
-      expect(() => service.addTranslation(
+      service.addTranslation(
         {
           target: 'en',
           source: 'it',
@@ -150,7 +166,14 @@ describe('DataService', () => {
           original: 'Ciao, mondo!',
           translator: Transaltor.APERTIUM
         }
-      )).toThrow('Oh no!');
+      ).pipe(
+        catchError((err) => {
+          expect(err).toStrictEqual('Oh no!');
+          done();
+
+          return [];
+        })
+      ).subscribe();
     });
   });
 

@@ -50,6 +50,7 @@ describe('TranslationComponent', () => {
       (settings) => mockSettingsBS.next(settings)
     );
     mockTabsService.getCurrentTab.mockReturnValue(of(0));
+    mockDataService.addTranslation.mockReturnValue(of(undefined));
 
     if (!('randomUUID' in crypto)) {
       (crypto as any).randomUUID = jest.fn(() => 'mock-uuid');

@@ -171,13 +171,15 @@ export class TranslationComponent {
       }
 
       return service.translate(source, target, textToTranslate).pipe(
-        tap((translation) => {
+        switchMap((translation) => {
           this.translationSubject.next(translation.result);
 
           translation.key = crypto.randomUUID();
           translation.timestamp = DateTime.now().toUTC().toISO();
 
-          this.dataService.addTranslation(translation);
+          return this.dataService.addTranslation(translation).pipe(
+            map(() => translation)
+          );
         }),
         catchError((err: Error) => {
           console.error(err);

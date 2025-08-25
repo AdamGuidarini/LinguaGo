@@ -7,7 +7,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatRadioModule } from '@angular/material/radio';
 import { DateTime } from 'luxon';
-import { BehaviorSubject, combineLatest, EMPTY, from, map, Observable, startWith, Subject, switchMap, take, tap, withLatestFrom } from 'rxjs';
+import { BehaviorSubject, combineLatest, EMPTY, forkJoin, from, map, Observable, startWith, Subject, switchMap, take, tap, withLatestFrom } from 'rxjs';
+import { ITranslation } from '../../interfaces/global-transation-interfaces';
 import { Transaltor } from '../../interfaces/settings-interfaces';
 import { DataService } from '../../services/data.service';
 import { SettingsService } from '../../services/settings.service';
@@ -99,9 +100,13 @@ export class SettingsComponent {
       if (file) {
         return from(file.text()).pipe(
           tap((t) => {
-            const data = JSON.parse(t);
+            const data: ITranslation[] = JSON.parse(t);
 
-            console.log(data);
+            this.dataService.deleteAllTranslations();
+            
+            return forkJoin(
+              data.map((d) => this.dataService.addTranslation(d))
+            );
           })
         );
       }
