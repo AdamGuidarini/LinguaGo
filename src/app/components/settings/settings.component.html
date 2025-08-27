@@ -40,4 +40,13 @@
         (change)="importDataSubject.next($event)" #fileUpload>
 </div>
 
+<dialog #confirmationdialog>
+    <div id="title" class="title"></div>
+    <div id="message" class="message"></div>
+    <mat-dialog-actions fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="15px">
+        <button id="cancel" class="button close" mat-button>Cancel</button>
+        <button id="accept" class="button" mat-button>OK</button>
+    </mat-dialog-actions>
+</dialog>
+
 <ng-template *ngIf="triggers$ | async"></ng-template>

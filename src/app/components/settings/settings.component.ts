@@ -1,13 +1,14 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatRadioModule } from '@angular/material/radio';
 import { DateTime } from 'luxon';
-import { BehaviorSubject, combineLatest, EMPTY, forkJoin, from, map, Observable, startWith, Subject, switchMap, take, tap, withLatestFrom } from 'rxjs';
+import { BehaviorSubject, combineLatest, EMPTY, filter, forkJoin, from, map, Observable, startWith, Subject, switchMap, take, tap, throwError, withLatestFrom } from 'rxjs';
 import { ITranslation } from '../../interfaces/global-transation-interfaces';
 import { Transaltor } from '../../interfaces/settings-interfaces';
 import { DataService } from '../../services/data.service';
@@ -23,7 +24,8 @@ import { SettingsService } from '../../services/settings.service';
     MatInputModule,
     FormsModule,
     CommonModule,
-    MatButtonModule
+    MatButtonModule,
+    MatDialogModule
   ],
   templateUrl: './settings.component.html',
   styleUrl: './settings.component.scss'
@@ -33,6 +35,10 @@ export class SettingsComponent {
     private settingsService: SettingsService,
     private dataService: DataService
   ) { }
+  @ViewChild('confirmationdialog') confirmationDialog: ElementRef | undefined;
+
+  modalTrigger = new Subject<{ show: boolean, title: string, message: string }>();
+  modal$ = this.modalTrigger.asObservable();
 
   settings$ = this.settingsService.getSettings();
   firstSettings$ = this.settings$.pipe(
@@ -138,6 +144,11 @@ export class SettingsComponent {
 
   deleteAllSubject = new Subject<void>();
   deleteAll$ = this.deleteAllSubject.pipe(
+    switchMap(() => this.showDialog(
+      'Permanently Delete All Translations',
+      'Are you sure you want to delete all translations? This action cannot be undone!'
+    )),
+    filter((res) => res),
     switchMap(() => this.dataService.deleteAllTranslations())
   );
 
@@ -168,4 +179,54 @@ export class SettingsComponent {
     this.exportData$,
     this.deleteAll$
   ]);
+
+  showDialog(dialogTitle: string, dialogMessage: string): Observable<boolean> {
+    if (!this.confirmationDialog) {
+      return throwError(() => 'Could not bind confirmation dialog');
+    }
+
+    this.confirmationDialog.nativeElement.showModal();
+
+    return new Observable((observer) => {
+      const title = document.getElementById('title');
+      const message = document.getElementById('message');
+      const cancel = document.getElementById('cancel');
+      const accept = document.getElementById('accept');
+
+      console.log(title, dialogTitle, message, dialogMessage);
+
+      if (title && message) {
+        title.textContent = dialogTitle;
+        message.textContent = dialogMessage;
+      } else {
+        observer.error('Could not bind title or message elements in dialog');
+        return;
+      }
+
+      if (!cancel || !accept) {
+        observer.error('Could not bind cancel or accept elements in dialog');
+        return;
+      }
+
+      accept.addEventListener(
+        'click',
+        () => {
+          this.confirmationDialog?.nativeElement.close();
+
+          observer.next(true);
+          observer.complete();
+        }
+      );
+
+      cancel.addEventListener(
+        'click',
+        () => {
+          this.confirmationDialog?.nativeElement.close();
+
+          observer.next(false);
+          observer.complete();
+        }
+      );
+    });
+  }
 }

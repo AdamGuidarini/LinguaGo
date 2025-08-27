@@ -31,3 +31,18 @@ button {
 .delete-button {
     background-color: var(--delete) !important;
 }
+
+dialog {
+    border: none;
+    border-radius: 5px;
+}
+
+.title {
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.message {
+    font-weight: 500;
+    margin-bottom: 10px;
+}
