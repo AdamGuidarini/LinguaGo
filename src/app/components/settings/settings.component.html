@@ -24,7 +24,7 @@
     <div class="card">
         <mat-label>Data</mat-label>
         <div fxLayout="column" fxLayoutGap="10px">
-            <button mat-button (click)="fileUpload.click()">
+            <button mat-button (click)="importClickTrigger.next()">
                 Import History
             </button>
             <button mat-button (click)="exportDataSubject.next()">
@@ -37,7 +37,7 @@
     </div>
 
     <input type="file" style="display: none;" accept="application/json" multiple="false"
-        (change)="importDataSubject.next($event)" #fileUpload>
+        (change)="importDataSubject.next($event)" id="fileupload">
 </div>
 
 <dialog #confirmationdialog>

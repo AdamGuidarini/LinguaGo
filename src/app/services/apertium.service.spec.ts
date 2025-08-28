@@ -1,7 +1,7 @@
 import { createSpyFromClass } from 'jest-auto-spies';
 import { ApertiumService } from './apertium.service';
 import { HttpClient } from '@angular/common/http';
-import { of } from 'rxjs';
+import { lastValueFrom, of } from 'rxjs';
 
 const mockHttpClient = createSpyFromClass(HttpClient);
 
@@ -40,6 +40,17 @@ describe('ApertiumService', () => {
           done();
         }
       );
+    });
+
+    it('should return the language list if it already exists', async () => {
+      await lastValueFrom(service.getLanguages());
+
+      mockHttpClient.get.mockClear();
+
+      const retVal = await lastValueFrom(service.getLanguages());
+
+      expect(mockHttpClient.get).not.toHaveBeenCalled();
+      expect(retVal).toHaveLength(3);
     });
   });
 

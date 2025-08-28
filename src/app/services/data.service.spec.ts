@@ -44,6 +44,7 @@ describe('DataService', () => {
       transaction: jest.fn(() => mockTransaction),
       close: jest.fn(),
       createObjectStore: jest.fn(),
+      objectStoreNames: { contains: jest.fn() }
     } as unknown as IDBDatabase;
 
     mockOpenRequest = {
@@ -57,6 +58,7 @@ describe('DataService', () => {
       error: null,
       source: null,
       transaction: null,
+      onupgradeneeded: null
     } as unknown as IDBOpenDBRequest;
 
     Object.defineProperty(window, 'indexedDB', {
@@ -100,6 +102,38 @@ describe('DataService', () => {
 
       if (mockOpenRequest.onerror) {
         mockOpenRequest.onerror(new Error('Open failed') as any);
+      }
+    });
+
+    it('should not create object store if it exists', (done) => {
+      mockDb.objectStoreNames.contains = jest.fn(() => true);
+
+      service.setUp().subscribe(
+        () => {
+          expect(mockDb.createObjectStore)
+            .not
+            .toHaveBeenCalled();
+          done();
+        }
+      );
+
+      if (typeof mockOpenRequest.onupgradeneeded === 'function') {
+        mockOpenRequest.onupgradeneeded({} as any);
+      }
+    });
+
+    it('should create objectstore if needed', (done) => {
+      service.setUp().subscribe(
+        () => {
+          expect(mockDb.createObjectStore).toHaveBeenCalledWith(
+            'translations', { keyPath: 'key' }
+          );
+          done();
+        }
+      );
+
+      if (typeof mockOpenRequest.onupgradeneeded === 'function') {
+        mockOpenRequest.onupgradeneeded({} as any);
       }
     });
   });
@@ -421,6 +455,19 @@ describe('DataService', () => {
   });
 
   describe('deleteAllTranslations method', () => {
+    it('should throw an error if db is falsy', (done) => {
+      service.db = null;
+
+      service.deleteAllTranslations().pipe(
+        catchError((err) => {
+          expect(err).toStrictEqual(new Error('Attempted to delete data from undefined database reference'));
+          done();
+
+          return [];
+        })
+      ).subscribe();
+    });
+
     it('should delete translations', async () => {
       service.db = mockDb;
 
@@ -429,27 +476,46 @@ describe('DataService', () => {
       expect(mockObjectStore.clear).toHaveBeenCalled();
     });
 
-    it('should throw an error if one occurs while deleteing', () => {
+    it('should throw an error if the transaction fails', (done) => {
       service.db = mockDb;
+      const retVal = service.deleteAllTranslations();
 
-      try {
-        service.deleteAllTranslations();
+      retVal.pipe(
+        catchError((err) => {
+          expect(err).toStrictEqual(new Error('Oh no!'));
+          done();
 
-        if (mockTransaction.onerror) {
-          mockTransaction.onerror(new Error('Oh no!') as any);
-        }
-      } catch (e) {
-        expect(e).toStrictEqual(
-          new Error('Oh no!')
-        );
+          return [];
+        })
+      ).subscribe();
+
+      if (typeof mockTransaction.onerror === 'function') {
+        mockTransaction.onerror(new Error('Oh no!') as any);
       }
     });
 
-    it('should throw an error if db is null', () => {
-      service.db = null;
+    it('should throw an error if one occurs while deleting to db', (done) => {
+      const clearRequest = { onerror: jest.fn() };
 
-      expect(() => service.deleteTranslation('foo')).toThrow(
-        new Error('Attempted to delete data from undefined database reference')
+      mockObjectStore.clear = jest.fn(
+        () => clearRequest as any
+      );
+
+      service.db = mockDb;
+
+      service.deleteAllTranslations().pipe(
+        catchError((err) => {
+          expect(err).toStrictEqual(
+            new Error('Oh no!')
+          );
+          done();
+
+          return [];
+        })
+      ).subscribe();
+
+      clearRequest.onerror(
+        new Error('Oh no!')
       );
     });
   });

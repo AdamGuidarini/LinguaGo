@@ -97,6 +97,22 @@ export class SettingsComponent {
     startWith('')
   );
 
+  importClickTrigger = new Subject<void>();
+  importClick$ = this.importClickTrigger.pipe(
+        switchMap(
+      () => this.showDialog(
+        'Warning!',
+        'Importing data will delete all existing data, do you want to continue?'
+      )
+    ),
+    filter((accept) => accept),
+    tap(() => {
+      const filePicker = document.getElementById('fileupload');
+
+      filePicker?.click();
+    })
+  );
+
   importDataSubject = new Subject<Event>();
   importData$ = this.importDataSubject.pipe(
     switchMap((ev) => {
@@ -177,7 +193,8 @@ export class SettingsComponent {
   triggers$ = combineLatest([
     this.importData$,
     this.exportData$,
-    this.deleteAll$
+    this.deleteAll$,
+    this.importClick$
   ]);
 
   showDialog(dialogTitle: string, dialogMessage: string): Observable<boolean> {

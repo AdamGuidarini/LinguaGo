@@ -16,7 +16,5 @@ export class TranslatorPipe implements PipeTransform {
       case Transaltor.APERTIUM:
         return 'Apertium';
     }
-
-    return '';
   }
 }

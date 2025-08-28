@@ -7,7 +7,7 @@ describe('SettingsService', () => {
   beforeEach(() => {
     jest.spyOn(Storage.prototype, 'setItem');
     jest.spyOn(Storage.prototype, 'getItem').mockReturnValue(
-      '{ "translator": "apertium" }'
+      '{ "translator": "google" }'
     );
 
     service = new SettingsService();
@@ -21,7 +21,24 @@ describe('SettingsService', () => {
     it('should return the settings observable', (done) => {
       service.getSettings().subscribe(
         (res) => {
-          expect(res).toStrictEqual({ translator: 'apertium' });
+          expect(res).toStrictEqual({ translator: 'google' });
+          done();
+        }
+      );
+    });
+
+    it('should return the default settings of no settings are found', (done) => {
+      jest.spyOn(Storage.prototype, 'getItem').mockReturnValue(
+        null
+      );
+
+      service = new SettingsService();
+
+      service.getSettings().subscribe(
+        (settings) => {
+          expect(settings).toStrictEqual(
+            { translator: Transaltor.APERTIUM }
+          );
           done();
         }
       );
