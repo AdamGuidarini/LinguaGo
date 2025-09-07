@@ -35,7 +35,7 @@ export class LanguageNamePipe implements PipeTransform {
     }
 
     return service.getLanguages().pipe(
-      map((langs) => langs.find((l) => l.code === value)?.name || '')
+      map((langs) => langs.find((l) => l.code === value)?.name || value)
     );
   }
 }

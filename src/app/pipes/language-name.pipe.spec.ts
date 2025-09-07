@@ -75,5 +75,22 @@ describe('LanguageNamePipe', () => {
         mockLangs[0].name
       );
     });
+
+    it('should return an empty string if there is no valid translator', async () => {
+      const retVal = await firstValueFrom(
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        pipe.transform('hello', 'world' as any)
+      );
+
+      expect(retVal).toBe('');
+    });
+
+    it('should the provided language code if no language is found', async () => {
+      const retVal = await firstValueFrom(
+        pipe.transform('hello', Transaltor.APERTIUM)
+      );
+
+      expect(retVal).toBe('hello');
+    });
   });
 });

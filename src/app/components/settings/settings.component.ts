@@ -8,7 +8,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatRadioModule } from '@angular/material/radio';
 import { DateTime } from 'luxon';
-import { BehaviorSubject, combineLatest, EMPTY, filter, forkJoin, from, map, Observable, startWith, Subject, switchMap, take, tap, throwError, withLatestFrom } from 'rxjs';
+import { BehaviorSubject, combineLatest, filter, forkJoin, from, map, Observable, of, startWith, Subject, switchMap, take, tap, throwError, withLatestFrom } from 'rxjs';
 import { ITranslation } from '../../interfaces/global-transation-interfaces';
 import { Transaltor } from '../../interfaces/settings-interfaces';
 import { DataService } from '../../services/data.service';
@@ -99,7 +99,7 @@ export class SettingsComponent {
 
   importClickTrigger = new Subject<void>();
   importClick$ = this.importClickTrigger.pipe(
-        switchMap(
+    switchMap(
       () => this.showDialog(
         'Warning!',
         'Importing data will delete all existing data, do you want to continue?'
@@ -124,8 +124,6 @@ export class SettingsComponent {
           switchMap((t) => {
             const data: ITranslation[] = JSON.parse(t);
 
-            this.dataService.deleteAllTranslations();
-
             return this.dataService.deleteAllTranslations().pipe(
               switchMap(() => forkJoin(
                 data.map((d) => this.dataService.addTranslation(d))
@@ -135,7 +133,7 @@ export class SettingsComponent {
         );
       }
 
-      return EMPTY;
+      return of(null);
     })
   );
 
@@ -164,7 +162,7 @@ export class SettingsComponent {
       'Permanently Delete All Translations',
       'Are you sure you want to delete all translations? This action cannot be undone!'
     )),
-    filter((res) => res),
+    filter((accept) => accept),
     switchMap(() => this.dataService.deleteAllTranslations())
   );
 
