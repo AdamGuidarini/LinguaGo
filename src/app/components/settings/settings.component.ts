@@ -37,9 +37,6 @@ export class SettingsComponent {
   ) { }
   @ViewChild('confirmationdialog') confirmationDialog: ElementRef | undefined;
 
-  modalTrigger = new Subject<{ show: boolean, title: string, message: string }>();
-  modal$ = this.modalTrigger.asObservable();
-
   settings$ = this.settingsService.getSettings();
   firstSettings$ = this.settings$.pipe(
     take(1),

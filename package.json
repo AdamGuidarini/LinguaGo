@@ -1,12 +1,13 @@
 {
   "name": "lingua-go",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "scripts": {
-    "build": "ng build --aot && npx webpack --config webpack.config.js && npx web-ext build -s ./dist/lingua-go/browser -o",
+    "build": "ng build --aot && npx webpack --config webpack.config.js && npx web-ext build -s ./dist/lingua-go/browser -o && cp ./src/metadata.json ./dist/lingua-go/browser",
     "start": "web-ext run -t firefox-desktop --devtools -s ./dist/lingua-go/browser",
     "test": "npx jest",
     "lint": "ng lint",
-    "clean": "rm -r dist"
+    "clean": "rm -r dist",
+    "package": "zip -r -FS ./linguago.zip * --exclude '*.git*'"
   },
   "jest": {
     "preset": "jest-preset-angular",
@@ -21,6 +22,7 @@
       "src/extension-actions/*"
     ]
   },
+  "license": "GPL-3.0-only",
   "private": true,
   "dependencies": {
     "@angular/animations": "^17.2.0",

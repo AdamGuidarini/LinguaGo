@@ -1,0 +1,15 @@
+{
+    "version": {
+        "license": "GPL-3.0-only"
+    },
+    "description": {
+        "en-US": "A browser extension to help translate in a side bar."
+    },
+    "categories": {
+        "firefox": ["other"]
+    },
+    "requires_payment": false,
+    "support_email": {
+        "en-US": "adam.g.software@gmail.com"
+    }
+}
