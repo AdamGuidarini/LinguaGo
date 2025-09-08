@@ -48,3 +48,5 @@ The compiled filed will be placed in `dist/lingua-go` and can be loaded into a b
 
 You can also have web-ext load the extension into a browser for testing with the scripts in `package.json`: `yarn start`
 
+To add the extension to Firefox, you can go to `about:addons`, click the options button, and then `Debug Add-ons` and from there `Load Temporary Add-on`. Once this extension is approved by Firefox, it will be possible to download directly from the Add-ons page 
+
