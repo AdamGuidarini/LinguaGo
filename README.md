@@ -1,6 +1,6 @@
 # LinguaGo
 
-A browser extension to help translate as you browse the web.
+A browser extension for Firefox to help translate as you browse the web.
 
 ## About
 
