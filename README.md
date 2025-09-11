@@ -26,6 +26,11 @@ LinguaGo uses an unofficial API for Google Translate to provide a more robust tr
 
 See more: https://www.npmjs.com/package/google-translate-api-x, https://translate.google.com
 
+## Installation
+
+LinguaGo is available as a Firefox add-on here: https://addons.mozilla.org/en-US/firefox/addon/linguago1/
+
+Alternatively, you can install the provided zip from [`releases`](https://github.com/AdamGuidarini/LinguaGo/releases)
 
 ## Build and Run
 
@@ -47,6 +52,3 @@ The built extension will be places in `web-ext-artifacts/linguago-[version].zip`
 The compiled filed will be placed in `dist/lingua-go` and can be loaded into a browser from there if you prefer to run locally.
 
 You can also have web-ext load the extension into a browser for testing with the scripts in `package.json`: `yarn start`
-
-To add the extension to Firefox, you can go to `about:addons`, click the options button, and then `Debug Add-ons` and from there `Load Temporary Add-on`. Once this extension is approved by Firefox, it will be possible to download directly from the Add-ons page 
-
