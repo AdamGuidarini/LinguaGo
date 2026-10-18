@@ -36,9 +36,11 @@ Alternatively, you can install the provided zip from [`releases`](https://github
 
 ### Dependencies
 
- - Node.js
- - Yarn
- - Angular CLI
+ - Linux, macOS or Windows (built and tested on Linux)
+ - Node.js 22.x (https://nodejs.org)
+ - Yarn 1.22.x (`npm install -g yarn`)
+
+All other tools (Angular CLI, esbuild, web-ext, TypeScript) are installed locally by `yarn` from `yarn.lock`. The build uses `cp`, so on Windows use WSL or Git Bash.
 
 To fetch dependencies and build the extension, run:
 ```bash
