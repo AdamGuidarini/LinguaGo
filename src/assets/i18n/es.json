@@ -1,32 +1,32 @@
 {
     "Translate": {
-        "Translate-tab": "Translate",
-        "Translate": "Translate",
-        "Translator": "Translator",
-        "LibreTranslate requires a URL function, but none was found": "LibreTranslate requires a URL function, but none was found."
+        "Translate-tab": "Traducción",
+        "Translate": "Traducir",
+        "Translator": "Traductor",
+        "LibreTranslate requires a URL function, but none was found": "LibreTranslate requiere una URL para funcionar, pero no se encontró ninguno."
     },
     "History": {
-        "History": "History",
+        "History": "Historial",
         "Original": "Original",
-        "Translation": "Translation",
-        "Timestamp": "Timestamp"
+        "Translation": "Traducción",
+        "Timestamp": "Fecha y hora"
     },
     "Settings": {
-        "Settings": "Settings",
-        "LibreTranslate Settings": "LibreTranslate Settings",
-        "Key (Optional)": "Key (Optional)",
-        "Data": "Data",
-        "Translators": "Translators",
-        "Import History": "Import History",
-        "Export History": "Export History",
-        "Delete History": "Delete History",
-        "Unofficial": "Unofficial",
+        "Settings": "Configuraciones",
+        "LibreTranslate Settings": "Configuraciones LibreTranslate",
+        "Key (Optional)": "Clave (Opcional)",
+        "Data": "Datos",
+        "Translators": "Traductores",
+        "Import History": "Importar historial",
+        "Export History": "Exportar historial",
+        "Delete History": "Eliminar historial",
+        "Unofficial": "No oficial",
         "URL": "URL",
-        "Warning": "Warning!",
-        "Importing data will delete all existing data, do you want to continue?": "Importing data will delete all existing data, do you want to continue?",
-        "Permanently Delete All Translations": "Permanently Delete All Translations",
-        "Are you sure you want to delete all translations? This action cannot be undone!": "Are you sure you want to delete all translations? This action cannot be undone!",
-        "Cancel": "Cancel",
-        "OK": "OK"
+        "Warning": "¡Advertencia!",
+        "Importing data will delete all existing data, do you want to continue?": "La importación de los datos resultará en la eliminación de todos los datos existentes, ¿seguro que deseas continuar?",
+        "Permanently Delete All Translations": "Eliminar todas las traducciones permanentemente",
+        "Are you sure you want to delete all translations? This action cannot be undone!": "¿Seguro que deseas eliminar todas la traducciones? ¡Esta acción no puede ser deshecha!",
+        "Cancel": "Cancelar",
+        "OK": "Aceptar"
     }
 }
