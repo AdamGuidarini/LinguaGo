@@ -1,34 +1,39 @@
-<div *ngIf="vm$ | async as vm">
-    <div *ngFor="let translation of vm.translationHistory.translations" class="card">
-        <div fxLayout="column">
-            <div>
-                <div fxLayout="row" fxLayoutAlign="space-between center" class="header">
-                    <span style="flex: 1;">
-                        Original - {{ (translation.source | languagename: translation.translator) | async }}
-                    </span>
-                    <button style="background: none; border: none;" (click)="deleteTranslationSubject.next(translation)">
-                        <i class="pi pi-trash" style="color: var(--delete);"></i>
-                    </button>
-                </div>
-                <div>{{ translation.original }}</div>
+@if (vm$ | async; as vm) {
+  <div>
+    @for (translation of vm.translationHistory.translations; track translation) {
+      <div class="card">
+        <div style="display: flex; flex-direction: column;">
+          <div>
+            <div class="header details-row">
+              <span style="flex: 1;">
+                Original - {{ (translation.source | languagename: translation.translator) | async }}
+              </span>
+              <button style="background: none; border: none;" (click)="deleteTranslationSubject.next(translation)">
+                <i class="pi pi-trash" style="color: var(--delete);"></i>
+              </button>
             </div>
-            <div>
-                <div class="header">Translation - {{ (translation.target | languagename: translation.translator) | async
-                    }} </div>
-                <div>{{ translation.result }}</div>
+            <div>{{ translation.original }}</div>
+          </div>
+          <div>
+            <div class="header">Translation - {{ (translation.target | languagename: translation.translator) | async
+            }} </div>
+            <div>{{ translation.result }}</div>
+          </div>
+          <div class="details-row">
+            <div style="width: 50%;">
+              <div class="header">Translator</div>
+              <div>{{ translation.translator | translator }}</div>
             </div>
-            <div fxLayout="row" fxLayoutAlign="space-betwen center">
-                <div fxFlex="50">
-                    <div class="header">Translator</div>
-                    <div>{{ translation.translator | translator }}</div>
-                </div>
-                <div fxFlex="50">
-                    <div class="header">Timestamp</div>
-                    <div>{{ translation.timestamp | datetime }}</div>
-                </div>
+            <div style="width: 50%;">
+              <div class="header">Timestamp</div>
+              <div>{{ translation.timestamp | datetime }}</div>
             </div>
+          </div>
         </div>
-    </div>
-</div>
+      </div>
+    }
+  </div>
+}
 
-<ng-template *ngIf="deleteTranslation$ | async"></ng-template>
+@if (deleteTranslation$ | async) {
+}

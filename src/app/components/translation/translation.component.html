@@ -1,43 +1,59 @@
-<div *ngIf="vm$ | async as vm" class="card">
+@if (vm$ | async; as vm) {
+  <div class="card">
     <div class="translator-label">
-        Translator: {{ vm.settings.translator | translator }}
+      Translator: {{ vm.settings.translator | translator }}
     </div>
-    <div fxLayout="column" fxLayoutAlign="space-around center">
-        <div class="select">
-            <select [value]="vm.source" #s (change)="sourceSubject.next(s.value)">
-                <option *ngIf="vm.languages && vm.languages.length > 0" style="display:none"></option>
-                <option *ngFor="let lang of vm.languages" [value]="lang.code">
-                    {{ lang.name }}
-                </option>
-            </select>
-        </div>
-        <div class="select">
-            <select [value]="vm.target" #t (change)="targetSubject.next(t.value)">
-                <option *ngIf="vm.targetLangs && vm.targetLangs.length > 0" style="display:none"></option>
-                <option *ngFor="let lang of vm.targetLangs" [value]="lang.code">
-                    {{ lang.name }}
-                </option>
-            </select>
-        </div>
+    <div class="selector-box">
+      <div class="select">
+        <select [value]="vm.source" #s (change)="sourceSubject.next(s.value)">
+          @if (vm.languages && vm.languages.length > 0) {
+            <option style="display:none"></option>
+          }
+          @for (lang of vm.languages; track lang) {
+            <option [value]="lang.code">
+              {{ lang.name }}
+            </option>
+          }
+        </select>
+      </div>
+      <div class="select">
+        <select [value]="vm.target" #t (change)="targetSubject.next(t.value)">
+          @if (vm.targetLangs && vm.targetLangs.length > 0) {
+            <option style="display:none"></option>
+          }
+          @for (lang of vm.targetLangs; track lang) {
+            <option [value]="lang.code">
+              {{ lang.name }}
+            </option>
+          }
+        </select>
+      </div>
     </div>
-    <div *ngIf="!(vm.settings.translator === translator.LIBRETRANSLATE && !vm.settings.libreTranslateUrl)"
-        fxLayout="column" fxLayoutAlign="space-around center">
+    @if (!(vm.settings.translator === translator.LIBRETRANSLATE && !vm.settings.libreTranslateUrl)) {
+      <div
+        class="selector-box">
         <mat-form-field appearance="outline">
-            <textarea #inputText matInput minRows="5"
-                (input)="this.textToTranslateSubject.next(inputText.value)"></textarea>
+          <textarea #inputText matInput minRows="5"
+          (input)="this.textToTranslateSubject.next(inputText.value)"></textarea>
         </mat-form-field>
         <mat-form-field appearance="outline">
-            <textarea matInput minRows="5" readonly="true"
-                style="caret-color: transparent;">{{ vm.translation }}</textarea>
+          <textarea matInput minRows="5" readonly="true"
+          style="caret-color: transparent;">{{ vm.translation }}</textarea>
         </mat-form-field>
         <button mat-button class="translate-button" (click)="translateSubject.next()"
-            [disabled]="!(vm.source || vm.target || vm.textToTranslate)">
-            Translate
+          [disabled]="!(vm.source || vm.target || vm.textToTranslate)">
+          Translate
         </button>
-    </div>
-    <div *ngIf="vm.settings.translator === translator.LIBRETRANSLATE && !vm.settings.libreTranslateUrl"
+      </div>
+    }
+    @if (vm.settings.translator === translator.LIBRETRANSLATE && !vm.settings.libreTranslateUrl) {
+      <div
         class="error-box">
         LibreTranslate requires a URL to be provided to function, but none was found.
-    </div>
-    <div *ngIf="vm.error" class="error-box" style="margin-top: 5px;">{{ vm.error }}</div>
-</div>
+      </div>
+    }
+    @if (vm.error) {
+      <div class="error-box" style="margin-top: 5px;">{{ vm.error }}</div>
+    }
+  </div>
+}

@@ -1,9 +1,11 @@
-::ng-deep .mdc-tab-indicator--active {
-    font-weight: 650 !important;
-    color: var(--accent-color) !important;
-    border-bottom: 50px;
-}
-
-::ng-deep mat-ink-bar {
-    border-width: 20px !important;
+mat-tab-nav-bar, mat-tab-group {
+  --mat-tab-active-label-text-color: var(--accent-color);
+  --mat-tab-active-focus-label-text-color: var(--accent-color);
+  --mat-tab-active-hover-label-text-color: var(--accent-color);
+  --mat-tab-active-ripple-color: var(--accent-color);
+  --mat-tab-active-focus-indicator-color: var(--accent-color);
+  --mat-tab-active-hover-indicator-color: var(--accent-color);
+  --mat-tab-active-indicator-color: var(--accent-color);
+  --mat-tab-active-indicator-height: 4px;
+  --mat-tab-label-text-weight: 50px;
 }

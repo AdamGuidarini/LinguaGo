@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -42,7 +41,6 @@ import { TabsService } from '../../services/tabs.service';
     MatSelectModule,
     FormsModule,
     CommonModule,
-    FlexLayoutModule,
     MatButtonModule,
     HttpClientModule,
     TranslatorPipe

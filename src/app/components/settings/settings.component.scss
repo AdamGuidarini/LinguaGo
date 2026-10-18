@@ -3,15 +3,19 @@ mat-card mat-label {
     padding-bottom: 10px;
 }
 
+mat-radio-button {
+  --mat-radio-selected-icon-color: var(--accent-color);
+  --mat-radio-selected-hover-icon-color: var(--accent-color);
+  --mat-radio-selected-focus-icon-color: var(--accent-color);
+  --mat-radio-selected-pressed-icon-color: var(--accent-color);
+  --mat-radio-checked-ripple-color: var(--accent-color);
+}
+
 .card {
     margin: 5px;
     padding: 5px;
     border: solid black 0.5px;
     border-radius: 5px;
-}
-
-::ng-deep .mdc-radio {
-    color: var(--accent-color);
 }
 
 button {
@@ -24,8 +28,9 @@ button {
     text-align: center;
 }
 
-::ng-deep .mdc-button__label {
-    color: #fff;
+button {
+  --mat-button-text-label-text-color: #fff;
+  --mat-button-filled-label-text-color: #fff;
 }
 
 .delete-button {
@@ -45,4 +50,12 @@ dialog {
 .message {
     font-weight: 500;
     margin-bottom: 10px;
+}
+
+mat-dialog-actions {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    justify-content: flex-end;
+    width: 100%;
 }

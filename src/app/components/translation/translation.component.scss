@@ -8,8 +8,9 @@ mat-form-field {
     width: 100%;
 }
 
-::ng-deep .mat-mdc-button-disabled {
-    opacity: 70% !important;
+button {
+  --mat-button-text-label-text-color: #fff;
+  --mat-button-filled-label-text-color: #fff;
 }
 
 .card {
@@ -53,12 +54,16 @@ select {
 .translate-button {
     background-color: var(--accent-color);
     border-radius: 5px;
-    color: #fff;
     font-weight: 600;
     border-color: var(--accent-color);
     padding: 5px;
     text-align: center;
     width: 100%;
+}
+
+.translate-button:disabled {
+    opacity: 0.7;
+    color: #fff;
 }
 
 .error-box {
@@ -75,4 +80,10 @@ select {
     color: #667;
     font-size: 0.8rem;
     padding-bottom: 5px;
+}
+
+.selector-box {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around center;
 }
