@@ -1,12 +1,12 @@
 <main>
   <mat-tab-group (selectedIndexChange)="onTabChange($event)" animationDuration="0ms">
-    <mat-tab label="Translate">
+    <mat-tab label="{{ 'Translate.Translate' | transloco }}">
       <app-translation></app-translation>
     </mat-tab>
-    <mat-tab label="History">
+    <mat-tab label="{{ 'History.History' | transloco }}">
       <app-history></app-history>
     </mat-tab>
-    <mat-tab label="Settings">
+    <mat-tab label="{{ 'Settings.Settings' | transloco }}">
       <app-settings></app-settings>
     </mat-tab>
   </mat-tab-group>

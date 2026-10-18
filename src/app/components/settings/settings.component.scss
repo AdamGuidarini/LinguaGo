@@ -3,12 +3,12 @@ mat-card mat-label {
     padding-bottom: 10px;
 }
 
-mat-radio-button {
-  --mat-radio-selected-icon-color: var(--accent-color);
-  --mat-radio-selected-hover-icon-color: var(--accent-color);
-  --mat-radio-selected-focus-icon-color: var(--accent-color);
-  --mat-radio-selected-pressed-icon-color: var(--accent-color);
-  --mat-radio-checked-ripple-color: var(--accent-color);
+mat-radio-button.mat-mdc-radio-button {
+    --mat-radio-selected-icon-color: var(--accent-color);
+    --mat-radio-selected-hover-icon-color: var(--accent-color);
+    --mat-radio-selected-focus-icon-color: var(--accent-color);
+    --mat-radio-selected-pressed-icon-color: var(--accent-color);
+    --mat-radio-checked-ripple-color: var(--accent-color);
 }
 
 .card {
@@ -29,8 +29,8 @@ button {
 }
 
 button {
-  --mat-button-text-label-text-color: #fff;
-  --mat-button-filled-label-text-color: #fff;
+    --mat-button-text-label-text-color: #fff;
+    --mat-button-filled-label-text-color: #fff;
 }
 
 .delete-button {

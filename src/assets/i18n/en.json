@@ -1,0 +1,23 @@
+{
+    "Translate": {
+        "Translate": "Translate",
+        "Translator": "Translator"
+    },
+    "History": {
+        "History": "History",
+        "Original": "Original",
+        "Translation": "Translation",
+        "Timestamp": "Timestamp"
+    },
+    "Settings": {
+        "Settings": "Settings",
+        "LibreTranslate Settings": "LibreTranslate Settings",
+        "Key (Optional)": "Key (Optional)",
+        "Data": "Data",
+        "Translators": "Translators",
+        "Import History": "Import History",
+        "Export History": "Export History",
+        "Delete History": "Delete History",
+        "Unofficial": "Unofficial"
+    }
+}
