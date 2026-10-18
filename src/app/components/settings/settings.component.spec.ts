@@ -8,9 +8,11 @@ import { Transaltor } from '../../interfaces/settings-interfaces';
 import { DataService } from '../../services/data.service';
 import { SettingsService } from '../../services/settings.service';
 import { SettingsComponent } from './settings.component';
+import { TranslocoService } from "@jsverse/transloco";
 
 const mockSettingsService = mock<SettingsService>();
 const mockDataService = mock<DataService>();
+const mockTransloco = mock<TranslocoService>();
 
 describe('SettingsComponent', () => {
   let component: SettingsComponent;
@@ -21,10 +23,14 @@ describe('SettingsComponent', () => {
         translator: Transaltor.APERTIUM
       })
     );
+    mockTransloco.translate.mockImplementation(
+      (key) => key 
+    );
 
     component = new SettingsComponent(
       mockSettingsService,
-      mockDataService
+      mockDataService,
+      mockTransloco
     );
   });
 
@@ -117,8 +123,8 @@ describe('SettingsComponent', () => {
           expect(
             component.showDialog
           ).toHaveBeenCalledWith(
-            'Warning!',
-            'Importing data will delete all existing data, do you want to continue?'
+            'Settings.Warning',
+            'Settings.Importing data will delete all existing data, do you want to continue?'
           );
         }
       );

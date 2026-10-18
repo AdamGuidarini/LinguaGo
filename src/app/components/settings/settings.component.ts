@@ -6,8 +6,25 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatRadioModule } from '@angular/material/radio';
+import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { DateTime } from 'luxon';
-import { BehaviorSubject, combineLatest, filter, forkJoin, from, map, Observable, of, startWith, Subject, switchMap, take, tap, throwError, withLatestFrom } from 'rxjs';
+import {
+  BehaviorSubject,
+  combineLatest,
+  filter,
+  forkJoin,
+  from,
+  map,
+  Observable,
+  of,
+  startWith,
+  Subject,
+  switchMap,
+  take,
+  tap,
+  throwError,
+  withLatestFrom
+} from 'rxjs';
 import { ITranslation } from '../../interfaces/global-transation-interfaces';
 import { Transaltor } from '../../interfaces/settings-interfaces';
 import { DataService } from '../../services/data.service';
@@ -23,7 +40,8 @@ import { SettingsService } from '../../services/settings.service';
     FormsModule,
     CommonModule,
     MatButtonModule,
-    MatDialogModule
+    MatDialogModule,
+    TranslocoModule
   ],
   templateUrl: './settings.component.html',
   styleUrl: './settings.component.scss'
@@ -31,7 +49,8 @@ import { SettingsService } from '../../services/settings.service';
 export class SettingsComponent {
   constructor(
     private settingsService: SettingsService,
-    private dataService: DataService
+    private dataService: DataService,
+    private transloco: TranslocoService
   ) { }
   @ViewChild('confirmationdialog') confirmationDialog: ElementRef | undefined;
 
@@ -96,8 +115,8 @@ export class SettingsComponent {
   importClick$ = this.importClickTrigger.pipe(
     switchMap(
       () => this.showDialog(
-        'Warning!',
-        'Importing data will delete all existing data, do you want to continue?'
+        this.transloco.translate('Settings.Warning'),
+        this.transloco.translate('Settings.Importing data will delete all existing data, do you want to continue?')
       )
     ),
     filter((accept) => accept),
@@ -154,8 +173,8 @@ export class SettingsComponent {
   deleteAllSubject = new Subject<void>();
   deleteAll$ = this.deleteAllSubject.pipe(
     switchMap(() => this.showDialog(
-      'Permanently Delete All Translations',
-      'Are you sure you want to delete all translations? This action cannot be undone!'
+      this.transloco.translate('Settings.Permanently Delete All Translations'),
+      this.transloco.translate('Settings.Are you sure you want to delete all translations? This action cannot be undone!')
     )),
     filter((accept) => accept),
     switchMap(() => this.dataService.deleteAllTranslations())

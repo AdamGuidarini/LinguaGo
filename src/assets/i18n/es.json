@@ -1,0 +1,32 @@
+{
+    "Translate": {
+        "Translate-tab": "Traducción",
+        "Translate": "Traducir",
+        "Translator": "Traductor",
+        "LibreTranslate requires a URL function, but none was found": "LibreTranslate requiere una URL para funcionar, pero no se encontró ninguno."
+    },
+    "History": {
+        "History": "Historial",
+        "Original": "Original",
+        "Translation": "Traducción",
+        "Timestamp": "Fecha y hora"
+    },
+    "Settings": {
+        "Settings": "Configuraciones",
+        "LibreTranslate Settings": "Configuraciones LibreTranslate",
+        "Key (Optional)": "Clave (Opcional)",
+        "Data": "Datos",
+        "Translators": "Traductores",
+        "Import History": "Importar historial",
+        "Export History": "Exportar historial",
+        "Delete History": "Eliminar historial",
+        "Unofficial": "No oficial",
+        "URL": "URL",
+        "Warning": "¡Advertencia!",
+        "Importing data will delete all existing data, do you want to continue?": "La importación de los datos resultará en la eliminación de todos los datos existentes, ¿seguro que deseas continuar?",
+        "Permanently Delete All Translations": "Eliminar todas las traducciones permanentemente",
+        "Are you sure you want to delete all translations? This action cannot be undone!": "¿Seguro que deseas eliminar todas la traducciones? ¡Esta acción no puede ser deshecha!",
+        "Cancel": "Cancelar",
+        "OK": "Aceptar"
+    }
+}

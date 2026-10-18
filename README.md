@@ -10,7 +10,7 @@ LinguaGo is a browser extension created with Angular to make it easier to looks 
 
 ### Apertium
 
-Apertium is a free and open source machine translator hosted by developers themselves. It supports a wide vareity of language pairs and is the LinguaGo's default translator
+Apertium is a free and open source machine translator hosted by developers themselves. It supports a wide vareity of language pairs and is the LinguaGo's default translator.
 
 See more: https://www.apertium.org/index.eng.html
 
@@ -22,7 +22,7 @@ See more: https://libretranslate.com/
 
 ### Google Translate (Unofficial)
 
-LinguaGo uses an unofficial API for Google Translate to provide a more robust translation engine than Apertium with more flexibilty than Apertium.
+LinguaGo uses an unofficial API for Google Translate to provide a more robust translation engine than Apertium with more flexibilty than Apertium. However, it is not supported by Google and could break at any time.
 
 See more: https://www.npmjs.com/package/google-translate-api-x, https://translate.google.com
 
@@ -39,8 +39,6 @@ Alternatively, you can install the provided zip from [`releases`](https://github
  - Node.js
  - Yarn
  - Angular CLI
- - web-ext
-
 
 To fetch dependencies and build the extension, run:
 ```bash
@@ -51,4 +49,4 @@ The built extension will be places in `web-ext-artifacts/linguago-[version].zip`
 
 The compiled filed will be placed in `dist/lingua-go` and can be loaded into a browser from there if you prefer to run locally.
 
-You can also have web-ext load the extension into a browser for testing with the scripts in `package.json`: `yarn start`
+You can also have web-ext load the extension into a browser for testing by running `yarn start`.
