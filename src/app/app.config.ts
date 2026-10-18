@@ -19,7 +19,7 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(withInterceptorsFromDi()),
     provideTransloco({
       config: {
-        availableLangs: ['en'],
+        availableLangs: ['en', 'es', 'it'],
         defaultLang: 'en',
 
         reRenderOnLangChange: true,
