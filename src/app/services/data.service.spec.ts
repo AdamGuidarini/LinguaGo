@@ -1,5 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { catchError, lastValueFrom } from 'rxjs';
+import { beforeEach, describe, expect, it, vi } from "vitest";
+
+import { subscribeSpyTo } from '@hirez_io/observer-spy';
+import { lastValueFrom } from 'rxjs';
 import { DataService } from './data.service';
 import { Transaltor } from '../interfaces/settings-interfaces';
 
@@ -12,7 +15,7 @@ describe('DataService', () => {
 
   beforeEach(() => {
     mockObjectStore = {
-      add: jest.fn(() => {
+      add: vi.fn(() => {
         const request: any = {};
         setTimeout(() => {
           if (typeof request.onsuccess === 'function') {
@@ -21,10 +24,10 @@ describe('DataService', () => {
         }, 0);
         return request;
       }),
-      count: jest.fn(() => ({ onsuccess: null, onerror: null })),
-      getAll: jest.fn(() => ({ onsuccess: null, onerror: null })),
-      delete: jest.fn(),
-      clear: jest.fn(() => {
+      count: vi.fn(() => ({ onsuccess: null, onerror: null })),
+      getAll: vi.fn(() => ({ onsuccess: null, onerror: null })),
+      delete: vi.fn(),
+      clear: vi.fn(() => {
         const request: any = {};
         setTimeout(() => {
           if (typeof request.onsuccess === 'function') {
@@ -36,24 +39,24 @@ describe('DataService', () => {
     } as unknown as IDBObjectStore;
 
     mockTransaction = {
-      objectStore: jest.fn(() => mockObjectStore),
+      objectStore: vi.fn(() => mockObjectStore),
       onerror: null,
     } as unknown as IDBTransaction;
 
     mockDb = {
-      transaction: jest.fn(() => mockTransaction),
-      close: jest.fn(),
-      createObjectStore: jest.fn(),
-      objectStoreNames: { contains: jest.fn() }
+      transaction: vi.fn(() => mockTransaction),
+      close: vi.fn(),
+      createObjectStore: vi.fn(),
+      objectStoreNames: { contains: vi.fn() }
     } as unknown as IDBDatabase;
 
     mockOpenRequest = {
       onsuccess: null,
       onerror: null,
       result: mockDb,
-      addEventListener: jest.fn(),
-      removeEventListener: jest.fn(),
-      dispatchEvent: jest.fn(),
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+      dispatchEvent: vi.fn(),
       readyState: 'done',
       error: null,
       source: null,
@@ -63,7 +66,7 @@ describe('DataService', () => {
 
     Object.defineProperty(window, 'indexedDB', {
       value: {
-        open: jest.fn(() => mockOpenRequest)
+        open: vi.fn(() => mockOpenRequest)
       },
       writable: true,
     });
@@ -83,64 +86,63 @@ describe('DataService', () => {
   });
 
   describe('setUp method', () => {
-    it('should define the db', (done) => {
-      service.setUp().subscribe(
-        () => {
-          expect(service.db).toBe(mockDb);
-          done();
-        }
-      );
+    it('should define the db', async () => {
+      const sub = subscribeSpyTo(service.setUp());
+
+      await sub.onComplete();
+
+      expect(sub.getFirstValue()).toBe(true);
+      expect(service.db).toBe(mockDb);
     });
 
-    it('should error if database open fails', (done) => {
-      service.setUp().subscribe({
-        error: (err) => {
-          expect(err).toBeDefined();
-          done();
-        }
-      });
+    it('should error if database open fails', async () => {
+      const sub = subscribeSpyTo(service.setUp(), { expectErrors: true });
 
       if (mockOpenRequest.onerror) {
         mockOpenRequest.onerror(new Error('Open failed') as any);
       }
+
+      await sub.onError();
+
+      expect(sub.getError()).toBeDefined();
     });
 
-    it('should not create object store if it exists', (done) => {
-      mockDb.objectStoreNames.contains = jest.fn(() => true);
+    it('should not create object store if it exists', async () => {
+      mockDb.objectStoreNames.contains = vi.fn(() => true);
 
-      service.setUp().subscribe(
-        () => {
-          expect(mockDb.createObjectStore)
-            .not
-            .toHaveBeenCalled();
-          done();
-        }
-      );
+      const sub = subscribeSpyTo(service.setUp());
 
       if (typeof mockOpenRequest.onupgradeneeded === 'function') {
         mockOpenRequest.onupgradeneeded({} as any);
       }
+
+      await sub.onComplete();
+
+      expect(sub.getFirstValue()).toBe(true);
+      expect(mockDb.createObjectStore)
+        .not
+        .toHaveBeenCalled();
     });
 
-    it('should create objectstore if needed', (done) => {
-      service.setUp().subscribe(
-        () => {
-          expect(mockDb.createObjectStore).toHaveBeenCalledWith(
-            'translations', { keyPath: 'key' }
-          );
-          done();
-        }
-      );
+    it('should create objectstore if needed', async () => {
+      const sub = subscribeSpyTo(service.setUp());
 
       if (typeof mockOpenRequest.onupgradeneeded === 'function') {
         mockOpenRequest.onupgradeneeded({} as any);
       }
+
+      await sub.onComplete();
+
+      expect(sub.getFirstValue()).toBe(true);
+      expect(mockDb.createObjectStore).toHaveBeenCalledWith(
+        'translations', { keyPath: 'key' }
+      );
     });
   });
 
   describe('ngOnDestroy method', () => {
     it('should close the db', () => {
-      service.db = { close: jest.fn() } as any;
+      service.db = { close: vi.fn() } as any;
 
       service.ngOnDestroy();
 
@@ -157,23 +159,18 @@ describe('DataService', () => {
   });
 
   describe('addTranslation method', () => {
-    it('should throw an error if db is falsy', (done) => {
+    it('should throw an error if db is falsy', () => {
       service.db = null;
 
-      service.addTranslation({} as any).pipe(
-        catchError((err) => {
-          expect(err).toStrictEqual(new Error('DB reference is not defined'));
-          done();
+      const sub = subscribeSpyTo(service.addTranslation({} as any), { expectErrors: true });
 
-          return [];
-        })
-      ).subscribe();
+      expect(sub.getError()).toStrictEqual(new Error('DB reference is not defined'));
     });
 
-    it('should add an item to the db', (done) => {
+    it('should add an item to the db', async () => {
       service.db = mockDb;
 
-      service.addTranslation(
+      const sub = subscribeSpyTo(service.addTranslation(
         {
           target: 'en',
           source: 'it',
@@ -181,16 +178,16 @@ describe('DataService', () => {
           original: 'Ciao, mondo!',
           translator: Transaltor.APERTIUM
         }
-      ).subscribe(
-        () => {
-          expect(mockObjectStore.add).toHaveBeenCalled();
-          done();
-        }
-      );
+      ));
+
+      await sub.onComplete();
+
+      expect(sub.getValuesLength()).toBe(1);
+      expect(mockObjectStore.add).toHaveBeenCalled();
     });
 
-    it('should throw an error if one occurs while adding to db', (done) => {
-      mockObjectStore.add = jest.fn(() => {
+    it('should throw an error if one occurs while adding to db', () => {
+      mockObjectStore.add = vi.fn(() => {
         if (typeof mockTransaction.onerror === 'function') {
           mockTransaction.onerror('Oh no!' as any);
         }
@@ -200,7 +197,7 @@ describe('DataService', () => {
 
       service.db = mockDb;
 
-      service.addTranslation(
+      const sub = subscribeSpyTo(service.addTranslation(
         {
           target: 'en',
           source: 'it',
@@ -208,19 +205,14 @@ describe('DataService', () => {
           original: 'Ciao, mondo!',
           translator: Transaltor.APERTIUM
         }
-      ).pipe(
-        catchError((err) => {
-          expect(err).toStrictEqual('Oh no!');
-          done();
+      ), { expectErrors: true });
 
-          return [];
-        })
-      ).subscribe();
+      expect(sub.getError()).toStrictEqual('Oh no!');
     });
   });
 
   describe('getAllTranslations method', () => {
-    it('should return an Observable with the translations - translations first', (done) => {
+    it('should return an Observable with the translations - translations first', () => {
       service.db = mockDb;
       const mockGetAllResp = {
         result: [
@@ -231,46 +223,43 @@ describe('DataService', () => {
             original: 'Ciao, mondo!'
           }
         ],
-        onsuccess: jest.fn()
+        onsuccess: vi.fn()
       };
       const mockCountResp = {
         result: 1,
-        onsuccess: jest.fn()
+        onsuccess: vi.fn()
       };
 
-      mockObjectStore.getAll = jest.fn(
+      mockObjectStore.getAll = vi.fn(
         () => mockGetAllResp as any
       );
-      mockObjectStore.count = jest.fn(
+      mockObjectStore.count = vi.fn(
         () => mockCountResp as any
       );
 
       const retVal = service.getTranslations();
 
-      retVal.subscribe(
-        (res) => {
-          expect(res).toStrictEqual(
-            {
-              translations: [
-                {
-                  target: 'en',
-                  source: 'it',
-                  result: 'Hello, world!',
-                  original: 'Ciao, mondo!'
-                }
-              ],
-              count: 1
-            }
-          );
-          done();
-        }
-      );
+      const sub = subscribeSpyTo(retVal);
 
       mockGetAllResp.onsuccess();
       mockCountResp.onsuccess();
+
+      expect(sub.getFirstValue()).toStrictEqual(
+        {
+          translations: [
+            {
+              target: 'en',
+              source: 'it',
+              result: 'Hello, world!',
+              original: 'Ciao, mondo!'
+            }
+          ],
+          count: 1
+        }
+      );
     });
 
-    it('should return an Observable with the translations - count first', (done) => {
+    it('should return an Observable with the translations - count first', () => {
       service.db = mockDb;
       const mockGetAllResp = {
         result: [
@@ -281,142 +270,117 @@ describe('DataService', () => {
             original: 'Ciao, mondo!'
           }
         ],
-        onsuccess: jest.fn()
+        onsuccess: vi.fn()
       };
       const mockCountResp = {
         result: 1,
-        onsuccess: jest.fn()
+        onsuccess: vi.fn()
       };
 
-      mockObjectStore.getAll = jest.fn(
+      mockObjectStore.getAll = vi.fn(
         () => mockGetAllResp as any
       );
-      mockObjectStore.count = jest.fn(
+      mockObjectStore.count = vi.fn(
         () => mockCountResp as any
       );
 
       const retVal = service.getTranslations();
 
-      retVal.subscribe(
-        (res) => {
-          expect(res).toStrictEqual(
-            {
-              translations: [
-                {
-                  target: 'en',
-                  source: 'it',
-                  result: 'Hello, world!',
-                  original: 'Ciao, mondo!'
-                }
-              ],
-              count: 1
-            }
-          );
-          done();
-        }
-      );
+      const sub = subscribeSpyTo(retVal);
 
       mockCountResp.onsuccess();
       mockGetAllResp.onsuccess();
+
+      expect(sub.getFirstValue()).toStrictEqual(
+        {
+          translations: [
+            {
+              target: 'en',
+              source: 'it',
+              result: 'Hello, world!',
+              original: 'Ciao, mondo!'
+            }
+          ],
+          count: 1
+        }
+      );
     });
 
-    it('should throw an error if the transaction fails', (done) => {
+    it('should throw an error if the transaction fails', () => {
       service.db = mockDb;
       const retVal = service.getTranslations();
 
-      retVal.pipe(
-        catchError((err) => {
-          expect(err).toStrictEqual(new Error('Oh no!'));
-          done();
-
-          return [];
-        })
-      ).subscribe();
+      const sub = subscribeSpyTo(retVal, { expectErrors: true });
 
       if (typeof mockTransaction.onerror === 'function') {
         mockTransaction.onerror(new Error('Oh no!') as any);
       }
+
+      expect(sub.getError()).toStrictEqual(new Error('Oh no!'));
     });
 
-    it('should throw an error if count request fails', (done) => {
+    it('should throw an error if count request fails', () => {
       service.db = mockDb;
       const mockGetAllResp = {
-        onerror: jest.fn()
+        onerror: vi.fn()
       };
       const mockCountResp = {
-        onerror: jest.fn()
+        onerror: vi.fn()
       };
 
-      mockObjectStore.getAll = jest.fn(
+      mockObjectStore.getAll = vi.fn(
         () => mockGetAllResp as any
       );
-      mockObjectStore.count = jest.fn(
+      mockObjectStore.count = vi.fn(
         () => mockCountResp as any
       );
 
       const retVal = service.getTranslations();
 
-      retVal.pipe(
-        catchError((err) => {
-          expect(err).toStrictEqual(new Error('Count failed!'));
-          done();
-
-          return [];
-        })
-      ).subscribe();
+      const sub = subscribeSpyTo(retVal, { expectErrors: true });
 
       mockCountResp.onerror(
         new Error('Count failed!')
       );
+
+      expect(sub.getError()).toStrictEqual(new Error('Count failed!'));
     });
 
-    it('should throw an error if getAll request fails', (done) => {
+    it('should throw an error if getAll request fails', () => {
       service.db = mockDb;
       const mockGetAllResp = {
-        onerror: jest.fn()
+        onerror: vi.fn()
       };
       const mockCountResp = {
-        onerror: jest.fn()
+        onerror: vi.fn()
       };
 
-      mockObjectStore.getAll = jest.fn(
+      mockObjectStore.getAll = vi.fn(
         () => mockGetAllResp as any
       );
-      mockObjectStore.count = jest.fn(
+      mockObjectStore.count = vi.fn(
         () => mockCountResp as any
       );
 
       const retVal = service.getTranslations();
 
-      retVal.pipe(
-        catchError((err) => {
-          expect(err).toStrictEqual(new Error('getAll failed!'));
-          done();
-
-          return [];
-        })
-      ).subscribe();
+      const sub = subscribeSpyTo(retVal, { expectErrors: true });
 
       mockGetAllResp.onerror(
         new Error('getAll failed!')
       );
+
+      expect(sub.getError()).toStrictEqual(new Error('getAll failed!'));
     });
 
-    it('should error out if db is falsy', (done) => {
+    it('should error out if db is falsy', () => {
       service.db = null;
 
       const retVal = service.getTranslations();
 
-      retVal.pipe(
-        catchError((err) => {
-          expect(err).toStrictEqual(
-            new Error('DB reference is not defined')
-          );
-          done();
+      const sub = subscribeSpyTo(retVal, { expectErrors: true });
 
-          return [];
-        })
-      ).subscribe();
+      expect(sub.getError()).toStrictEqual(new Error('DB reference is not defined'));
     });
   });
 
@@ -455,17 +419,12 @@ describe('DataService', () => {
   });
 
   describe('deleteAllTranslations method', () => {
-    it('should throw an error if db is falsy', (done) => {
+    it('should throw an error if db is falsy', () => {
       service.db = null;
 
-      service.deleteAllTranslations().pipe(
-        catchError((err) => {
-          expect(err).toStrictEqual(new Error('Attempted to delete data from undefined database reference'));
-          done();
+      const sub = subscribeSpyTo(service.deleteAllTranslations(), { expectErrors: true });
 
-          return [];
-        })
-      ).subscribe();
+      expect(sub.getError()).toStrictEqual(new Error('Attempted to delete data from undefined database reference'));
     });
 
     it('should delete translations', async () => {
@@ -476,47 +435,35 @@ describe('DataService', () => {
       expect(mockObjectStore.clear).toHaveBeenCalled();
     });
 
-    it('should throw an error if the transaction fails', (done) => {
+    it('should throw an error if the transaction fails', () => {
       service.db = mockDb;
       const retVal = service.deleteAllTranslations();
 
-      retVal.pipe(
-        catchError((err) => {
-          expect(err).toStrictEqual(new Error('Oh no!'));
-          done();
-
-          return [];
-        })
-      ).subscribe();
+      const sub = subscribeSpyTo(retVal, { expectErrors: true });
 
       if (typeof mockTransaction.onerror === 'function') {
         mockTransaction.onerror(new Error('Oh no!') as any);
       }
+
+      expect(sub.getError()).toStrictEqual(new Error('Oh no!'));
     });
 
-    it('should throw an error if one occurs while deleting to db', (done) => {
-      const clearRequest = { onerror: jest.fn() };
+    it('should throw an error if one occurs while deleting to db', () => {
+      const clearRequest = { onerror: vi.fn() };
 
-      mockObjectStore.clear = jest.fn(
+      mockObjectStore.clear = vi.fn(
         () => clearRequest as any
       );
 
       service.db = mockDb;
 
-      service.deleteAllTranslations().pipe(
-        catchError((err) => {
-          expect(err).toStrictEqual(
-            new Error('Oh no!')
-          );
-          done();
-
-          return [];
-        })
-      ).subscribe();
+      const sub = subscribeSpyTo(service.deleteAllTranslations(), { expectErrors: true });
 
       clearRequest.onerror(
         new Error('Oh no!')
       );
+
+      expect(sub.getError()).toStrictEqual(new Error('Oh no!'));
     });
   });
 });

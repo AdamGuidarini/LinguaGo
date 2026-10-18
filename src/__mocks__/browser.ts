@@ -1,11 +1,11 @@
-import { jest } from "@jest/globals";
+import { vi } from "vitest";
 
 const mockBrowser = {
   runtime: {
-    sendMessage: jest.fn(),
+    sendMessage: vi.fn(),
     onMessage: {
-      addListener: jest.fn(),
-      removeListener: jest.fn(),
+      addListener: vi.fn(),
+      removeListener: vi.fn(),
     },
   }
 };

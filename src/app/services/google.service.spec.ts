@@ -1,9 +1,9 @@
+import { subscribeSpyTo } from '@hirez_io/observer-spy';
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { languages } from 'google-translate-api-x';
 import { GoogleTranslateService } from './google.service';
 import Browser from 'webextension-polyfill';
 import { Transaltor } from '../interfaces/settings-interfaces';
-
-jest.mock('webextension-polyfill');
 
 describe('GoogleService', () => {
   let service: GoogleTranslateService;
@@ -17,42 +17,36 @@ describe('GoogleService', () => {
   });
 
   describe('getLanguages method', () => {
-    it('should return mapped changes', (done) => {
-      service.getLanguages().subscribe(
-        (res) => {
-          expect(res.length).toBe(
-            Object.keys(languages).length
-          );
+    it('should return mapped changes', () => {
+      const sub = subscribeSpyTo(service.getLanguages());
 
-          done();
-        }
+      expect(sub.getFirstValue()?.length).toBe(
+        Object.keys(languages).length
       );
     });
   });
 
   describe('translate method', () => {
-    it('should translate', (done) => {
-      (Browser.runtime.sendMessage as jest.Mock).mockResolvedValue({
+    it('should translate', async () => {
+      vi.mocked(Browser.runtime.sendMessage).mockResolvedValue({
         result: {
           text: 'Ciao'
         }
       });
 
-      service.translate(
+      const sub = subscribeSpyTo(service.translate(
         'en', 'it', 'Hello'
-      ).subscribe(
-        (result) => {
-          expect(result).toStrictEqual({
-            confidence: undefined,
-            original: 'Hello',
-            result: 'Ciao',
-            source: 'en',
-            target: 'it',
-            translator: Transaltor.GOOGLE
-          });
-          done();
-        }
-      );
+      ));
+      await sub.onComplete();
+
+      expect(sub.getFirstValue()).toStrictEqual({
+        confidence: undefined,
+        original: 'Hello',
+        result: 'Ciao',
+        source: 'en',
+        target: 'it',
+        translator: Transaltor.GOOGLE
+      });
     });
   });
 });

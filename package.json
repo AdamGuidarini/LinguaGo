@@ -5,23 +5,12 @@
     "build:background": "esbuild src/extension-actions/background.ts --bundle --minify --format=iife --target=firefox115 --outfile=dist/lingua-go/browser/extension-actions/background.js",
     "build": "ng build --aot && yarn build:background && cp ./src/metadata.json ./dist/lingua-go/browser && npx web-ext build -s ./dist/lingua-go/browser -o",
     "start": "web-ext run -t firefox-desktop --devtools -s ./dist/lingua-go/browser",
-    "test": "npx jest",
+    "test": "ng test --watch=false",
+    "test:watch": "ng test",
+    "test:coverage": "ng test --watch=false --coverage",
     "lint": "ng lint",
     "clean": "rm -r dist",
     "package": "zip -r -FS ./linguago.zip * --exclude '*.git*'"
-  },
-  "jest": {
-    "preset": "jest-preset-angular",
-    "testEnvironment": "jsdom",
-    "moduleNameMapper": {
-      "^webextension-polyfill$": "<rootDir>/src/__mocks__/browser.ts"
-    },
-    "setupFilesAfterEnv": [
-      "./setup-jest.ts"
-    ],
-    "testPathIgnorePatterns": [
-      "src/extension-actions/*"
-    ]
   },
   "license": "GPL-3.0-only",
   "private": true,
@@ -37,7 +26,6 @@
     "@angular/platform-browser-dynamic": "^22.2.3",
     "@angular/router": "^22.2.3",
     "google-translate-api-x": "^10.7.2",
-    "jest-auto-spies": "^3.0.0",
     "luxon": "^3.7.1",
     "primeicons": "^7.0.0",
     "rxjs": "~7.8.0",
@@ -50,18 +38,21 @@
     "@angular/cli": "^22.2.3",
     "@angular/compiler-cli": "^22.2.3",
     "@eslint/js": "^9.29.0",
-    "@types/jest": "^30.0.0",
+    "@hirez_io/observer-spy": "^2.2.0",
+    "@testing-library/jest-dom": "^7.0.1",
+    "@testing-library/react": "^16.3.3",
     "@types/luxon": "^3.7.1",
     "@types/node": "^24.0.15",
     "@types/webextension-polyfill": "^0.12.3",
+    "@vitest/coverage-v8": "^5.0.5",
     "angular-eslint": "20.1.1",
     "esbuild": "0.20.1",
     "eslint": "^9.29.0",
-    "jest": "^30.5.2",
-    "jest-environment-jsdom": "^30",
-    "jest-preset-angular": "^17.0.3",
+    "jsdom": "^30.1.3",
     "typescript": "~6.0.3",
     "typescript-eslint": "8.71.1",
+    "vitest": "^5.0.5",
+    "vitest-mock-extended": "^5.1.1",
     "web-ext": "^8.8.0",
     "webextension-polyfill": "^0.12.0"
   }
