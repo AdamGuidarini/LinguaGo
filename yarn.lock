@@ -5605,7 +5605,7 @@ jest-mock@30.5.2:
     "@types/node" "*"
     jest-util "30.5.1"
 
-jest-preset-angular@^22.2.3:
+jest-preset-angular@^17.0.3:
   version "17.0.3"
   resolved "https://registry.yarnpkg.com/jest-preset-angular/-/jest-preset-angular-17.0.3.tgz#68aa75b773a25f775903c4bc4f8e94063066eecd"
   integrity sha512-ufDKlvNgT5eMq72OCVkac+9ibOkgL2Ee7orUhlQ1IdTLqn76eniNDz8oZ9vE3Biwh5zSitdSojZvB/Tf+KaWsQ==
