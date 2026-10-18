@@ -19,6 +19,13 @@
         "Import History": "Import History",
         "Export History": "Export History",
         "Delete History": "Delete History",
-        "Unofficial": "Unofficial"
+        "Unofficial": "Unofficial",
+        "URL": "URL",
+        "Warning": "Warning!",
+        "Importing data will delete all existing data, do you want to continue?": "Importing data will delete all existing data, do you want to continue?",
+        "Permanently Delete All Translations": "Permanently Delete All Translations",
+        "Are you sure you want to delete all translations? This action cannot be undone!": "Are you sure you want to delete all translations? This action cannot be undone!",
+        "Cancel": "Cancel",
+        "OK": "OK"
     }
 }

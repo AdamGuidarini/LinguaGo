@@ -1,38 +1,38 @@
 @if (vm$ | async; as vm) {
   <div>
     <div class="card">
-      <mat-label style="padding-bottom: 0 !important;">Translators</mat-label>
+      <mat-label style="padding-bottom: 0 !important;">{{ 'Settings.Translators' | transloco }}</mat-label>
       <mat-radio-group style="display: flex; flex-direction: column;" (ngModelChange)="selectedTranslatorSubject.next($event)"
         [(ngModel)]="vm.selectedTranslator">
         <mat-radio-button value="apertium">Apertium</mat-radio-button>
         <mat-radio-button value="libretranslate">LibreTranslate</mat-radio-button>
-        <mat-radio-button value="google">Google (Unofficial)</mat-radio-button>
+        <mat-radio-button value="google">Google (<span>{{ 'Settings.Unofficial' | transloco }}</span>)</mat-radio-button>
       </mat-radio-group>
     </div>
     <div class="card">
-      <mat-label>LibreTranslate Settings</mat-label>
+      <mat-label>{{ 'Settings.LibreTranslate Settings' | transloco }}</mat-label>
       <mat-form-field appearance="outline">
-        <mat-label>URL</mat-label>
+        <mat-label>{{ 'Settings.URL' | transloco }}</mat-label>
         <input matInput #url type="text" [disabled]="vm.selectedTranslator !== 'libretranslate'"
           [value]="vm.libreTranslateUrl" (input)="libreTranslateUrlSubject.next(url.value)">
       </mat-form-field>
       <mat-form-field appearance="outline">
-        <mat-label>Key (Optional)</mat-label>
+        <mat-label>{{ 'Settings.Key (Optional)' | transloco }}</mat-label>
         <input matInput #key type="text" [disabled]="vm.selectedTranslator !== 'libretranslate'"
           [value]="vm.libreTranslateKey" (input)="libreTranslateKeySubject.next(key.value)">
       </mat-form-field>
     </div>
     <div class="card">
-      <mat-label>Data</mat-label>
+      <mat-label>{{ 'Settings.Data' | transloco }}</mat-label>
       <div style="display: flex; flex-direction: column; gap: 10px;">
         <button mat-button (click)="importClickTrigger.next()">
-          Import History
+          {{ 'Settings.Import History' | transloco }}
         </button>
         <button mat-button (click)="exportDataSubject.next()">
-          Export History
+          {{ 'Settings.Export History' | transloco }}
         </button>
         <button mat-button class="delete-button" (click)="deleteAllSubject.next()">
-          Delete History
+          {{ 'Settings.Delete History' | transloco }}
         </button>
       </div>
     </div>
@@ -45,8 +45,8 @@
   <div id="title" class="title"></div>
   <div id="message" class="message"></div>
   <mat-dialog-actions>
-    <button id="cancel" class="button close" mat-button>Cancel</button>
-    <button id="accept" class="button" mat-button>OK</button>
+    <button id="cancel" class="button close" mat-button>{{ 'Settings.Cancel' | transloco }}</button>
+    <button id="accept" class="button" mat-button>{{ 'Settings.OK' | transloco }}</button>
   </mat-dialog-actions>
 </dialog>
 
