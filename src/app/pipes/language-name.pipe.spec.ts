@@ -1,4 +1,5 @@
-import { createSpyFromClass } from 'jest-auto-spies';
+import { beforeEach, describe, expect, it } from "vitest";
+import { mock } from 'vitest-mock-extended';
 import { LanguageNamePipe } from './language-name.pipe';
 import { ApertiumService } from '../services/apertium.service';
 import { LibreTranslateService } from '../services/libre-translate.service';
@@ -7,9 +8,9 @@ import { ILanguage } from '../interfaces/global-transation-interfaces';
 import { firstValueFrom, of } from 'rxjs';
 import { Transaltor } from '../interfaces/settings-interfaces';
 
-const mockApertiumSerivce = createSpyFromClass(ApertiumService);
-const mockLibreTranslateService = createSpyFromClass(LibreTranslateService);
-const mockGoogleTranslateSerivce = createSpyFromClass(GoogleTranslateService);
+const mockApertiumSerivce = mock<ApertiumService>();
+const mockLibreTranslateService = mock<LibreTranslateService>();
+const mockGoogleTranslateSerivce = mock<GoogleTranslateService>();
 
 describe('LanguageNamePipe', () => {
   let pipe: LanguageNamePipe;

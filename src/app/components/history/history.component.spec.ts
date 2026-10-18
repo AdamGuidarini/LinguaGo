@@ -1,12 +1,14 @@
-import { createSpyFromClass } from 'jest-auto-spies';
+import { subscribeSpyTo } from '@hirez_io/observer-spy';
+import { beforeEach, describe, expect, it } from "vitest";
+import { mock } from 'vitest-mock-extended';
 import { lastValueFrom, of, throwError } from 'rxjs';
 import { ITranslation } from '../../interfaces/global-transation-interfaces';
 import { DataService } from '../../services/data.service';
 import { TabsService } from '../../services/tabs.service';
 import { HistoryComponent } from './history.component';
 
-const mockDataService = createSpyFromClass(DataService);
-const mockTabsService = createSpyFromClass(TabsService);
+const mockDataService = mock<DataService>();
+const mockTabsService = mock<TabsService>();
 
 describe('HistoryComponent', () => {
   let component: HistoryComponent;
@@ -26,52 +28,38 @@ describe('HistoryComponent', () => {
   });
 
   describe('dbReady$ stream', () => {
-    it('should start as false', (done) => {
-      component.dbReady$.subscribe(
-        (res) => {
-          expect(res).toBe(false);
-          done();
-        }
-      );
+    it('should start as false', () => {
+      const sub = subscribeSpyTo(component.dbReady$);
+
+      expect(sub.getFirstValue()).toBe(false);
     });
 
-    it('should be true after setUp', (done) => {
-      component.dbReady$.subscribe(
-        (res) => {
-          expect(res).toBe(true);
-          done();
-        }
-      );
+    it('should be true after setUp', () => {
+      const sub = subscribeSpyTo(component.dbReady$);
+
+      expect(sub.getLastValue()).toBe(true);
     });
 
-    it('should emit false when setUp throws error (catchError block)', (done) => {
+    it('should emit false when setUp throws error (catchError block)', () => {
       mockDataService.setUp.mockReturnValueOnce(throwError(() => new Error('setup failed')));
       component = new HistoryComponent(mockDataService, mockTabsService);
 
-      let callCount = 0;
-      component.dbReady$.subscribe((value) => {
-        callCount++;
-        if (callCount === 2) {
-          expect(value).toBe(false);
-          done();
-        }
-      });
+      const sub = subscribeSpyTo(component.dbReady$);
+
+      expect(sub.getValueAt(1)).toBe(false);
     });
   });
 
   describe('translationHistory$ stream', () => {
-    it('should get translations', (done) => {
+    it('should get translations', () => {
       mockDataService.getTranslations.mockReturnValue(
         of({ translations: [], count: 0 })
       );
 
-      component.translationHistory$.subscribe(
-        (res) => {
-          expect(res).toStrictEqual(
-            { translations: [], count: 0 }
-          );
-          done();
-        }
+      const sub = subscribeSpyTo(component.translationHistory$);
+
+      expect(sub.getFirstValue()).toStrictEqual(
+        { translations: [], count: 0 }
       );
     });
 

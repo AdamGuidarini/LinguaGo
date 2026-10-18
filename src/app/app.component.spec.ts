@@ -1,8 +1,9 @@
-import { createSpyFromClass } from 'jest-auto-spies';
+import { beforeEach, describe, expect, it } from "vitest";
+import { mock } from 'vitest-mock-extended';
 import { AppComponent } from './app.component';
 import { TabsService } from './services/tabs.service';
 
-const mockTabsService = createSpyFromClass(TabsService);
+const mockTabsService = mock<TabsService>();
 
 describe('AppComponent', () => {
   let component: AppComponent;

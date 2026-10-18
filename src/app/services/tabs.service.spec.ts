@@ -1,3 +1,5 @@
+import { subscribeSpyTo } from '@hirez_io/observer-spy';
+import { beforeEach, describe, expect, it } from "vitest";
 import { TabsService } from './tabs.service';
 
 describe('TabsService', () => {
@@ -12,24 +14,18 @@ describe('TabsService', () => {
   });
 
   describe('getCurrentTab method', () => {
-    it('should return the observable with tab index', (done) => {
-      service.getCurrentTab().subscribe(
-        (tab) => {
-          expect(tab).toBe(0);
-          done();
-        }
-      );
+    it('should return the observable with tab index', () => {
+      const sub = subscribeSpyTo(service.getCurrentTab());
+
+      expect(sub.getFirstValue()).toBe(0);
     });
 
-    it('should update the current tab', (done) => {
+    it('should update the current tab', () => {
       service.changeTab(1);
 
-      service.getCurrentTab().subscribe(
-        (tab) => {
-          expect(tab).toBe(1);
-          done();
-        }
-      );
+      const sub = subscribeSpyTo(service.getCurrentTab());
+
+      expect(sub.getFirstValue()).toBe(1);
     });
   });
 });

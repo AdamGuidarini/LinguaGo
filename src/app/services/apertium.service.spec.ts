@@ -1,9 +1,11 @@
-import { createSpyFromClass } from 'jest-auto-spies';
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import { mock } from 'vitest-mock-extended';
 import { ApertiumService } from './apertium.service';
 import { HttpClient } from '@angular/common/http';
+import { subscribeSpyTo } from '@hirez_io/observer-spy';
 import { lastValueFrom, of } from 'rxjs';
 
-const mockHttpClient = createSpyFromClass(HttpClient);
+const mockHttpClient = mock<HttpClient>();
 
 describe('ApertiumService', () => {
   let service: ApertiumService;
@@ -17,8 +19,8 @@ describe('ApertiumService', () => {
   });
 
   describe('getLanguages method', () => {
-    it('should retrieve and map languages', (done) => {
-      service.getLanguageNames = jest.fn(() => of({ 'eng': 'English', 'it': 'Italian', 'spa': 'Spanish' }));
+    it('should retrieve and map languages', () => {
+      service.getLanguageNames = vi.fn(() => of({ 'eng': 'English', 'it': 'Italian', 'spa': 'Spanish' }));
       mockHttpClient.get.mockReturnValue(of({
         responseData: [
           { sourceLanguage: 'it', targetLanguage: 'spa' },
@@ -28,17 +30,14 @@ describe('ApertiumService', () => {
         ]
       }));
 
-      service.getLanguages().subscribe(
-        (res) => {
-          expect(res).toStrictEqual(
-            [
-              { code: 'it', name: 'Italian', targets: ['spa'] },
-              { code: 'eng', name: 'English', targets: ['spa'] },
-              { code: 'spa', name: 'Spanish', targets: ['it', 'eng'] }
-            ]
-          );
-          done();
-        }
+      const sub = subscribeSpyTo(service.getLanguages());
+
+      expect(sub.getFirstValue()).toStrictEqual(
+        [
+          { code: 'it', name: 'Italian', targets: ['spa'] },
+          { code: 'eng', name: 'English', targets: ['spa'] },
+          { code: 'spa', name: 'Spanish', targets: ['it', 'eng'] }
+        ]
       );
     });
 
@@ -55,48 +54,39 @@ describe('ApertiumService', () => {
   });
 
   describe('getLanguageNames method', () => {
-    it('should retrieve language names', (done) => {
+    it('should retrieve language names', () => {
       mockHttpClient.get.mockReturnValue(
         of({ 'eng': 'English', 'it': 'Italian', 'spa': 'Spanish' })
       );
 
-      service.getLanguageNames(['eng', 'it', 'spa']).subscribe(
-        (res) => {
-          expect(res).toStrictEqual({ 'eng': 'English', 'it': 'Italian', 'spa': 'Spanish' });
-          done();
-        }
-      );
+      const sub = subscribeSpyTo(service.getLanguageNames(['eng', 'it', 'spa']));
+
+      expect(sub.getFirstValue()).toStrictEqual({ 'eng': 'English', 'it': 'Italian', 'spa': 'Spanish' });
     });
 
-    it('should filter for languages if none are provided', (done) => {
-      service.getLanguageNames([]).subscribe(
-        () => {
-          expect(mockHttpClient.get).toHaveBeenLastCalledWith(
-            'https://apertium.org/apy/listLanguageNames?locale=en'
-          );
-          done();
-        }
+    it('should filter for languages if none are provided', () => {
+      subscribeSpyTo(service.getLanguageNames([]));
+
+      expect(mockHttpClient.get).toHaveBeenLastCalledWith(
+        'https://apertium.org/apy/listLanguageNames?locale=en'
       );
     });
   });
 
   describe('detectLanguage method', () => {
-    it('should get the language', (done) => {
+    it('should get the language', () => {
       mockHttpClient.get.mockReturnValue(
         of({ 'eng': 0.5, 'nld': '0.5' })
       );
 
-      service.detectLanguage('drink water').subscribe(
-        (res) => {
-          expect(res).toStrictEqual({ 'eng': 0.5, 'nld': '0.5' });
-          done();
-        }
-      );
+      const sub = subscribeSpyTo(service.detectLanguage('drink water'));
+
+      expect(sub.getFirstValue()).toStrictEqual({ 'eng': 0.5, 'nld': '0.5' });
     });
   });
 
   describe('translate method', () => {
-    it('should translate', (done) => {
+    it('should translate', () => {
       mockHttpClient.get.mockReturnValue(
         of({
           responseData: { translatedText: 'Hello, world!'},
@@ -105,12 +95,9 @@ describe('ApertiumService', () => {
         })
       );
 
-      service.translate('it', 'en', 'Salve, mondo!').subscribe(
-        (res) => {
-          expect(res.result).toBe('Hello, world!');
-          done();
-        }
-      );
+      const sub = subscribeSpyTo(service.translate('it', 'en', 'Salve, mondo!'));
+
+      expect(sub.getFirstValue().result).toBe('Hello, world!');
     });
   });
 });
