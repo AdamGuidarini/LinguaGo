@@ -4,7 +4,7 @@
       {{ 'Translate.Translator' | transloco }}: {{ vm.settings.translator | translator }}
     </div>
     <div class="selector-box">
-      <div class="select">
+      <div class="select" style="display: flex; flex-direction: column;">
         <select [value]="vm.source" #s (change)="sourceSubject.next(s.value)">
           @if (vm.languages && vm.languages.length > 0) {
             <option style="display:none"></option>
