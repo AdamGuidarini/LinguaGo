@@ -10,7 +10,8 @@
     "test:coverage": "ng test --watch=false --coverage",
     "lint": "ng lint",
     "clean": "rm -r dist",
-    "package": "zip -r -FS ./linguago.$npm_package_version.zip . -x '*.git*' 'node_modules/*' 'dist/*' 'coverage/*' 'web-ext-artifacts/*'"
+    "package": "cd dist/lingua-go/browser && zip -r -FS ../../../linguago.$npm_package_version.zip . -x '*.map'",
+    "package:source": "zip -r -FS ./linguago-source.$npm_package_version.zip . -x '*.git*' 'node_modules/*' 'dist/*' 'coverage/*' 'web-ext-artifacts/*' '*.zip'"
   },
   "license": "GPL-3.0-only",
   "private": true,
