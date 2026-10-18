@@ -6,7 +6,7 @@
           <div>
             <div class="header details-row">
               <span style="flex: 1;">
-                Original - {{ (translation.source | languagename: translation.translator) | async }}
+                {{ 'History.Original' | transloco }} - {{ (translation.source | languagename: translation.translator) | async }}
               </span>
               <button style="background: none; border: none;" (click)="deleteTranslationSubject.next(translation)">
                 <i class="pi pi-trash" style="color: var(--delete);"></i>
@@ -15,17 +15,17 @@
             <div>{{ translation.original }}</div>
           </div>
           <div>
-            <div class="header">Translation - {{ (translation.target | languagename: translation.translator) | async
+            <div class="header">{{ 'History.Translation' | transloco }} - {{ (translation.target | languagename: translation.translator) | async
             }} </div>
             <div>{{ translation.result }}</div>
           </div>
           <div class="details-row">
             <div style="width: 50%;">
-              <div class="header">Translator</div>
+              <div class="header">{{ 'Translate.Translator' | transloco }}</div>
               <div>{{ translation.translator | translator }}</div>
             </div>
             <div style="width: 50%;">
-              <div class="header">Timestamp</div>
+              <div class="header">{{ 'History.Timestamp' | transloco }}</div>
               <div>{{ translation.timestamp | datetime }}</div>
             </div>
           </div>

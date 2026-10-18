@@ -19,6 +19,7 @@ import { LanguageNamePipe } from '../../pipes/language-name.pipe';
 import { TranslatorPipe } from '../../pipes/translator.pipe';
 import { DataService } from '../../services/data.service';
 import { TabsService } from '../../services/tabs.service';
+import { TranslocoModule } from '@jsverse/transloco';
 
 @Component({
   selector: 'app-history',
@@ -28,7 +29,8 @@ import { TabsService } from '../../services/tabs.service';
     DatetimePipe,
     LanguageNamePipe,
     TranslatorPipe,
-    MatIconModule
+    MatIconModule,
+    TranslocoModule
   ],
   templateUrl: './history.component.html',
   styleUrl: './history.component.scss'

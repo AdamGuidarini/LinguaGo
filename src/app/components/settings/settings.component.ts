@@ -99,7 +99,7 @@ export class SettingsComponent {
   importClick$ = this.importClickTrigger.pipe(
     switchMap(
       () => this.showDialog(
-        this.transloco.translate('Warning'),
+        this.transloco.translate('Settings.Warning'),
         this.transloco.translate('Settings.Importing data will delete all existing data, do you want to continue?')
       )
     ),
