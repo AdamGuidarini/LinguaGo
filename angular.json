@@ -80,12 +80,6 @@
           },
           "defaultConfiguration": "development"
         },
-        "extract-i18n": {
-          "builder": "@angular-devkit/build-angular:extract-i18n",
-          "options": {
-            "buildTarget": "LinguaGo:build"
-          }
-        },
         "lint": {
           "builder": "@angular-eslint/builder:lint",
           "options": {
