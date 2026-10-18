@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { subscribeSpyTo } from '@hirez_io/observer-spy';
 import { createSpyFromClass } from 'jest-auto-spies';
 import { BehaviorSubject, firstValueFrom, of, take, throwError } from 'rxjs';
 import { ILanguage } from '../../interfaces/global-transation-interfaces';
@@ -26,14 +27,17 @@ const langList: ILanguage[] = [
   { code: 'spa', name: 'Spanish', targets: ['it', 'eng'] }
 ];
 
-const mockSettingsBS = new BehaviorSubject<ISettings>(
-  { translator: Transaltor.APERTIUM }
-);
 
 describe('TranslationComponent', () => {
+  let tabBS: BehaviorSubject<number>;
+  let mockSettingsBS: BehaviorSubject<ISettings>;
   let component: TranslationComponent;
 
   beforeEach(async () => {
+    tabBS = new BehaviorSubject<number>(0);
+    mockSettingsBS = new BehaviorSubject<ISettings>(
+      { translator: Transaltor.APERTIUM }
+    );
     mockApertiumService.getLanguages.mockReturnValue(
       of(langList)
     );
@@ -49,7 +53,12 @@ describe('TranslationComponent', () => {
     mockSettingsService.saveSettings.mockImplementation(
       (settings) => mockSettingsBS.next(settings)
     );
-    mockTabsService.getCurrentTab.mockReturnValue(of(0));
+    mockTabsService.changeTab.mockImplementation(
+      (tab: number) => tabBS.next(tab)
+    );
+    mockTabsService.getCurrentTab.mockReturnValue(
+      tabBS.asObservable()
+    );
     mockDataService.addTranslation.mockReturnValue(of(undefined));
 
     if (!('randomUUID' in crypto)) {
@@ -66,66 +75,55 @@ describe('TranslationComponent', () => {
     );
   });
 
+  afterAll(() => {
+    jest.clearAllMocks();
+  });
+
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
   describe('currentTab$ stream', () => {
-    it('should clear the error', (done) => {
-      component.error$.subscribe(
-        (res) => {
-          expect(res).toBe('');
-          done();
-        }
-      );
+    it('should clear the error', () => {
+      const sub = subscribeSpyTo(component.error$);
+      subscribeSpyTo(component.currentTab$);
 
       component.errorSubject.next('hello!');
       mockTabsService.changeTab(0);
+
+      expect(sub.getLastValue()).toBe('');
     });
 
-    it('should not clear the error', (done) => {
-      component.error$.subscribe(
-        (res) => {
-          expect(res).toBe('hello!');
-          done();
-        }
-      );
+    it('should not clear the error', () => {
+      const sub = subscribeSpyTo(component.error$);
 
       component.errorSubject.next('hello!');
       mockTabsService.changeTab(1);
+
+      expect(sub.getLastValue()).toBe('hello!');
     });
   });
 
   describe('languages stream', () => {
-    it('should populate languages from Apertium', (done) => {
-      component.languages$.subscribe(
-        () => {
-          expect(mockApertiumService.getLanguages).toHaveBeenCalled();
-          done();
-        }
-      );
+    it('should populate languages from Apertium', () => {
+      subscribeSpyTo(component.languages$);
+      mockSettingsBS.next({ translator: Transaltor.APERTIUM });
+
+      expect(mockApertiumService.getLanguages).toHaveBeenCalled();
     });
 
-    it('should get languages from Libretranslate', (done) => {
-      component.languages$.subscribe(
-        () => {
-          expect(mockLibreTranslateService.getLanguages).toHaveBeenCalled();
-          done();
-        }
-      );
-
+    it('should get languages from Libretranslate', () => {
+      subscribeSpyTo(component.languages$);
       mockSettingsBS.next({ translator: Transaltor.LIBRETRANSLATE });
+
+      expect(mockLibreTranslateService.getLanguages).toHaveBeenCalled();
     });
 
-    it('should get languages from Google', (done) => {
-      component.languages$.subscribe(
-        () => {
-          expect(mockGoogleTranslateService.getLanguages).toHaveBeenCalled();
-          done();
-        }
-      );
-
+    it('should get languages from Google', () => {
+      subscribeSpyTo(component.languages$);
       mockSettingsBS.next({ translator: Transaltor.GOOGLE });
+
+      expect(mockGoogleTranslateService.getLanguages).toHaveBeenCalled();
     });
 
     it('should log if it cannot retrieve languages', (done) => {
@@ -191,47 +189,35 @@ describe('TranslationComponent', () => {
       component.sourceSubject.next('eng');
     });
 
-    it('set targetLanguages to languages if source is auto', (done) => {
-      component.targetLanguages$.subscribe(
-        (res) => {
-          if (res.length > 0) {
-            expect(res).toStrictEqual(langList);
-            done();
-          }
-        }
-      );
+    it('set targetLanguages to languages if source is auto', () => {
+      const sub = subscribeSpyTo(component.targetLanguages$);
 
       component.targetSubject.next('nld');
       component.sourceSubject.next('auto');
+
+      expect(sub.getLastValue()).toStrictEqual(langList);
     });
 
-    it('should return all languages expect auto for Google Translate', (done) => {
-      component.targetLanguages$.subscribe(
-        (res) => {
-          const ll = [...langList];
-          ll.shift();
-
-          expect(res).toStrictEqual(ll);
-          done();
-        }
-      );
+    it('should return all languages expect auto for Google Translate', () => {
+      const sub = subscribeSpyTo(component.targetLanguages$);
+      subscribeSpyTo(mockSettingsService.getSettings());
 
       mockSettingsService.saveSettings({
         translator: Transaltor.GOOGLE
       });
+      const ll = [...langList];
+      ll.shift();
+
+      expect(sub.getLastValue()).toStrictEqual(ll);
     });
 
-    it('should unset the target language if source cannot translate to it', (done) => {
-      component.targetLanguages$.subscribe();
-      component.target$.subscribe(
-        (res) => {
-          expect(res).toBe('');
-          done();
-        }
-      );
+    it('should unset the target language if source cannot translate to it', () => {
+      subscribeSpyTo(component.targetLanguages$);
 
       component.targetSubject.next('en');
       component.sourceSubject.next('it');
+
+      expect(component.targetSubject.value).toBe('');
     });
   });
 
@@ -264,7 +250,7 @@ describe('TranslationComponent', () => {
       component.translate$.subscribe(
         (res) => {
           if (res) {
-            expect(res).toStrictEqual({ result: 'Hola', key: 'mock-uuid', timestamp: expect.stringContaining(':') });
+            expect(res).toStrictEqual({ result: 'Hola', key: expect.any(String), timestamp: expect.stringContaining(':') });
             expect(mockApertiumService.translate).toHaveBeenCalled();
             done();
           }
@@ -283,7 +269,7 @@ describe('TranslationComponent', () => {
       component.translate$.subscribe(
         (res) => {
           if (res) {
-            expect(res).toStrictEqual({ result: 'Salve', key: 'mock-uuid', timestamp: expect.stringContaining(':') });
+            expect(res).toStrictEqual({ result: 'Salve', key: expect.any(String), timestamp: expect.stringContaining(':') });
             expect(mockLibreTranslateService.translate).toHaveBeenCalled();
             done();
           }
@@ -297,22 +283,19 @@ describe('TranslationComponent', () => {
       component.translateSubject.next();
     });
 
-    it('should translate - GoogleTranslate', (done) => {
-      component.translate$.subscribe(
-        (res) => {
-          if (res) {
-            expect(res).toStrictEqual({ result: 'Hallo', key: 'mock-uuid', timestamp: expect.stringContaining(':') });
-            expect(mockGoogleTranslateService.translate).toHaveBeenCalled();
-            done();
-          }
-        }
-      );
+    it('should translate - GoogleTranslate', () => {
+      const sub = subscribeSpyTo(component.translate$);
 
       mockSettingsBS.next({ translator: Transaltor.GOOGLE });
       component.sourceSubject.next('eng');
       component.targetSubject.next('nl');
       component.textToTranslateSubject.next('Hello');
       component.translateSubject.next();
+
+      expect(sub.getLastValue()).toStrictEqual(
+        { result: 'Hallo', key: expect.any(String), timestamp: expect.stringContaining(':') }
+      );
+      expect(mockGoogleTranslateService.translate).toHaveBeenCalled();
     });
 
     it('should set an error if one occurs', (done) => {

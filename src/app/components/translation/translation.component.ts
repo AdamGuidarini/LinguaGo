@@ -67,7 +67,8 @@ export class TranslationComponent {
 
   settings$ = this.settingsService.getSettings();
   currentTab$ = this.tabsService.getCurrentTab().pipe(
-    tap((tab) => tab === 0 ? this.errorSubject.next('') : null)
+    tap((tab) => tab === 0 ? this.errorSubject.next('') : null),
+    startWith(0)
   );
 
   translatorSubject = new Subject<Transaltor>();

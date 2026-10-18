@@ -50,6 +50,7 @@
     "@angular/cli": "^22.2.3",
     "@angular/compiler-cli": "^22.2.3",
     "@eslint/js": "^9.29.0",
+    "@hirez_io/observer-spy": "^2.2.0",
     "@types/jest": "^30.0.0",
     "@types/luxon": "^3.7.1",
     "@types/node": "^24.0.15",
