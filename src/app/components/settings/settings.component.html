@@ -1,7 +1,7 @@
 <div *ngIf="vm$ | async as vm">
     <div class="card">
         <mat-label style="padding-bottom: 0 !important;">Translators</mat-label>
-        <mat-radio-group fxLayout="column" (ngModelChange)="selectedTranslatorSubject.next($event)"
+        <mat-radio-group style="display: flex; flex-direction: column;" (ngModelChange)="selectedTranslatorSubject.next($event)"
             [(ngModel)]="vm.selectedTranslator">
             <mat-radio-button value="apertium">Apertium</mat-radio-button>
             <mat-radio-button value="libretranslate">LibreTranslate</mat-radio-button>
@@ -23,7 +23,7 @@
     </div>
     <div class="card">
         <mat-label>Data</mat-label>
-        <div fxLayout="column" fxLayoutGap="10px">
+        <div style="display: flex; flex-direction: column; gap: 10px;">
             <button mat-button (click)="importClickTrigger.next()">
                 Import History
             </button>
@@ -43,7 +43,7 @@
 <dialog #confirmationdialog>
     <div id="title" class="title"></div>
     <div id="message" class="message"></div>
-    <mat-dialog-actions fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="15px">
+    <mat-dialog-actions>
         <button id="cancel" class="button close" mat-button>Cancel</button>
         <button id="accept" class="button" mat-button>OK</button>
     </mat-dialog-actions>

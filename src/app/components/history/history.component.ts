@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { FlexModule } from '@angular/flex-layout';
 import { MatIconModule } from '@angular/material/icon';
 import {
   catchError,
@@ -29,7 +28,6 @@ import { TabsService } from '../../services/tabs.service';
     DatetimePipe,
     LanguageNamePipe,
     TranslatorPipe,
-    FlexModule,
     MatIconModule
   ],
   templateUrl: './history.component.html',

@@ -14,3 +14,9 @@
     font-size: 1.1em;
     margin-bottom: 2px;
 }
+
+.details-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between center;
+}

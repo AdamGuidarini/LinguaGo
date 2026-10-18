@@ -1,8 +1,8 @@
 <div *ngIf="vm$ | async as vm">
     <div *ngFor="let translation of vm.translationHistory.translations" class="card">
-        <div fxLayout="column">
+        <div style="display: flex; flex-direction: column;">
             <div>
-                <div fxLayout="row" fxLayoutAlign="space-between center" class="header">
+                <div class="header details-row">
                     <span style="flex: 1;">
                         Original - {{ (translation.source | languagename: translation.translator) | async }}
                     </span>
@@ -17,12 +17,12 @@
                     }} </div>
                 <div>{{ translation.result }}</div>
             </div>
-            <div fxLayout="row" fxLayoutAlign="space-betwen center">
-                <div fxFlex="50">
+            <div class="details-row">
+                <div style="width: 50%;">
                     <div class="header">Translator</div>
                     <div>{{ translation.translator | translator }}</div>
                 </div>
-                <div fxFlex="50">
+                <div style="width: 50%;">
                     <div class="header">Timestamp</div>
                     <div>{{ translation.timestamp | datetime }}</div>
                 </div>

@@ -2,7 +2,7 @@
     <div class="translator-label">
         Translator: {{ vm.settings.translator | translator }}
     </div>
-    <div fxLayout="column" fxLayoutAlign="space-around center">
+    <div class="selector-box">
         <div class="select">
             <select [value]="vm.source" #s (change)="sourceSubject.next(s.value)">
                 <option *ngIf="vm.languages && vm.languages.length > 0" style="display:none"></option>
@@ -21,7 +21,7 @@
         </div>
     </div>
     <div *ngIf="!(vm.settings.translator === translator.LIBRETRANSLATE && !vm.settings.libreTranslateUrl)"
-        fxLayout="column" fxLayoutAlign="space-around center">
+        class="selector-box">
         <mat-form-field appearance="outline">
             <textarea #inputText matInput minRows="5"
                 (input)="this.textToTranslateSubject.next(inputText.value)"></textarea>
