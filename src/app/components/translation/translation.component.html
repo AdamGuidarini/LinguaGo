@@ -1,7 +1,7 @@
 @if (vm$ | async; as vm) {
   <div class="card">
     <div class="translator-label">
-      Translator: {{ vm.settings.translator | translator }}
+      {{ 'Translate.Translator' | transloco }}: {{ vm.settings.translator | translator }}
     </div>
     <div class="selector-box">
       <div class="select">
@@ -42,14 +42,14 @@
         </mat-form-field>
         <button mat-button class="translate-button" (click)="translateSubject.next()"
           [disabled]="!(vm.source || vm.target || vm.textToTranslate)">
-          Translate
+          {{ 'Translate.Translate' | transloco }}
         </button>
       </div>
     }
     @if (vm.settings.translator === translator.LIBRETRANSLATE && !vm.settings.libreTranslateUrl) {
       <div
         class="error-box">
-        LibreTranslate requires a URL to be provided to function, but none was found.
+        {{ 'Translate.LibreTranslate requires a URL to be provided to function, but none was found' | transloco }}
       </div>
     }
     @if (vm.error) {

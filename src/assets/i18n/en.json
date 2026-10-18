@@ -1,7 +1,8 @@
 {
     "Translate": {
         "Translate": "Translate",
-        "Translator": "Translator"
+        "Translator": "Translator",
+        "LibreTranslate requires a URL to be provided to function, but none was found": "LibreTranslate requires a URL to be provided to function, but none was found."
     },
     "History": {
         "History": "History",
