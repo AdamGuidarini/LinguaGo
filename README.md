@@ -49,6 +49,6 @@ yarn build
 ```
 The built extension will be places in `web-ext-artifacts/linguago-[version].zip`.
 
-The compiled filed will be placed in `dist/lingua-go` and can be loaded into a browser from there if you prefer to run locally.
+The compiled files will be placed in `dist/lingua-go` and can be loaded into a browser from there if you prefer to run locally.
 
 You can also have web-ext load the extension into a browser for testing by running `yarn start`.
