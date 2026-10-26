@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it } from 'vitest';
 import { Transaltor } from '../interfaces/settings-interfaces';
 import { TranslatorPipe } from './translator.pipe';
 

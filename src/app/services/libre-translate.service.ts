@@ -19,7 +19,7 @@ export class LibreTranslateService implements ITranslator {
   constructor(
     private httpClient: HttpClient,
     private settingsService: SettingsService
-  ) { }
+  ) {}
 
   getLanguages(): Observable<ILanguage[]> {
     return this.settingsService.getSettings().pipe(

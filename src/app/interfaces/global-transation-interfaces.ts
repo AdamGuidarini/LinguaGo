@@ -1,5 +1,5 @@
-import { Observable } from "rxjs";
-import { Transaltor } from "./settings-interfaces";
+import { Observable } from 'rxjs';
+import { Transaltor } from './settings-interfaces';
 
 export interface ILanguage {
     code: string;

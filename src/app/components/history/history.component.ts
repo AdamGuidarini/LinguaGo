@@ -39,7 +39,7 @@ export class HistoryComponent {
   constructor(
     private dataService: DataService,
     private tabsService: TabsService
-  ) { }
+  ) {}
 
   private readonly batchSize = 50;
 
@@ -53,9 +53,7 @@ export class HistoryComponent {
     startWith(false)
   );
 
-  translationHistory$ = combineLatest([
-    this.dbReady$, this.tabsService.getCurrentTab()
-  ]).pipe(
+  translationHistory$ = combineLatest([this.dbReady$, this.tabsService.getCurrentTab()]).pipe(
     filter(([dbReady, tab]) => !!dbReady && tab === 1),
     switchMap(() => this.dataService.getTranslations())
   );
@@ -70,12 +68,8 @@ export class HistoryComponent {
     tap(() => this.tabsService.changeTab(1))
   );
 
-  vm$ = combineLatest([
-    this.translationHistory$
-  ]).pipe(
-    map(([
-      translationHistory
-    ]) => ({
+  vm$ = combineLatest([this.translationHistory$]).pipe(
+    map(([translationHistory]) => ({
       translationHistory
     }))
   );

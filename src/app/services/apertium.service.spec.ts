@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { mock } from 'vitest-mock-extended';
 import { ApertiumService } from './apertium.service';
 import { HttpClient } from '@angular/common/http';
@@ -89,7 +89,7 @@ describe('ApertiumService', () => {
     it('should translate', () => {
       mockHttpClient.get.mockReturnValue(
         of({
-          responseData: { translatedText: 'Hello, world!'},
+          responseData: { translatedText: 'Hello, world!' },
           responseDetails: '',
           responseCode: 200
         })

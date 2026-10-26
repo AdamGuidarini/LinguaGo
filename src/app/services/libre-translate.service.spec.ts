@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it } from 'vitest';
 import { HttpClient } from '@angular/common/http';
 import { mock } from 'vitest-mock-extended';
 import { subscribeSpyTo } from '@hirez_io/observer-spy';
@@ -30,9 +30,7 @@ describe('LibreTranslateService', () => {
 
   describe('getLanguages method', () => {
     it('should get all languages', () => {
-      const langList = [
-        { name: 'Foo', code: 'bar', targets: [] }
-      ];
+      const langList = [{ name: 'Foo', code: 'bar', targets: [] }];
 
       mockHttpClient.get.mockReturnValue(
         of(langList)

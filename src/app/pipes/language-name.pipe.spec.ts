@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it } from 'vitest';
 import { mock } from 'vitest-mock-extended';
 import { LanguageNamePipe } from './language-name.pipe';
 import { ApertiumService } from '../services/apertium.service';

@@ -1,5 +1,5 @@
 import { subscribeSpyTo } from '@hirez_io/observer-spy';
-import { beforeEach, describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it } from 'vitest';
 import { TabsService } from './tabs.service';
 
 describe('TabsService', () => {

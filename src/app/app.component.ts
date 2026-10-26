@@ -24,7 +24,7 @@ import { TranslocoModule } from '@jsverse/transloco';
 export class AppComponent {
   constructor(
     private tabsService: TabsService
-  ) { }
+  ) {}
 
   title = 'LinguaGo';
 

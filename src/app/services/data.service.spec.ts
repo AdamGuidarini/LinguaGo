@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { subscribeSpyTo } from '@hirez_io/observer-spy';
 import { lastValueFrom } from 'rxjs';

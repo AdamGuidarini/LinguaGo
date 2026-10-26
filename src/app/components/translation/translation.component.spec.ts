@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { afterAll, beforeEach, describe, expect, it, vi } from "vitest";
+import { afterAll, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { subscribeSpyTo } from '@hirez_io/observer-spy';
 import { mock } from 'vitest-mock-extended';
@@ -168,9 +168,7 @@ describe('TranslationComponent', () => {
       mockSettingsBS.next({ translator: Transaltor.APERTIUM });
       component.sourceSubject.next('eng');
 
-      expect(sub.getValues().find((res) => res.length > 0)).toStrictEqual([
-        { code: 'spa', name: 'Spanish', targets: ['it', 'eng'] }
-      ]);
+      expect(sub.getValues().find((res) => res.length > 0)).toStrictEqual([{ code: 'spa', name: 'Spanish', targets: ['it', 'eng'] }]);
     });
 
     it('set targetLanguages to languages if source is auto', () => {

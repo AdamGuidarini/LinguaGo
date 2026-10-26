@@ -51,7 +51,7 @@ export class SettingsComponent {
     private settingsService: SettingsService,
     private dataService: DataService,
     private transloco: TranslocoService
-  ) { }
+  ) {}
   @ViewChild('confirmationdialog') confirmationDialog: ElementRef | undefined;
 
   settings$ = this.settingsService.getSettings();
@@ -61,9 +61,7 @@ export class SettingsComponent {
   );
 
   selectedTranslatorSubject = new BehaviorSubject<string>('');
-  selectedTranslator$: Observable<Transaltor> = combineLatest([
-    this.selectedTranslatorSubject, this.settings$
-  ]).pipe(
+  selectedTranslator$: Observable<Transaltor> = combineLatest([this.selectedTranslatorSubject, this.settings$]).pipe(
     map(([choice, settings]) => {
       if (choice && choice !== settings.translator) {
         this.settingsService.saveSettings(

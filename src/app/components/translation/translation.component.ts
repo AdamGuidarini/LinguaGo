@@ -56,7 +56,7 @@ export class TranslationComponent {
     private settingsService: SettingsService,
     private tabsService: TabsService,
     private dataService: DataService
-  ) { }
+  ) {}
 
   readonly translator = Transaltor;
 

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { singleTranslate } from "google-translate-api-x";
-import Browser from "webextension-polyfill";
-import { ITranslateMessage } from "./interfaces/translate-message-interfaces";
+import { singleTranslate } from 'google-translate-api-x';
+import Browser from 'webextension-polyfill';
+import { ITranslateMessage } from './interfaces/translate-message-interfaces';
 
 Browser.browserAction.onClicked.addListener(
     () => Browser.sidebarAction.open()

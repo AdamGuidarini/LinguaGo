@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { mock } from 'vitest-mock-extended';
 import { subscribeSpyTo } from '@hirez_io/observer-spy';
@@ -8,7 +8,7 @@ import { Transaltor } from '../../interfaces/settings-interfaces';
 import { DataService } from '../../services/data.service';
 import { SettingsService } from '../../services/settings.service';
 import { SettingsComponent } from './settings.component';
-import { TranslocoService } from "@jsverse/transloco";
+import { TranslocoService } from '@jsverse/transloco';
 
 const mockSettingsService = mock<SettingsService>();
 const mockDataService = mock<DataService>();

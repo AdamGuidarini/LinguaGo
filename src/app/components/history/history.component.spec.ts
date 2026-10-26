@@ -1,5 +1,5 @@
 import { subscribeSpyTo } from '@hirez_io/observer-spy';
-import { beforeEach, describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it } from 'vitest';
 import { mock } from 'vitest-mock-extended';
 import { lastValueFrom, of, throwError } from 'rxjs';
 import { ITranslation } from '../../interfaces/global-transation-interfaces';

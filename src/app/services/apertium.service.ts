@@ -16,7 +16,7 @@ import { Transaltor } from '../interfaces/settings-interfaces';
 export class ApertiumService implements ITranslator {
   constructor(
     private httpClient: HttpClient
-  ) { }
+  ) {}
 
   private readonly baseUrl = 'https://apertium.org/apy';
   private languages$: Observable<ILanguage[]> = of([]);
