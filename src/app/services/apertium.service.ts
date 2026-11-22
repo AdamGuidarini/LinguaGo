@@ -53,20 +53,25 @@ export class ApertiumService implements ITranslator {
   }
 
   getLanguageNames(codes: string[], locale = 'en'): Observable<IApertiumLanguageNames> {
+    const params = new URLSearchParams({ locale });
+    if (codes.length > 0) {
+      params.set('languages', codes.join('+'));
+    }
+
     return this.httpClient.get<IApertiumLanguageNames>(
-      `${this.baseUrl}/listLanguageNames?locale=${locale}${codes.length > 0 ? '&languages=' : ''}${codes.join('+')}`
+      `${this.baseUrl}/listLanguageNames?${params.toString()}`
     );
   }
 
   detectLanguage(text: string): Observable<IApertiumIdentification> {
     return this.httpClient.get<IApertiumIdentification>(
-      `${this.baseUrl}/identifyLang?q=${text}`
+      `${this.baseUrl}/identifyLang?q=${encodeURIComponent(text)}`
     );
   }
 
   translate(source: string, target: string, text: string): Observable<ITranslation> {
     return this.httpClient.get<IApertiumResponse<IApertiumTranslationRepsonse>>(
-      `${this.baseUrl}/translate?langpair=${source}|${target}&q=${text}`
+      `${this.baseUrl}/translate?langpair=${encodeURIComponent(source)}|${encodeURIComponent(target)}&q=${encodeURIComponent(text)}`
     ).pipe(
       map((result) => ({
         source,
