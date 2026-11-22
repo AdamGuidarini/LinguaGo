@@ -80,6 +80,14 @@
     "@angular-devkit/architect" ">= 0.2200.0 < 0.2300.0"
     "@angular-devkit/core" ">= 22.0.0 < 23.0.0"
 
+"@angular-eslint/builder@22.8.0":
+  version "22.8.0"
+  resolved "https://registry.yarnpkg.com/@angular-eslint/builder/-/builder-22.8.0.tgz#798a96be673f6644293756a3b88198b28102618e"
+  integrity sha512-A6DocmcoqdVwWDeSQ3h/qdj/v2lly2Yu4l0ccC2J46JR93k89bdHaj8DwM1pel7KyGyOYPnNw95iwr7T4GEUSA==
+  dependencies:
+    "@angular-devkit/architect" ">= 0.2200.0 < 0.2300.0"
+    "@angular-devkit/core" ">= 22.0.0 < 23.0.0"
+
 "@angular-eslint/bundled-angular-compiler@22.6.0":
   version "22.6.0"
   resolved "https://registry.yarnpkg.com/@angular-eslint/bundled-angular-compiler/-/bundled-angular-compiler-22.6.0.tgz#253f0b782c43fe38ea1361c04077cacff7ba3c02"
