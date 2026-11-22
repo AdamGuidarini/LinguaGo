@@ -2160,10 +2160,10 @@
   dependencies:
     undici-types "~7.8.0"
 
-"@types/webextension-polyfill@^0.12.3":
-  version "0.12.3"
-  resolved "https://registry.yarnpkg.com/@types/webextension-polyfill/-/webextension-polyfill-0.12.3.tgz#a4ac3452b816e4bd646024007a886234e2f6293e"
-  integrity sha512-F58aDVSeN/MjUGazXo/cPsmR76EvqQhQ1v4x23hFjUX0cfAJYE+JBWwiOGW36/VJGGxoH74sVlRIF3z7SJCKyg==
+"@types/webextension-polyfill@^0.12.6":
+  version "0.12.6"
+  resolved "https://registry.yarnpkg.com/@types/webextension-polyfill/-/webextension-polyfill-0.12.6.tgz#2df19ec98c6a90b1b2f3eb6c8980193280811602"
+  integrity sha512-XTNQSGiQaipt1iocbpHSjYHd+Ujcya+K5H4H2uH7JwycReTFixoYqGWIKih2Ec072NuEW2lAyXRDYmlEx00+cw==
 
 "@types/yauzl@2.10.3":
   version "2.10.3"
