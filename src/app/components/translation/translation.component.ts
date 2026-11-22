@@ -11,6 +11,7 @@ import {
   BehaviorSubject,
   catchError,
   combineLatest,
+  debounceTime,
   filter,
   map,
   Observable,
@@ -62,7 +63,8 @@ export class TranslationComponent {
 
   textToTranslateSubject = new Subject<string>();
   textToTranslate$: Observable<string> = this.textToTranslateSubject.pipe(
-    startWith('')
+    startWith(''),
+    debounceTime(400)
   );
 
   settings$ = this.settingsService.getSettings();

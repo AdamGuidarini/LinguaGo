@@ -5,7 +5,10 @@
   "description": "A browser extension to help translate in a side bar.",
   "permissions": [
     "activeTab",
-    "https://translate.google.com/*"
+    "https://translate.google.com/*",
+    "https://apertium.org/*",
+    "https://*/*",
+    "http://*/*"
   ],
   "browser_specific_settings": {
     "gecko": {
